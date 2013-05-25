@@ -64,7 +64,8 @@ struct name_ SZN_FINAL { \
 		this->iterate(visitor); \
 	} \
 	template <class Visitor> \
-	void iterate(Visitor &visitor) const {
+	void iterate(Visitor &visitor) const { \
+		(void)visitor; //avoid warning when the structure has no fields
 
 #define SZN_BEGIN2(name_) \
 struct name_ { \

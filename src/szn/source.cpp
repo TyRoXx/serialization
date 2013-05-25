@@ -28,6 +28,7 @@ namespace szn
 
 	void MemorySource::load(std::size_t n)
 	{
+		(void)n;
 		//nothing to do
 	}
 

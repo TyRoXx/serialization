@@ -175,12 +175,12 @@ namespace szn
 				bool ok;
 			};
 
-			void serialize(Sink &sink, const Custom &custom, szn::ByADL)
+			void serialize(Sink &, const Custom &custom, szn::ByADL)
 			{
 				BOOST_REQUIRE(custom.ok);
 			}
 
-			void deserialize(Source &source, Custom &custom, szn::ByADL)
+			void deserialize(Source &, Custom &custom, szn::ByADL)
 			{
 				BOOST_REQUIRE(!custom.ok);
 				custom.ok = true;
