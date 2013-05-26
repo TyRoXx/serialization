@@ -6,8 +6,25 @@
 #include <utility>
 
 
-#define SZN_FINAL final
-#define SZN_OVERRIDE override
+//GCC supports override and final beginning with version 4.7
+#if defined(__GNUC__) && (__GNUC__ >= 4) && ((__GNUC__ > 4) || (__GNUC_MINOR__ >= 7))
+#	define SZN_FINAL final
+#	define SZN_OVERRIDE override
+
+//Clang has supported override and final since 3.0 and this library requires Clang 3.2
+#elif defined(__clang__)
+#	define SZN_FINAL final
+#	define SZN_OVERRIDE override
+
+//VC++ 2010 is supported and it has override
+#elif defined(_MSC_VER)
+#	define SZN_FINAL
+#	define SZN_OVERRIDE override
+
+#else
+#	define SZN_FINAL
+#	define SZN_OVERRIDE
+#endif
 
 
 namespace szn
