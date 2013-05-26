@@ -7,6 +7,7 @@
 #include <szn/vector.hpp>
 #include <szn/float.hpp>
 #include <szn/array.hpp>
+#include <szn/unique_ptr.hpp>
 
 
 namespace szn
@@ -381,5 +382,23 @@ namespace szn
 		BOOST_CHECK(tester.vec.size() == 1);
 		BOOST_CHECK(tester.vec.at(0) == 42);
 		BOOST_CHECK(rangePointee == std::string(tester.range.first, tester.range.second));
+	}
+
+	BOOST_AUTO_TEST_CASE(Serialization_UniquePtr)
+	{
+		std::vector<signed char> generated;
+		{
+			std::unique_ptr<long> p(new long(123));
+			auto sink = szn::makeContainerSink(generated);
+			szn::serialize(sink, p, szn::UniquePtr<szn::LE32>());
+		}
+
+		szn::MemorySource source(generated.data(),
+								 generated.data() + generated.size());
+		std::unique_ptr<long> p;
+		szn::deserialize(source, p, szn::UniquePtr<szn::LE32>());
+
+		BOOST_REQUIRE(p);
+		BOOST_CHECK(*p == 123);
 	}
 }
