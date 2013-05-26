@@ -38,6 +38,11 @@ if(CMAKE_COMPILER_IS_GNUCXX)
 	list(APPEND CMAKE_CXX_FLAGS ${flags})
 endif()
 
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+	message(STATUS "Using Clang")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -pedantic")
+endif()
+
 option(SZN_BOOST_DYNAMIC "change if linker complains about Boost" ON)
 if(SZN_BOOST_DYNAMIC)
 	add_definitions("-DBOOST_TEST_DYN_LINK")
