@@ -1,6 +1,12 @@
 Serialization library for C++
 =============================
 
+How to use
+----------
+
+You can find samples of usage in src/examples/.
+
+
 Requirements
 ------------
 
