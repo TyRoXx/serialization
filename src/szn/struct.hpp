@@ -4,6 +4,7 @@
 
 #include <szn/sink.hpp>
 #include <szn/source.hpp>
+#include <rxn/struct.hpp>
 
 
 namespace szn
@@ -53,6 +54,7 @@ namespace szn
 		};
 	}
 
+
 #define SZN_BEGIN(name_) \
 struct name_ SZN_FINAL { \
 	void serialize(::szn::Sink &sink) const { \
@@ -63,28 +65,21 @@ struct name_ SZN_FINAL { \
 		const ::szn::detail::DeserializingFieldVisitor visitor(source); \
 		this->iterate(visitor); \
 	} \
-	template <class Visitor> \
-	void iterate(Visitor &visitor) const { \
-		(void)visitor; //avoid warning when the structure has no fields
+	RXN_BEGIN()
+
 
 #define SZN_BEGIN2(name_) \
 struct name_ { \
-	template <class Visitor> \
-	void iterate(Visitor &visitor) const {
+	RXN_BEGIN()
 
-#define SZN_FIELD(name_, type_, format_) \
-		this->_internal_iterate_ ## name_ (visitor); \
-	} \
-public: \
-	type_ name_; \
-private: \
-	template <class Visitor> \
-	void _internal_iterate_ ## name_(Visitor &visitor) const { \
-		visitor.visitField(this->name_, format_(), #name_ );
+
+#define SZN_FIELD RXN_FIELD
+
 
 #define SZN_END() \
-	} \
+	RXN_END() \
 };
+
 
 	struct Struct SZN_FINAL
 	{
