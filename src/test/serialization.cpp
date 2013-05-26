@@ -313,23 +313,32 @@ namespace szn
 
 		struct IterationTestVisitor SZN_FINAL
 		{
-			void visitField(int a, szn::BE32, const char *name)
+			explicit IterationTestVisitor(IterationTester &tester)
+				: m_tester(tester)
 			{
-				BOOST_CHECK(a == 2);
+			}
+
+			void visitField(int IterationTester::*a, szn::BE32, const char *name)
+			{
+				BOOST_CHECK(m_tester.*a == 2);
 				BOOST_CHECK(std::string(name) == "fieldA");
 			}
 
-			void visitField(long b, szn::LE32, const char *name)
+			void visitField(long IterationTester::*b, szn::LE32, const char *name)
 			{
-				BOOST_CHECK(b == 7);
+				BOOST_CHECK(m_tester.*b == 7);
 				BOOST_CHECK(std::string(name) == "fieldB");
 			}
 
-			void visitField(char c, szn::LE8, const char *name)
+			void visitField(char IterationTester::*c, szn::LE8, const char *name)
 			{
-				BOOST_CHECK(c == '!');
+				BOOST_CHECK(m_tester.*c == '!');
 				BOOST_CHECK(std::string(name) == "fieldC");
 			}
+
+		private:
+
+			IterationTester const &m_tester;
 		};
 	}
 
@@ -339,7 +348,7 @@ namespace szn
 		tester.fieldA = 2;
 		tester.fieldB = 7;
 		tester.fieldC = '!';
-		IterationTestVisitor visitor;
+		IterationTestVisitor visitor((tester));
 		tester.iterate(visitor);
 	}
 

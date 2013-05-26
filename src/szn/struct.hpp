@@ -13,44 +13,55 @@ namespace szn
 	namespace detail
 	{
 		/// Serializes the fields it visits to a given sink.
+		template <class Structure>
 		struct SerializingFieldVisitor SZN_FINAL
 		{
-			explicit SerializingFieldVisitor(Sink &sink);
+			explicit SerializingFieldVisitor(Sink &sink,
+											 Structure const &object)
+				: m_sink(sink)
+				, m_object(object)
+			{
+			}
 
 			template <class Value, class Format>
-			void visitField(const Value &value,
+			void visitField(Value Structure::*value,
 							const Format &format,
 							const char * /*name*/) const
 			{
-				serialize(m_sink, value, format);
+				serialize(m_sink, m_object.*value, format);
 			}
 
 		private:
 
 			Sink &m_sink;
+			Structure const &m_object;
 		};
 
 		/// Deserializes the fields it visits from a given source.
+		template <class Structure>
 		struct DeserializingFieldVisitor SZN_FINAL
 		{
-			explicit DeserializingFieldVisitor(Source &source);
+			explicit DeserializingFieldVisitor(Source &source,
+											   Structure &object)
+				: m_source(source)
+				, m_object(object)
+			{
+			}
 
 			template <class Value, class Format>
-			void visitField(Value &value,
+			void visitField(Value Structure::*value,
 							const Format &format,
 							const char * /*name*/) const
 			{
-				//Because iterate() gives us only const-references to
-				//the structure's elements we have to cast the const away.
-				typedef typename std::remove_const<Value>::type MutableValue;
 				deserialize(m_source,
-							const_cast<MutableValue &>(value),
+							m_object.*value,
 							format);
 			}
 
 		private:
 
 			Source &m_source;
+			Structure &m_object;
 		};
 	}
 
@@ -58,19 +69,19 @@ namespace szn
 #define SZN_BEGIN(name_) \
 struct name_ SZN_FINAL { \
 	void serialize(::szn::Sink &sink) const { \
-		const ::szn::detail::SerializingFieldVisitor visitor(sink); \
-		this->iterate(visitor); \
+		const ::szn::detail::SerializingFieldVisitor<name_> visitor(sink, *this); \
+		iterate(visitor); \
 	} \
 	void deserialize(::szn::Source &source) { \
-		const ::szn::detail::DeserializingFieldVisitor visitor(source); \
-		this->iterate(visitor); \
+		const ::szn::detail::DeserializingFieldVisitor<name_> visitor(source, *this); \
+		iterate(visitor); \
 	} \
-	RXN_BEGIN()
+	RXN_BEGIN(name_)
 
 
 #define SZN_BEGIN2(name_) \
 struct name_ { \
-	RXN_BEGIN()
+	RXN_BEGIN(name_)
 
 
 #define SZN_FIELD RXN_FIELD
@@ -86,15 +97,15 @@ struct name_ { \
 		template <class Value>
 		void serialize(Sink &sink, const Value &value) const
 		{
-			const detail::SerializingFieldVisitor visitor(sink);
-			value.iterate(visitor);
+			const detail::SerializingFieldVisitor<Value> visitor(sink, value);
+			Value::iterate(visitor);
 		}
 
 		template <class Value>
 		void deserialize(Source &source, Value &value) const
 		{
-			const detail::DeserializingFieldVisitor visitor(source);
-			value.iterate(visitor);
+			const detail::DeserializingFieldVisitor<Value> visitor(source, value);
+			Value::iterate(visitor);
 		}
 	};
 }
