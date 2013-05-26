@@ -1,4 +1,4 @@
-#include "sink.h"
+#include "sink.hpp"
 
 
 namespace szn

@@ -1,4 +1,4 @@
-#include "struct.h"
+#include "struct.hpp"
 
 
 namespace szn

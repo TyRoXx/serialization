@@ -1,5 +1,5 @@
 file(GLOB codeFiles
-	"*.h"
+	"*.hpp"
 	"*.cpp"
 )
 
