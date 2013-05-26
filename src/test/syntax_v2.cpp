@@ -11,11 +11,20 @@ namespace szn
 		struct TestStruct
 		{
 			RXN_REFLECT(
-				(RXN_MEMBERS),
+				(RXN_MEMBERS) (RXN_ITERATE),
 				(a) (int) (szn::BE16),
 				(b) (long) (szn::BE32),
 				(c) (std::string) (szn::Bytes<szn::BE8>)
 			)
+		};
+
+		struct TestVisitor
+		{
+			template <class Format, class Value>
+			void accept(Value &member)
+			{
+				(void)member;
+			}
 		};
 	}
 
@@ -25,5 +34,7 @@ namespace szn
 		t.a = 0;
 		t.b = 3;
 		t.c = "hallo";
+		TestVisitor v;
+		t.iterate(v);
 	}
 }
