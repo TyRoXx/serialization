@@ -10,11 +10,12 @@ namespace szn
 	{
 		struct TestStruct
 		{
-			RXN_REFLECT(TestStruct, (
+			RXN_REFLECT(
+				(RXN_MEMBERS),
 				(a) (int) (szn::BE16),
 				(b) (long) (szn::BE32),
 				(c) (std::string) (szn::Bytes<szn::BE8>)
-			))
+			)
 		};
 	}
 
