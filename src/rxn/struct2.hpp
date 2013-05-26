@@ -19,10 +19,10 @@
 #define RXN_DECLARE_MEMBER(rxn_name, rxn_type, rxn_annotation) \
 	rxn_type rxn_name;
 
-#define RXN_STRIP_PAREN(...) __VA_ARGS__
+#define RXN_IDENTITY(...) __VA_ARGS__
 
 #define RXN_REFLECT(rxn_struct_name, ...) \
-	RXN_FOR_EACH_FIELD(RXN_DECLARE_MEMBER, RXN_STRIP_PAREN __VA_ARGS__)
+	RXN_FOR_EACH_FIELD(RXN_DECLARE_MEMBER, RXN_IDENTITY __VA_ARGS__)
 
 
 #endif
