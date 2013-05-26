@@ -17,8 +17,11 @@ Things to do in no particular order
 * UTF-8/16/32 formats
 * formats for std::list, deque, map, set, queue etc.
 * formats for std::unique_ptr, auto_ptr, shared_ptr (and the Boost equivalents)
+* formats for Boost.Container, Boost.Range, Boost.UUID, Boost.PtrContainer
 * provide usage examples
   * garbage collector
   * custom format
 * allow recursion in data structures
 * std::istream/ostream in binary mode should be valid Source/Sink
+* use C++11 noexcept
+* .hpp file ending for headers
