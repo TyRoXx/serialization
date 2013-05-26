@@ -2,8 +2,15 @@
 #define SERIALIZATION_BYTES_HPP_8BE0A18D_7A18_41A3_B154_C6C47903EDE7
 
 
+#include <szn/sink.hpp>
+#include <szn/source.hpp>
 #include <szn/util.hpp>
 #include <boost/static_assert.hpp>
+#include <string>
+#include <vector>
+#include <utility>
+#include <stdexcept>
+#include <cassert>
 
 
 namespace szn
