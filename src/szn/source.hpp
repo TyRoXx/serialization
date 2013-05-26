@@ -2,7 +2,7 @@
 #define SERIALIZATION_SOURCE_HPP_F36EFB7C_FC73_4CA5_AE0D_43EBB4E699F7
 
 
-#include "util.hpp"
+#include <szn/util.hpp>
 #include <algorithm>
 
 

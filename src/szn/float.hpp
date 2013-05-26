@@ -2,7 +2,7 @@
 #define SERIALIZATION_FLOAT_HPP_3A2C7AC8_6CC5_4BFF_BD0B_F1FB643EA623
 
 
-#include "util.hpp"
+#include <szn/util.hpp>
 #include <boost/integer.hpp>
 
 

@@ -2,7 +2,7 @@
 #define SERIALIZATION_BIG_ENDIAN_HPP_D3149094_ADEF_4FF6_B2CF_BD0110DF06BD
 
 
-#include "util.hpp"
+#include <szn/util.hpp>
 
 
 namespace szn

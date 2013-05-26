@@ -2,7 +2,7 @@
 #define SERIALIZATION_ARRAY_HPP_3AB95632_FCB4_481B_AB69_381567C9695C
 
 
-#include "util.hpp"
+#include <szn/util.hpp>
 #include <array>
 
 

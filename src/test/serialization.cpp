@@ -1,12 +1,12 @@
 #include <boost/test/unit_test.hpp>
 
-#include "szn/struct.hpp"
-#include "szn/little_endian.hpp"
-#include "szn/big_endian.hpp"
-#include "szn/bytes.hpp"
-#include "szn/vector.hpp"
-#include "szn/float.hpp"
-#include "szn/array.hpp"
+#include <szn/struct.hpp>
+#include <szn/little_endian.hpp>
+#include <szn/big_endian.hpp>
+#include <szn/bytes.hpp>
+#include <szn/vector.hpp>
+#include <szn/float.hpp>
+#include <szn/array.hpp>
 
 
 namespace szn

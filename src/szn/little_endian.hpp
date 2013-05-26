@@ -2,7 +2,7 @@
 #define SERIALIZATION_LITTLE_ENDIAN_HPP_BDA05921_80B7_4DF0_BBC7_B73C484EC091
 
 
-#include "util.hpp"
+#include <szn/util.hpp>
 
 
 namespace szn

@@ -24,4 +24,3 @@ Things to do in no particular order
 * allow recursion in data structures
 * std::istream/ostream in binary mode should be valid Source/Sink
 * use C++11 noexcept
-* do internal includes like <szn/util.h> instead of "util.h"

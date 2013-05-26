@@ -2,8 +2,8 @@
 #define SERIALIZATION_STRUCT_HPP_86B3FCE9_D690_407C_AC98_3ED93568B47E
 
 
-#include "sink.hpp"
-#include "source.hpp"
+#include <szn/sink.hpp>
+#include <szn/source.hpp>
 
 
 namespace szn

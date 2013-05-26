@@ -2,7 +2,7 @@
 #define SERIALIZATION_VECTOR_HPP_5418BAC1_2CDB_456D_A378_C673DE493A6D
 
 
-#include "util.hpp"
+#include <szn/util.hpp>
 #include <boost/foreach.hpp>
 
 

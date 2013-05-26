@@ -2,7 +2,7 @@
 #define SERIALIZATION_SINK_HPP_1FA67032_F7EB_48C8_97D7_659F27F90D72
 
 
-#include "util.hpp"
+#include <szn/util.hpp>
 #include <algorithm>
 
 
