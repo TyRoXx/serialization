@@ -11,9 +11,9 @@ namespace szn
 		struct TestStruct
 		{
 			RXN_FIELDS (
-				(int) a,
-				(long) b,
-				(std::string) c
+				(szn::BE16) (int) a,
+				(szn::BE32) (long) b,
+				(szn::Bytes<szn::BE8>) (std::string) c
 			)
 		};
 	}
