@@ -39,3 +39,4 @@ Things to do in no particular order
 * support for C (maybe with code generation)
 * shortcuts for common things
   * SZN_LE8(a) instead of SZN_FIELD(a, std::uint8_t, szn::LE8)
+* share code between little and big endian implementations?
