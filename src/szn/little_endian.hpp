@@ -20,7 +20,7 @@ namespace szn
 			{
 				const char digit = static_cast<char>(value);
 				sink.write(&digit, 1);
-				value >>= 8;
+				value = static_cast<Integer>(value >> 8);
 			}
 		}
 
@@ -33,7 +33,9 @@ namespace szn
 				// TODO check out of range
 				// TODO prevent integer overflow
 				const char digit = source.get(i);
-				result |= ((static_cast<Integer>(digit) & 0xff) << (i * 8));
+				result |= static_cast<Integer>(
+						   (static_cast<Integer>(digit) & 0xff) << (i * 8)
+						  );
 			}
 			value = result;
 			source.drop(SizeInBytes);

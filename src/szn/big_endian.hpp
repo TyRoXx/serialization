@@ -31,8 +31,12 @@ namespace szn
 			{
 				// TODO check out of range
 				const char digit = source.get(i);
-				result |= ((static_cast<Integer>(digit) & 0xff) <<
-						   (SizeInBytes - 1u - i) * 8u);
+				result |= static_cast<Integer>(
+						   (
+							(static_cast<Integer>(digit) & 0xff) <<
+							 ((SizeInBytes - 1u - i) * 8)
+						   )
+						  );
 			}
 			value = result;
 			source.drop(SizeInBytes);
