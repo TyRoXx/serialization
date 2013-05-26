@@ -4,7 +4,7 @@ Serialization library for C++
 Requirements
 ------------
 
-Currently the code works with GCC 4.6+ and Clang 3.2+.  Visual C++ 2010 will be
+Currently the code works with GCC 4.6+ and Clang 3.0+.  Visual C++ 2010 will be
 supported.  We will try to support older versions of GCC, Clang and VC++ as
 well.
 
