@@ -2,10 +2,6 @@
 #define SERIALIZATION_UTIL_H_5595449D_4B56_4FD3_983C_CC91E7E873D2
 
 
-#include <cstddef>
-#include <utility>
-
-
 //GCC supports override and final beginning with version 4.7
 #if defined(__GNUC__) && (__GNUC__ >= 4) && ((__GNUC__ > 4) || (__GNUC_MINOR__ >= 7))
 #	define SZN_FINAL final
