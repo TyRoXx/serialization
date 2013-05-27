@@ -83,8 +83,7 @@ namespace szn
 
 	BOOST_AUTO_TEST_CASE(Serialization_Struct_deserialize)
 	{
-		szn::MemorySource source(structureData,
-								 structureData + sizeof(structureData));
+		szn::MemorySource source(structureData);
 
 		TestStruct b;
 		deserialize(source, b, szn::ByMethod());
@@ -122,8 +121,7 @@ namespace szn
 
 	BOOST_AUTO_TEST_CASE(Serialization_EmptyStruct_deserialize)
 	{
-		const char * const nothing = nullptr;
-		szn::MemorySource source(nothing, nothing);
+		szn::MemorySource source((szn::MemorySource::range_type()));
 
 		EmptyStruct s;
 		s.deserialize(source);
@@ -235,8 +233,7 @@ namespace szn
 
 		std::array<std::uint16_t, 2> deserializedArray;
 		{
-			szn::MemorySource source(generated.data(),
-									 generated.data() + generated.size());
+			auto source = szn::makeRangeSource(generated);
 			szn::deserialize(source, deserializedArray, ArrayFormat());
 		}
 
@@ -265,8 +262,7 @@ namespace szn
 
 		std::uint16_t deserializedArray[2];
 		{
-			szn::MemorySource source(generated.data(),
-									 generated.data() + generated.size());
+			auto source = szn::makeRangeSource(generated);
 			szn::deserialize(source, deserializedArray, ArrayFormat());
 		}
 
@@ -295,8 +291,7 @@ namespace szn
 
 		NoMethods no;
 		{
-			szn::MemorySource source(generated.data(),
-									 generated.data() + generated.size());
+			auto source = szn::makeRangeSource(generated);
 			szn::Struct().deserialize(source, no);
 		}
 
@@ -382,8 +377,7 @@ namespace szn
 
 		BytesTester<ConstStringRange> tester;
 		{
-			szn::MemorySource source(generated.data(),
-									 generated.data() + generated.size());
+			auto source = szn::makeRangeSource(generated);
 			szn::Struct().deserialize(source, tester);
 		}
 
@@ -402,8 +396,7 @@ namespace szn
 			szn::serialize(sink, p, szn::UniquePtr<szn::LE32>());
 		}
 
-		szn::MemorySource source(generated.data(),
-								 generated.data() + generated.size());
+		auto source = szn::makeRangeSource(generated);
 		std::unique_ptr<long> p;
 		szn::deserialize(source, p, szn::UniquePtr<szn::LE32>());
 

@@ -4,6 +4,7 @@
 
 #include <szn/util.hpp>
 #include <algorithm>
+#include <boost/range/iterator_range.hpp>
 
 
 namespace szn
@@ -25,22 +26,92 @@ namespace szn
 		virtual bool isStable() const = 0;
 	};
 
-	struct MemorySource : Source
+	namespace detail
 	{
-		explicit MemorySource(const char *begin, const char *end);
-		explicit MemorySource(const unsigned char *begin, const unsigned char *end);
-		explicit MemorySource(const signed char *begin, const signed char *end);
-		virtual void load(std::size_t n) SZN_OVERRIDE;
-		virtual std::size_t size() SZN_OVERRIDE;
-		virtual char get(std::size_t index) SZN_OVERRIDE;
-		virtual void drop(std::size_t n) SZN_OVERRIDE;
-		virtual const char *data() SZN_OVERRIDE;
-		virtual bool isStable() const SZN_OVERRIDE;
+		template <class To, class From>
+		To castIterator(From const &from)
+		{
+			return from;
+		}
+
+		template <class To, class From>
+		To castIterator(From const *from)
+		{
+			return reinterpret_cast<To>(from);
+		}
+	}
+
+	template <class LValueRandomAccessByteRange,
+			  class PointsToLValue = typename std::enable_if<
+				  std::is_lvalue_reference<typename std::iterator_traits<typename LValueRandomAccessByteRange::const_iterator>::reference>::value, void>::type
+			  >
+	struct RangeSource : Source
+	{
+		typedef LValueRandomAccessByteRange range_type;
+		typedef typename range_type::const_iterator const_iterator;
+		typedef typename std::iterator_traits<const_iterator>::difference_type difference_type;
+
+		template <class Range>
+		explicit RangeSource(Range const &range)
+			: m_position(0)
+		{
+			using std::begin;
+			using std::end;
+			m_range = range_type(detail::castIterator<const_iterator>(begin(range)),
+								 detail::castIterator<const_iterator>(end(range)));
+		}
+
+		virtual void load(std::size_t n)
+		{
+			(void)n;
+		}
+
+		virtual std::size_t size()
+		{
+			using std::begin;
+			using std::end;
+			return static_cast<std::size_t>(
+						std::distance(begin(m_range), end(m_range)) - m_position);
+		}
+
+		virtual char get(std::size_t index)
+		{
+			assert(index < size());
+			using std::begin;
+			return std::next(begin(m_range), m_position)[index];
+		}
+
+		virtual void drop(std::size_t n)
+		{
+			assert(n <= size());
+			m_position += static_cast<difference_type>(n);
+		}
+
+		virtual const char *data()
+		{
+			using std::begin;
+			return reinterpret_cast<const char *>(&*(begin(m_range)) + m_position);
+		}
+
+		virtual bool isStable() const
+		{
+			return true;
+		}
 
 	private:
 
-		const char *m_begin, *m_end;
+		range_type m_range;
+		difference_type m_position;
 	};
+
+	template <class Range>
+	RangeSource<Range> makeRangeSource(Range const &range)
+	{
+		return RangeSource<Range>(range);
+	}
+
+	typedef RangeSource<boost::iterator_range<const char *>> MemorySource;
+
 }
 
 
