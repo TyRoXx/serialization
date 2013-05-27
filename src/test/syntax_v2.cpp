@@ -18,6 +18,15 @@ namespace szn
 			)
 		};
 
+#define TEST_STRUCT_2_MEMBERS \
+		(name) (std::string) (szn::Bytes<szn::BE32>), \
+		(id) (int) (szn::BE16)
+
+		struct TestStruct2
+		{
+			RXN_REFLECT((RXN_MEMBERS) (RXN_ITERATE), TEST_STRUCT_2_MEMBERS)
+		};
+
 		struct TestVisitor
 		{
 			template <class Format, class Value>
@@ -36,5 +45,9 @@ namespace szn
 		t.c = "hallo";
 		TestVisitor v;
 		t.iterate(v);
+
+		TestStruct2 t2;
+		t2.name = "name";
+		t2.id = 123;
 	}
 }
