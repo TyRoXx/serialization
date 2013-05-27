@@ -2,24 +2,34 @@
 #define SERIALIZATION_UTIL_HPP_5595449D_4B56_4FD3_983C_CC91E7E873D2
 
 
-//GCC supports override and final beginning with version 4.7
-#if defined(__GNUC__) && (__GNUC__ >= 4) && ((__GNUC__ > 4) || (__GNUC_MINOR__ >= 7))
-#	define SZN_FINAL final
-#	define SZN_OVERRIDE override
+#if defined(__GNUC__) && (__GNUC__ >= 4) && (__GNUC_MINOR__ >= 6)
+//	GCC supports override and final beginning with version 4.7
+#	if ((__GNUC__ > 4) || (__GNUC_MINOR__ >= 7))
+#		define SZN_FINAL final
+#		define SZN_OVERRIDE override
+#	else
+#		define SZN_FINAL
+#		define SZN_OVERRIDE
+#	endif
+//	GCC 4.6 introduced noexcept
+#	define SZN_NOEXCEPT noexcept
 
-//Clang has supported override and final since 3.0 and this library requires Clang 3.2
 #elif defined(__clang__)
+//	Clang has supported override, final and noexcept since 3.0
 #	define SZN_FINAL final
 #	define SZN_OVERRIDE override
+#	define SZN_NOEXCEPT noexcept
 
-//VC++ 2010 is supported and it has override
 #elif defined(_MSC_VER)
+//	VC++ 2010 has override
 #	define SZN_FINAL
 #	define SZN_OVERRIDE override
+#	define SZN_NOEXCEPT
 
 #else
 #	define SZN_FINAL
 #	define SZN_OVERRIDE
+#	define SZN_NOEXCEPT
 #endif
 
 
