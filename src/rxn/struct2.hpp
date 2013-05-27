@@ -20,21 +20,20 @@
 
 #define RXN_IGNORE(...)
 
-#define RXN_REMOVE_PARENS(...) RXN_IDENTITY __VA_ARGS__
+#define RXN_REMOVE_PAREN(...) RXN_IDENTITY __VA_ARGS__
 
-#define ADD_PAREN_1(...) ((__VA_ARGS__)) ADD_PAREN_2
-#define ADD_PAREN_2(...) ((__VA_ARGS__)) ADD_PAREN_1
-#define ADD_PAREN_1_END
-#define ADD_PAREN_2_END
-#define OUTPUT BOOST_PP_CAT(ADD_PAREN_1 INPUT,_END)
+#define RXN_ADD_PAREN_1(...) ((__VA_ARGS__)) RXN_ADD_PAREN_2
+#define RXN_ADD_PAREN_2(...) ((__VA_ARGS__)) RXN_ADD_PAREN_1
+#define RXN_ADD_PAREN_1_END
+#define RXN_ADD_PAREN_2_END
 
-#define RXN_NORMALIZE_FIELD(field) BOOST_PP_CAT(ADD_PAREN_1 field, _END)
+#define RXN_NORMALIZE_FIELD(field) BOOST_PP_CAT(RXN_ADD_PAREN_1 field, _END)
 
-#define RXN_GENERATE_FIELD_3(generator, name_type_tuple, annotations_3) \
+#define RXN_GENERATE_FIELD_3(generator, name_type_tuple, annotations) \
 	generator( \
 		BOOST_PP_TUPLE_ELEM(2, 0, name_type_tuple), \
 		(RXN_TAIL name_type_tuple), \
-		annotations_3 \
+		annotations \
 		)
 
 #define RXN_GENERATE_FIELD_2(generator, normalized_field) \
@@ -50,7 +49,7 @@
 #define RXN_MEMBERS(fields) BOOST_PP_SEQ_FOR_EACH_I(RXN_GENERATE_FIELD, RXN_MEMBER, fields)
 
 #define RXN_VISIT(name, type, annotations) \
-	visitor.template accept<RXN_REMOVE_PARENS(BOOST_PP_SEQ_ELEM(0, annotations))> \
+	visitor.template accept<RXN_REMOVE_PAREN(BOOST_PP_SEQ_ELEM(0, annotations))> \
 						   (this->name);
 
 #define RXN_ITERATE(fields) \
