@@ -20,7 +20,6 @@
 
 #define RXN_IGNORE(...)
 
-#define RXN_ADD_PARENS(...) ((__VA_ARGS__))
 #define RXN_REMOVE_PARENS(...) RXN_IDENTITY __VA_ARGS__
 
 #define ADD_PAREN_1(...) ((__VA_ARGS__)) ADD_PAREN_2
