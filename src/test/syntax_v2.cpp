@@ -19,7 +19,7 @@ namespace szn
 				(a, int) (szn::BE16),
 				(b, long) (szn::BE32),
 				(c, std::string) (szn::Bytes<szn::BE8>),
-				(v, std::vector<int, std::allocator<int>>) (Vector8_16)
+				(v, std::vector<int, std::allocator<int>>) (szn::Vector<szn::BE8, szn::BE16>)
 			)
 		};
 
@@ -44,6 +44,9 @@ namespace szn
 
 	BOOST_AUTO_TEST_CASE(Serialization_Syntax_v2)
 	{
+	//	static_assert(false, BOOST_PP_STRINGIZE((RXN_VISIT(name, (type), ((szn::BE8))))));
+	//	static_assert(false, BOOST_PP_STRINGIZE((RXN_VISIT(name, (type), ((szn::Vector<szn::BE8, szn::BE16>))))));
+
 		TestStruct t;
 		t.a = 0;
 		t.b = 3;
