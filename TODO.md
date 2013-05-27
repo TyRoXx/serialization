@@ -14,9 +14,10 @@ Things to do in no particular order
 * error handling, exceptions, constraints, backtracing
 * POD format
 * UTF-8/16/32 formats
-* formats for std::list, deque, map, set, queue etc.
-* formats for std::unique_ptr, auto_ptr, shared_ptr (and the Boost equivalents)
-* formats for Boost.Container, Boost.Range, Boost.UUID, Boost.PtrContainer
+* formats for std::list, deque, map, set, queue, vector<bool> etc.
+* formats for std::unique_ptr, auto_ptr, shared_ptr, bitset
+* formats for Boost.Container, Boost.Range, Boost.UUID, Boost.PtrContainer,
+  Boost.DynamicBitset, Boost.SmartPtr
 * a format like boost::optional
 * provide usage examples
   * garbage collector
@@ -36,7 +37,17 @@ Things to do in no particular order
 * default value optimization (so that a field only needs 1 bit in the stream if
   it has the default value)
 * support for UTF-8 representations of data (for example JSON)
+* investigate object-relational mapping (e.g. SQL)
 * support for C (maybe with code generation)
 * shortcuts for common things
   * SZN_LE8(a) instead of SZN_FIELD(a, std::uint8_t, szn::LE8)
 * share code between little and big endian implementations?
+* syntax v2 transformations (lexically, semantically with templates)
+* change syntax v2 to (name, type) (annotations)...
+  * maybe FIELD(name, (type), (annotations)...)
+  * METHOD(name, result, (parameters...), (annotations)...)
+* ignore trailing comma in v2 field sequence
+* polymorphism
+* check enum / enum class support
+* support bool
+* check possible bit field support
