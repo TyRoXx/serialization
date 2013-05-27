@@ -424,19 +424,72 @@ namespace szn
 		BOOST_CHECK(*p == 123);
 	}
 
-	BOOST_AUTO_TEST_CASE(Serialization_POD)
+	namespace
 	{
-		const long testValue = 1223456;
-		std::vector<char> generated;
+		template <class Value, class Format>
+		bool serializationRoundtrip(Value const &value, Format const &format)
 		{
-			auto sink = szn::makeContainerSink(generated);
-			szn::serialize(sink, testValue, szn::POD());
+			std::vector<char> generated;
+			{
+				auto sink = szn::makeContainerSink(generated);
+				szn::serialize(sink, value, format);
+			}
+
+			auto source = szn::makeRangeSource(generated);
+			Value readValue;
+			szn::deserialize(source, readValue, format);
+
+			return (value == readValue);
 		}
 
-		auto source = szn::makeRangeSource(generated);
-		long value = ~testValue;
-		szn::deserialize(source, value, szn::POD());
+		struct TestPOD
+		{
+			std::size_t field;
 
-		BOOST_CHECK(testValue == value);
+			TestPOD()
+			{
+			}
+
+			TestPOD(std::size_t field)
+				: field(field)
+			{
+			}
+		};
+
+		bool operator == (TestPOD const &left, TestPOD const &right)
+		{
+			return (left.field == right.field);
+		}
+	}
+
+	BOOST_AUTO_TEST_CASE(Serialization_POD)
+	{
+		BOOST_CHECK(serializationRoundtrip<char>(13, szn::POD()));
+		BOOST_CHECK(serializationRoundtrip<unsigned char>(13, szn::POD()));
+		BOOST_CHECK(serializationRoundtrip<signed char>(13, szn::POD()));
+		BOOST_CHECK(serializationRoundtrip<signed short>(13, szn::POD()));
+		BOOST_CHECK(serializationRoundtrip<unsigned short>(13, szn::POD()));
+		BOOST_CHECK(serializationRoundtrip<signed int>(13, szn::POD()));
+		BOOST_CHECK(serializationRoundtrip<unsigned int>(13, szn::POD()));
+		BOOST_CHECK(serializationRoundtrip<signed long>(13, szn::POD()));
+		BOOST_CHECK(serializationRoundtrip<unsigned long>(13, szn::POD()));
+		BOOST_CHECK(serializationRoundtrip<long long>(13, szn::POD()));
+		BOOST_CHECK(serializationRoundtrip<unsigned long long>(13, szn::POD()));
+		BOOST_CHECK(serializationRoundtrip<wchar_t>(13, szn::POD()));
+		BOOST_CHECK(serializationRoundtrip<std::size_t>(13, szn::POD()));
+		BOOST_CHECK(serializationRoundtrip<std::ptrdiff_t>(13, szn::POD()));
+		BOOST_CHECK(serializationRoundtrip(TestPOD(13), szn::POD()));
+
+		{
+			std::array<int, 3> const array = {{1, 2, 3}};
+			BOOST_CHECK(serializationRoundtrip(array, szn::POD()));
+		}
+
+		{
+			int dummy;
+			int * const pointer = &dummy;
+			BOOST_CHECK(serializationRoundtrip(pointer, szn::POD()));
+			BOOST_CHECK(serializationRoundtrip(&pointer, szn::POD()));
+		}
 	}
 }
