@@ -12,6 +12,7 @@
 #include <szn/bool.hpp>
 #include <szn/pod.hpp>
 #include <szn/unique_ptr.hpp>
+#include <szn/endianness.hpp>
 
 
 namespace szn
@@ -507,15 +508,15 @@ namespace szn
 		BOOST_CHECK(serializationRoundtrip(NonZero, szn:: BOOST_PP_CAT(endianness, bitsize) ())); \
 		BOOST_CHECK(serializationRoundtrip(Negative, szn:: BOOST_PP_CAT(endianness, bitsize) ()));
 
-		SZNTEST_ENUM_VALUES(LE, 8)
-		SZNTEST_ENUM_VALUES(LE, 16)
-		SZNTEST_ENUM_VALUES(LE, 32)
-		SZNTEST_ENUM_VALUES(LE, 64)
+		SZNTEST_ENUM_VALUES(LE_, 8)
+		SZNTEST_ENUM_VALUES(LE_, 16)
+		SZNTEST_ENUM_VALUES(LE_, 32)
+		SZNTEST_ENUM_VALUES(LE_, 64)
 
-		SZNTEST_ENUM_VALUES(BE, 8)
-		SZNTEST_ENUM_VALUES(BE, 16)
-		SZNTEST_ENUM_VALUES(BE, 32)
-		SZNTEST_ENUM_VALUES(BE, 64)
+		SZNTEST_ENUM_VALUES(BE_, 8)
+		SZNTEST_ENUM_VALUES(BE_, 16)
+		SZNTEST_ENUM_VALUES(BE_, 32)
+		SZNTEST_ENUM_VALUES(BE_, 64)
 #undef SZNTEST_ENUM_VALUES
 	}
 }

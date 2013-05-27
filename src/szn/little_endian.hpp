@@ -19,8 +19,8 @@ namespace szn
 
 			for (std::size_t i = 0; i < SizeInBytes; ++i)
 			{
-				const char digit = static_cast<char>(value);
-				sink.write(&digit, 1);
+				const unsigned char digit = static_cast<char>(value);
+				sink.write(reinterpret_cast<char const *>(&digit), 1);
 				value = static_cast<Integer>(value >> 8);
 			}
 		}
@@ -36,7 +36,7 @@ namespace szn
 			{
 				// TODO check out of range
 				// TODO prevent integer overflow
-				const char digit = source.get(i);
+				const unsigned char digit = source.get(i);
 				result |= static_cast<ArithUInt>(
 						   (static_cast<ArithUInt>(digit) & 0xff) << (i * 8)
 						  );

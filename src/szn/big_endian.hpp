@@ -17,10 +17,10 @@ namespace szn
 		{
 			for (std::size_t i = 0; i < SizeInBytes; ++i)
 			{
-				const char digit = static_cast<char>(
+				const unsigned char digit = static_cast<char>(
 							(value >> ((SizeInBytes - 1u - i) * 8u)) & 0xff
 							);
-				sink.write(&digit, 1);
+				sink.write(reinterpret_cast<char const *>(&digit), 1);
 			}
 		}
 
@@ -34,7 +34,7 @@ namespace szn
 			for (std::size_t i = 0; i < SizeInBytes; ++i)
 			{
 				// TODO check out of range
-				const char digit = source.get(i);
+				const unsigned char digit = source.get(i);
 				result |= static_cast<AlgorithmicInteger>(
 						   (
 							(static_cast<AlgorithmicInteger>(digit) & 0xff) <<
