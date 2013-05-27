@@ -1,4 +1,6 @@
 #include <boost/test/unit_test.hpp>
+#include <boost/preprocessor/cat.hpp>
+#include <boost/cstdint.hpp>
 
 #include <szn/struct.hpp>
 #include <szn/little_endian.hpp>
@@ -473,5 +475,44 @@ namespace szn
 			BOOST_CHECK(serializationRoundtrip(pointer, szn::POD()));
 			BOOST_CHECK(serializationRoundtrip(&pointer, szn::POD()));
 		}
+	}
+
+	BOOST_AUTO_TEST_CASE(Serialization_LittleEndian)
+	{
+		BOOST_CHECK(serializationRoundtrip<boost::int8_t>(-50, szn::LE8()));
+		BOOST_CHECK(serializationRoundtrip<boost::int16_t>(-50, szn::LE16()));
+		BOOST_CHECK(serializationRoundtrip<boost::int32_t>(-50, szn::LE32()));
+		BOOST_CHECK(serializationRoundtrip<boost::int64_t>(-50, szn::LE64()));
+
+		BOOST_CHECK(serializationRoundtrip<boost::int8_t>(-50, szn::BE8()));
+		BOOST_CHECK(serializationRoundtrip<boost::int16_t>(-50, szn::BE16()));
+		BOOST_CHECK(serializationRoundtrip<boost::int32_t>(-50, szn::BE32()));
+		BOOST_CHECK(serializationRoundtrip<boost::int64_t>(-50, szn::BE64()));
+	}
+
+	BOOST_AUTO_TEST_CASE(Serialization_enum)
+	{
+		enum TestEnum
+		{
+			Zero = 0,
+			NonZero = 12,
+			Negative = -50
+		};
+
+#define SZNTEST_ENUM_VALUES(endianness, bitsize) \
+		BOOST_CHECK(serializationRoundtrip(Zero, szn:: BOOST_PP_CAT(endianness, bitsize) ())); \
+		BOOST_CHECK(serializationRoundtrip(NonZero, szn:: BOOST_PP_CAT(endianness, bitsize) ())); \
+		BOOST_CHECK(serializationRoundtrip(Negative, szn:: BOOST_PP_CAT(endianness, bitsize) ()));
+
+		SZNTEST_ENUM_VALUES(LE, 8)
+		SZNTEST_ENUM_VALUES(LE, 16)
+		SZNTEST_ENUM_VALUES(LE, 32)
+		SZNTEST_ENUM_VALUES(LE, 64)
+
+		SZNTEST_ENUM_VALUES(BE, 8)
+		SZNTEST_ENUM_VALUES(BE, 16)
+		SZNTEST_ENUM_VALUES(BE, 32)
+		SZNTEST_ENUM_VALUES(BE, 64)
+#undef SZNTEST_ENUM_VALUES
 	}
 }

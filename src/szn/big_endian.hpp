@@ -3,6 +3,7 @@
 
 
 #include <szn/util.hpp>
+#include <boost/integer.hpp>
 
 
 namespace szn
@@ -26,19 +27,22 @@ namespace szn
 		template <class Integer>
 		void deserialize(Source &source, Integer &value) const
 		{
-			Integer result = 0;
+			typedef typename boost::uint_t<sizeof(value) * CHAR_BIT>::fast
+				AlgorithmicInteger;
+
+			AlgorithmicInteger result = 0;
 			for (std::size_t i = 0; i < SizeInBytes; ++i)
 			{
 				// TODO check out of range
 				const char digit = source.get(i);
-				result |= static_cast<Integer>(
+				result |= static_cast<AlgorithmicInteger>(
 						   (
-							(static_cast<Integer>(digit) & 0xff) <<
+							(static_cast<AlgorithmicInteger>(digit) & 0xff) <<
 							 ((SizeInBytes - 1u - i) * 8)
 						   )
 						  );
 			}
-			value = result;
+			value = static_cast<Integer>(result);
 			source.drop(SizeInBytes);
 		}
 	};
