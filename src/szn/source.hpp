@@ -61,12 +61,12 @@ namespace szn
 								 detail::castIterator<const_iterator>(end(range)));
 		}
 
-		virtual void load(std::size_t n)
+		virtual void load(std::size_t n) SZN_OVERRIDE
 		{
 			(void)n;
 		}
 
-		virtual std::size_t size()
+		virtual std::size_t size() SZN_OVERRIDE
 		{
 			using std::begin;
 			using std::end;
@@ -74,26 +74,26 @@ namespace szn
 						std::distance(begin(m_range), end(m_range)) - m_position);
 		}
 
-		virtual char get(std::size_t index)
+		virtual char get(std::size_t index) SZN_OVERRIDE
 		{
 			assert(index < size());
 			using std::begin;
 			return std::next(begin(m_range), m_position)[index];
 		}
 
-		virtual void drop(std::size_t n)
+		virtual void drop(std::size_t n) SZN_OVERRIDE
 		{
 			assert(n <= size());
 			m_position += static_cast<difference_type>(n);
 		}
 
-		virtual const char *data()
+		virtual const char *data() SZN_OVERRIDE
 		{
 			using std::begin;
 			return reinterpret_cast<const char *>(&*(begin(m_range)) + m_position);
 		}
 
-		virtual bool isStable() const
+		virtual bool isStable() const SZN_OVERRIDE
 		{
 			return true;
 		}

@@ -5,4 +5,3 @@ file(GLOB codeFiles
 
 add_executable(examples ${codeFiles})
 target_link_libraries(examples serialization)
-
