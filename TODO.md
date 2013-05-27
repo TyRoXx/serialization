@@ -1,11 +1,8 @@
 Things to do in no particular order
 ===================================
 
-* try to make iterate() static
-* separate reflexion from serialization
 * adapt C++ standard naming style
 * make Sink and Source parameters template-tized where possible
-* improve little/big endian implementations (e.g. fix warnings, add comments)
 * "lazy" ranges for deserialization
 * make library header-only?
 * support old compilers (MSVC9, GCC 4.2, Clang 2.9, ..)
@@ -43,7 +40,7 @@ Things to do in no particular order
   * SZN_LE8(a) instead of SZN_FIELD(a, std::uint8_t, szn::LE8)
 * share code between little and big endian implementations?
 * syntax v2 transformations (lexically, semantically with templates)
-* change syntax v2 to (name, type) (annotations)...
+* create syntax v3
   * maybe FIELD(name, (type), (annotations)...)
   * METHOD(name, result, (parameters...), (annotations)...)
 * ignore trailing comma in v2 field sequence
