@@ -3,6 +3,7 @@
 #include <szn/struct2.hpp>
 #include <szn/bytes.hpp>
 #include <szn/big_endian.hpp>
+#include <szn/vector.hpp>
 
 namespace szn
 {
@@ -10,11 +11,15 @@ namespace szn
 	{
 		struct TestStruct
 		{
+			typedef std::vector<int, std::allocator<int>> VectorInt;
+			typedef szn::Vector<szn::BE8, szn::BE16> Vector8_16;
+
 			RXN_REFLECT(
 				(RXN_MEMBERS) (RXN_ITERATE),
 				(a, int) (szn::BE16),
 				(b, long) (szn::BE32),
-				(c, std::string) (szn::Bytes<szn::BE8>)
+				(c, std::string) (szn::Bytes<szn::BE8>),
+				(v, std::vector<int, std::allocator<int>>) (Vector8_16)
 			)
 		};
 
@@ -43,6 +48,7 @@ namespace szn
 		t.a = 0;
 		t.b = 3;
 		t.c = "hallo";
+		t.v.resize(2, 12);
 		TestVisitor v;
 		t.iterate(v);
 

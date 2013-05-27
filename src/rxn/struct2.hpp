@@ -25,7 +25,7 @@
 #define RXN_GENERATE_FIELD_3(generator, name_type_tuple, annotations) \
 	generator( \
 		BOOST_PP_TUPLE_ELEM(2, 0, name_type_tuple), \
-		(BOOST_PP_TUPLE_ELEM(2, 1, name_type_tuple)), \
+		(RXN_TAIL name_type_tuple), \
 		annotations \
 		)
 
