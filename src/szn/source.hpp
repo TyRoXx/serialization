@@ -4,6 +4,7 @@
 
 #include <szn/util.hpp>
 #include <algorithm>
+#include <stdexcept>
 #include <boost/range/iterator_range.hpp>
 
 
@@ -17,6 +18,17 @@ namespace szn
 		virtual char get(std::size_t index) = 0;
 		virtual void drop(std::size_t n) = 0;
 		virtual const char *data() = 0;
+
+		inline void read(char *destination, std::size_t length)
+		{
+			load(length);
+			if (size() < length)
+			{
+				throw std::runtime_error("Insufficient input from source to read");
+			}
+			std::copy(data(), data() + length, destination);
+			drop(length);
+		}
 
 		/**
 		 * @brief isStable

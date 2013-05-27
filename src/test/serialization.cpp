@@ -8,6 +8,7 @@
 #include <szn/float.hpp>
 #include <szn/array.hpp>
 #include <szn/bool.hpp>
+#include <szn/pod.hpp>
 #include <szn/unique_ptr.hpp>
 
 
@@ -421,5 +422,21 @@ namespace szn
 
 		BOOST_REQUIRE(p);
 		BOOST_CHECK(*p == 123);
+	}
+
+	BOOST_AUTO_TEST_CASE(Serialization_POD)
+	{
+		const long testValue = 1223456;
+		std::vector<char> generated;
+		{
+			auto sink = szn::makeContainerSink(generated);
+			szn::serialize(sink, testValue, szn::POD());
+		}
+
+		auto source = szn::makeRangeSource(generated);
+		long value = ~testValue;
+		szn::deserialize(source, value, szn::POD());
+
+		BOOST_CHECK(testValue == value);
 	}
 }

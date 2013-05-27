@@ -9,7 +9,6 @@ Things to do in no particular order
 * avoid Boost in the library?
 * improve Source concept
 * error handling, exceptions, constraints, backtracing
-* POD format
 * UTF-8/16/32 formats
 * formats for std::list, deque, map, set, queue, vector<bool> etc.
 * formats for std::unique_ptr, auto_ptr, shared_ptr, bitset
