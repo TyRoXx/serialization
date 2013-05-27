@@ -45,3 +45,4 @@ Things to do in no particular order
 * polymorphism
 * check enum / enum class support
 * check possible bit field support
+* investigate sign extension problems to find safe solutions

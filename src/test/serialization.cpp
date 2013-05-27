@@ -21,11 +21,11 @@ namespace szn
 	{
 		SZN_BEGIN(TestStruct)
 			SZN_FIELD( le32,          int,                   LE32)
-			SZN_FIELD( le16,          int,                   LE16)
+			SZN_FIELD( le16,     unsigned,                   LE16)
 			SZN_FIELD(  le8,         char,                   LE8 )
 
 			SZN_FIELD( be32,          int,                   BE32)
-			SZN_FIELD( be16,          int,                   BE16)
+			SZN_FIELD( be16,     unsigned,                   BE16)
 			SZN_FIELD(  be8, std::uint8_t,                   BE8 )
 
 			SZN_FIELD(str16,  std::string,            Bytes<LE16>)
@@ -484,6 +484,11 @@ namespace szn
 		BOOST_CHECK(serializationRoundtrip<boost::int16_t>(-50, szn::LE16()));
 		BOOST_CHECK(serializationRoundtrip<boost::int32_t>(-50, szn::LE32()));
 		BOOST_CHECK(serializationRoundtrip<boost::int64_t>(-50, szn::LE64()));
+
+		BOOST_CHECK(serializationRoundtrip(-50, szn::LE8()));
+		BOOST_CHECK(serializationRoundtrip(-50, szn::LE16()));
+		BOOST_CHECK(serializationRoundtrip(-50, szn::LE32()));
+		BOOST_CHECK(serializationRoundtrip(-50, szn::LE64()));
 	}
 
 	BOOST_AUTO_TEST_CASE(Serialization_BigEndian)
@@ -492,6 +497,11 @@ namespace szn
 		BOOST_CHECK(serializationRoundtrip<boost::int16_t>(-50, szn::BE16()));
 		BOOST_CHECK(serializationRoundtrip<boost::int32_t>(-50, szn::BE32()));
 		BOOST_CHECK(serializationRoundtrip<boost::int64_t>(-50, szn::BE64()));
+
+		BOOST_CHECK(serializationRoundtrip(-50, szn::BE8()));
+		BOOST_CHECK(serializationRoundtrip(-50, szn::BE16()));
+		BOOST_CHECK(serializationRoundtrip(-50, szn::BE32()));
+		BOOST_CHECK(serializationRoundtrip(-50, szn::BE64()));
 	}
 
 	BOOST_AUTO_TEST_CASE(Serialization_enum)
@@ -500,23 +510,23 @@ namespace szn
 		{
 			Zero = 0,
 			NonZero = 12,
-			Negative = -50
+			Ones = 0xff
 		};
 
 #define SZNTEST_ENUM_VALUES(endianness, bitsize) \
 		BOOST_CHECK(serializationRoundtrip(Zero, szn:: BOOST_PP_CAT(endianness, bitsize) ())); \
 		BOOST_CHECK(serializationRoundtrip(NonZero, szn:: BOOST_PP_CAT(endianness, bitsize) ())); \
-		BOOST_CHECK(serializationRoundtrip(Negative, szn:: BOOST_PP_CAT(endianness, bitsize) ()));
+		BOOST_CHECK(serializationRoundtrip(Ones, szn:: BOOST_PP_CAT(endianness, bitsize) ()));
 
-		SZNTEST_ENUM_VALUES(LE_, 8)
-		SZNTEST_ENUM_VALUES(LE_, 16)
-		SZNTEST_ENUM_VALUES(LE_, 32)
-		SZNTEST_ENUM_VALUES(LE_, 64)
+		SZNTEST_ENUM_VALUES(LE, 8)
+		SZNTEST_ENUM_VALUES(LE, 16)
+		SZNTEST_ENUM_VALUES(LE, 32)
+		SZNTEST_ENUM_VALUES(LE, 64)
 
-		SZNTEST_ENUM_VALUES(BE_, 8)
-		SZNTEST_ENUM_VALUES(BE_, 16)
-		SZNTEST_ENUM_VALUES(BE_, 32)
-		SZNTEST_ENUM_VALUES(BE_, 64)
+		SZNTEST_ENUM_VALUES(BE, 8)
+		SZNTEST_ENUM_VALUES(BE, 16)
+		SZNTEST_ENUM_VALUES(BE, 32)
+		SZNTEST_ENUM_VALUES(BE, 64)
 #undef SZNTEST_ENUM_VALUES
 	}
 }

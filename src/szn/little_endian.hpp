@@ -2,54 +2,25 @@
 #define SERIALIZATION_LITTLE_ENDIAN_HPP_BDA05921_80B7_4DF0_BBC7_B73C484EC091
 
 
-#include <szn/util.hpp>
-#include <boost/integer.hpp>
+#include <szn/integer.hpp>
 
 
 namespace szn
 {
-	/// a format for little endian integers
-	template <std::size_t SizeInBytes>
-	struct LittleEndian
+	struct LittleEndianByteOrder SZN_FINAL
 	{
-		template <class Integer>
-		void serialize(Sink &sink, Integer value) const
+		static std::size_t getByteShift(std::size_t byteIndex,
+										std::size_t wordSize)
 		{
-//			BOOST_STATIC_ASSERT(sizeof(value) <= SizeInBytes);
-
-			for (std::size_t i = 0; i < SizeInBytes; ++i)
-			{
-				const unsigned char digit = static_cast<char>(value);
-				sink.write(reinterpret_cast<char const *>(&digit), 1);
-				value = static_cast<Integer>(value >> 8);
-			}
-		}
-
-		template <class Integer>
-		void deserialize(Source &source, Integer &value) const
-		{
-			typedef typename boost::uint_t<sizeof(value) * CHAR_BIT>::fast
-				ArithUInt;
-
-			ArithUInt result = 0;
-			for (std::size_t i = 0; i < SizeInBytes; ++i)
-			{
-				// TODO check out of range
-				// TODO prevent integer overflow
-				const unsigned char digit = source.get(i);
-				result |= static_cast<ArithUInt>(
-						   (static_cast<ArithUInt>(digit) & 0xff) << (i * 8)
-						  );
-			}
-			value = static_cast<Integer>(result);
-			source.drop(SizeInBytes);
+			(void)wordSize;
+			return byteIndex;
 		}
 	};
 
-	typedef LittleEndian<1> LE8;
-	typedef LittleEndian<2> LE16;
-	typedef LittleEndian<4> LE32;
-	typedef LittleEndian<8> LE64;
+	typedef Integer<1, LittleEndianByteOrder> LE8;
+	typedef Integer<2, LittleEndianByteOrder> LE16;
+	typedef Integer<4, LittleEndianByteOrder> LE32;
+	typedef Integer<8, LittleEndianByteOrder> LE64;
 }
 
 
