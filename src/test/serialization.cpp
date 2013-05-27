@@ -54,6 +54,45 @@ namespace szn
 			/*f32*/    0x00, 0x00, 0x00, 0x00,
 			/*f64*/    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 		};
+
+		struct Equal
+		{
+			template <class T>
+			bool operator ()(T const &left, T const &right) const
+			{
+				return left == right;
+			}
+
+			template <class T, std::size_t N>
+			bool operator ()(T const (&left)[N], T const (&right)[N]) const
+			{
+				return std::equal(&left[0], &left[N], &right[0]);
+			}
+
+			template <class T>
+			bool operator ()(std::unique_ptr<T> const &left,
+							 std::unique_ptr<T> const &right) const
+			{
+				return *left == *right;
+			}
+		};
+
+		template <class Value, class Format>
+		bool serializationRoundtrip(Value const &value,
+									Format const &format)
+		{
+			std::vector<char> generated;
+			{
+				auto sink = szn::makeContainerSink(generated);
+				szn::serialize(sink, value, format);
+			}
+
+			auto source = szn::makeRangeSource(generated);
+			Value readValue;
+			szn::deserialize(source, readValue, format);
+
+			return Equal()(value, readValue);
+		}
 	}
 
 	BOOST_AUTO_TEST_CASE(Serialization_Struct_serialize)
@@ -215,16 +254,16 @@ namespace szn
 
 	BOOST_AUTO_TEST_CASE(Serialization_Array_std_array)
 	{
-		std::vector<unsigned char> generated;
-		auto sink = szn::makeContainerSink(generated);
-
 		const std::array<std::uint16_t, 2> testArray =
 		{{
 			0x1122, 0x3344
 		}};
-
 		typedef szn::Array<2, szn::BE16> ArrayFormat;
 
+		BOOST_CHECK(serializationRoundtrip(testArray, ArrayFormat()));
+
+		std::vector<unsigned char> generated;
+		auto sink = szn::makeContainerSink(generated);
 		szn::serialize(sink, testArray, ArrayFormat());
 
 		BOOST_REQUIRE(generated.size() == 4);
@@ -232,28 +271,20 @@ namespace szn
 		BOOST_CHECK(generated[1] == 0x22);
 		BOOST_CHECK(generated[2] == 0x33);
 		BOOST_CHECK(generated[3] == 0x44);
-
-		std::array<std::uint16_t, 2> deserializedArray;
-		{
-			auto source = szn::makeRangeSource(generated);
-			szn::deserialize(source, deserializedArray, ArrayFormat());
-		}
-
-		BOOST_CHECK(testArray == deserializedArray);
 	}
 
 	BOOST_AUTO_TEST_CASE(Serialization_Array_C_array)
 	{
-		std::vector<unsigned char> generated;
-		auto sink = szn::makeContainerSink(generated);
-
 		const std::uint16_t testArray[2] =
 		{
 			0x1122, 0x3344
 		};
-
 		typedef szn::Array<2, szn::BE16> ArrayFormat;
 
+		BOOST_CHECK(serializationRoundtrip(testArray, ArrayFormat()));
+
+		std::vector<unsigned char> generated;
+		auto sink = szn::makeContainerSink(generated);
 		szn::serialize(sink, testArray, ArrayFormat());
 
 		BOOST_REQUIRE(generated.size() == 4);
@@ -261,17 +292,6 @@ namespace szn
 		BOOST_CHECK(generated[1] == 0x22);
 		BOOST_CHECK(generated[2] == 0x33);
 		BOOST_CHECK(generated[3] == 0x44);
-
-		std::uint16_t deserializedArray[2];
-		{
-			auto source = szn::makeRangeSource(generated);
-			szn::deserialize(source, deserializedArray, ArrayFormat());
-		}
-
-		using std::begin;
-		using std::end;
-		BOOST_CHECK(std::equal(begin(testArray), end(testArray),
-							   begin(deserializedArray)));
 	}
 
 	namespace
@@ -391,57 +411,19 @@ namespace szn
 
 	BOOST_AUTO_TEST_CASE(Serialization_Bool)
 	{
-		std::vector<signed char> generated;
-		{
-			auto sink = szn::makeContainerSink(generated);
-			szn::Bool().serialize(sink, true);
-			szn::Bool().serialize(sink, false);
-		}
-
-		bool first = false, second = false;
-		auto source = szn::makeRangeSource(generated);
-		szn::Bool().deserialize(source, first);
-		szn::Bool().deserialize(source, second);
-
-		BOOST_CHECK(first);
-		BOOST_CHECK(!second);
+		BOOST_CHECK(serializationRoundtrip(true, szn::Bool()));
+		BOOST_CHECK(serializationRoundtrip(false, szn::Bool()));
 	}
 
 	BOOST_AUTO_TEST_CASE(Serialization_UniquePtr)
 	{
-		std::vector<signed char> generated;
-		{
-			std::unique_ptr<long> p(new long(123));
-			auto sink = szn::makeContainerSink(generated);
-			szn::serialize(sink, p, szn::UniquePtr<szn::LE32>());
-		}
-
-		auto source = szn::makeRangeSource(generated);
-		std::unique_ptr<long> p;
-		szn::deserialize(source, p, szn::UniquePtr<szn::LE32>());
-
-		BOOST_REQUIRE(p);
-		BOOST_CHECK(*p == 123);
+		BOOST_CHECK(serializationRoundtrip(
+						std::unique_ptr<long>(new long(123)),
+						szn::UniquePtr<szn::LE32>()));
 	}
 
 	namespace
 	{
-		template <class Value, class Format>
-		bool serializationRoundtrip(Value const &value, Format const &format)
-		{
-			std::vector<char> generated;
-			{
-				auto sink = szn::makeContainerSink(generated);
-				szn::serialize(sink, value, format);
-			}
-
-			auto source = szn::makeRangeSource(generated);
-			Value readValue;
-			szn::deserialize(source, readValue, format);
-
-			return (value == readValue);
-		}
-
 		struct TestPOD
 		{
 			std::size_t field;
