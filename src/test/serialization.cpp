@@ -483,7 +483,10 @@ namespace szn
 		BOOST_CHECK(serializationRoundtrip<boost::int16_t>(-50, szn::LE16()));
 		BOOST_CHECK(serializationRoundtrip<boost::int32_t>(-50, szn::LE32()));
 		BOOST_CHECK(serializationRoundtrip<boost::int64_t>(-50, szn::LE64()));
+	}
 
+	BOOST_AUTO_TEST_CASE(Serialization_BigEndian)
+	{
 		BOOST_CHECK(serializationRoundtrip<boost::int8_t>(-50, szn::BE8()));
 		BOOST_CHECK(serializationRoundtrip<boost::int16_t>(-50, szn::BE16()));
 		BOOST_CHECK(serializationRoundtrip<boost::int32_t>(-50, szn::BE32()));
