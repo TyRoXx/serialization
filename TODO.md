@@ -46,5 +46,4 @@ Things to do in no particular order
 * ignore trailing comma in v2 field sequence
 * polymorphism
 * check enum / enum class support
-* support bool
 * check possible bit field support

@@ -7,6 +7,7 @@
 #include <szn/vector.hpp>
 #include <szn/float.hpp>
 #include <szn/array.hpp>
+#include <szn/bool.hpp>
 #include <szn/unique_ptr.hpp>
 
 
@@ -385,6 +386,24 @@ namespace szn
 		BOOST_CHECK(tester.vec.size() == 1);
 		BOOST_CHECK(tester.vec.at(0) == 42);
 		BOOST_CHECK(rangePointee == std::string(tester.range.first, tester.range.second));
+	}
+
+	BOOST_AUTO_TEST_CASE(Serialization_Bool)
+	{
+		std::vector<signed char> generated;
+		{
+			auto sink = szn::makeContainerSink(generated);
+			szn::Bool().serialize(sink, true);
+			szn::Bool().serialize(sink, false);
+		}
+
+		bool first = false, second = false;
+		auto source = szn::makeRangeSource(generated);
+		szn::Bool().deserialize(source, first);
+		szn::Bool().deserialize(source, second);
+
+		BOOST_CHECK(first);
+		BOOST_CHECK(!second);
 	}
 
 	BOOST_AUTO_TEST_CASE(Serialization_UniquePtr)
