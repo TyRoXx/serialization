@@ -12,15 +12,15 @@ namespace szn
 		{
 			RXN_REFLECT(
 				(RXN_MEMBERS) (RXN_ITERATE),
-				(a) (int) (szn::BE16),
-				(b) (long) (szn::BE32),
-				(c) (std::string) (szn::Bytes<szn::BE8>)
+				(a, int) (szn::BE16),
+				(b, long) (szn::BE32),
+				(c, std::string) (szn::Bytes<szn::BE8>)
 			)
 		};
 
 #define TEST_STRUCT_2_MEMBERS \
-		(name) (std::string) (szn::Bytes<szn::BE32>), \
-		(id) (int) (szn::BE16)
+		(name, std::string) (szn::Bytes<szn::BE32>), \
+		(id, int) (szn::BE16)
 
 		struct TestStruct2
 		{
