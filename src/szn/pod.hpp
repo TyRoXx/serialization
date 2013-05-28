@@ -8,9 +8,10 @@
 
 namespace szn
 {
+	template <class Value>
 	struct POD SZN_FINAL
 	{
-		template <class Sink, class Value>
+		template <class Sink>
 		void serialize(Sink &sink, const Value &value) const
 		{
 			char const * const data = reinterpret_cast<char const *>(&value);
@@ -18,7 +19,7 @@ namespace szn
 			sink.write(data, sizeof(value));
 		}
 
-		template <class Source, class Value>
+		template <class Source>
 		void deserialize(Source &source, Value &value) const
 		{
 			char * const data = reinterpret_cast<char *>(&value);
