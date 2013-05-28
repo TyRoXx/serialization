@@ -16,7 +16,7 @@ Things to do in no particular order
   Boost.DynamicBitset, Boost.SmartPtr
 * a format like boost::optional
 * provide usage examples
-  * garbage collector
+  * improve garbage collection example
   * custom format
 * support pointers and recursion in data structures
 * std::istream/ostream in binary mode should be valid Source/Sink
