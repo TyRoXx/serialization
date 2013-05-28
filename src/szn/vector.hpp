@@ -13,6 +13,8 @@ namespace szn
 	template <class LengthFormat, class ElementFormat>
 	struct Vector
 	{
+		typedef std::vector<typename ElementFormat::default_type> default_type;
+
 		template <class Element>
 		void serialize(Sink &sink, const std::vector<Element> &v) const
 		{

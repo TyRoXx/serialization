@@ -15,6 +15,8 @@ namespace szn
 		static std::size_t const minSize = MinSize<PointeeFormat>::value;
 		static std::size_t const maxSize = MaxSize<PointeeFormat>::value;
 
+		typedef std::unique_ptr<typename PointeeFormat::default_type> default_type;
+
 		template <class Pointee, class Deleter>
 		void serialize(Sink &sink, const std::unique_ptr<Pointee, Deleter> &p) const
 		{

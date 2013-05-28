@@ -13,6 +13,8 @@ namespace szn
 	template <std::size_t Length, class ElementFormat>
 	struct Array
 	{
+		typedef std::array<typename ElementFormat::default_type, Length> default_type;
+
 		//std::array
 		template <class Element>
 		void serialize(Sink &sink, const std::array<Element, Length> &a) const

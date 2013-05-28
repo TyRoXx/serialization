@@ -14,6 +14,8 @@ namespace szn
 		static std::size_t const minSize = ByteSize;
 		static std::size_t const maxSize = ByteSize;
 
+		typedef typename boost::uint_t<ByteSize * 8>::least default_type;
+
 		template <class Sink, class Value>
 		void serialize(Sink &sink, Value value) const
 		{

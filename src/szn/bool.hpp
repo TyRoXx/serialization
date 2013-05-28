@@ -13,6 +13,8 @@ namespace szn
 		static std::size_t const minSize = MinSize<Format>::value;
 		static std::size_t const maxSize = MaxSize<Format>::value;
 
+		typedef bool default_type;
+
 		template <class Sink>
 		void serialize(Sink &sink, bool value) const
 		{

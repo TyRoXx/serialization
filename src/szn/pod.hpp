@@ -14,6 +14,8 @@ namespace szn
 		static std::size_t const minSize = sizeof(Value);
 		static std::size_t const maxSize = sizeof(Value);
 
+		typedef Value default_type;
+
 		template <class Sink>
 		void serialize(Sink &sink, const Value &value) const
 		{
