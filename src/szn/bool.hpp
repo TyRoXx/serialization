@@ -36,7 +36,8 @@ namespace szn
 
 		static value_type fromBool(bool value)
 		{
-			return (value ? 1 : 0);
+			//explicit cast to silence warning by GCC 4.3
+			return static_cast<value_type>(value ? 1 : 0);
 		}
 
 		static bool toBool(value_type value)

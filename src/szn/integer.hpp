@@ -44,7 +44,7 @@ namespace szn
 				unsigned char byte;
 				source.read(reinterpret_cast<char *>(&byte), 1);
 				std::size_t const byteShift = ByteOrder::getByteShift(b, ByteSize);
-				result |= static_cast<UValue>(static_cast<UValue>(byte) << (byteShift * 8));
+				result = static_cast<UValue>(result | static_cast<UValue>(static_cast<UValue>(byte) << (byteShift * 8)));
 			}
 
 			//If Value is signed and ByteSize is less than sizeof(Value)
