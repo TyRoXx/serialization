@@ -124,6 +124,15 @@ namespace szn
 
 	typedef RangeSource<boost::iterator_range<const char *>> MemorySource;
 
+
+	struct EmptySource : Source
+	{
+		virtual void load(std::size_t n) SZN_OVERRIDE;
+		virtual std::size_t size() SZN_OVERRIDE;
+		virtual char get(std::size_t index) SZN_OVERRIDE;
+		virtual void drop(std::size_t n) SZN_OVERRIDE;
+		virtual const char *data() SZN_OVERRIDE;
+	};
 }
 
 
