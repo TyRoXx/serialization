@@ -23,7 +23,6 @@ Things to do in no particular order
 * use C++11 noexcept
 * allow custom field properties
 * support stateful formats
-* format size estimation (possible at compile time?)
 * bit-wise serialization
 * conditionals for versioning etc. (compile time and run time)
 * default values for fields (like C++11 data member initializers)
@@ -45,3 +44,5 @@ Things to do in no particular order
 * polymorphism
 * check possible bit field support
 * investigate sign extension problems to find safe solutions
+* use 64-bit integer for sizes in bits or bytes instead of std::size_t
+  * boost::uintmax_t is an option
