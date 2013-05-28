@@ -8,6 +8,7 @@
 #include <boost/range/iterator_range.hpp>
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
+#include <boost/typeof/typeof.hpp>
 
 
 namespace szn
@@ -87,7 +88,7 @@ namespace szn
 		virtual char get(std::size_t index) SZN_OVERRIDE
 		{
 			assert(index < size());
-			return std::next(boost::begin(m_range), m_position)[index];
+			return boost::next(boost::begin(m_range), m_position)[index];
 		}
 
 		virtual void drop(std::size_t n) SZN_OVERRIDE
@@ -131,6 +132,8 @@ namespace szn
 		virtual const char *data() SZN_OVERRIDE;
 	};
 }
+
+BOOST_TYPEOF_REGISTER_TEMPLATE(::szn::RangeSource, 2)
 
 
 #endif

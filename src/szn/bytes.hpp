@@ -61,11 +61,11 @@ namespace szn
 				  std::pair<ByteRandomAccessIterator, ByteRandomAccessIterator> range) const
 		{
 			using szn::serialize;
-			const auto size = std::distance(range.first, range.second);
+			const typename std::iterator_traits<ByteRandomAccessIterator>::difference_type size = std::distance(range.first, range.second);
 			serialize(sink, size, LengthFormat());
-			const auto * const data = &*range.first;
+			const char * const data = reinterpret_cast<const char *>(&*range.first);
 			BOOST_STATIC_ASSERT(sizeof(*data) == 1);
-			sink.write(reinterpret_cast<const char *>(data), size);
+			sink.write(data, size);
 		}
 
 		template <class ByteRandomAccessIterator>
@@ -84,8 +84,8 @@ namespace szn
 			szn::deserialize(source, length, LengthFormat());
 			source.load(length);
 			range.first = reinterpret_cast<ByteRandomAccessIterator>(source.data());
-			range.second = std::next(range.first,
-									 static_cast<typename std::iterator_traits<ByteRandomAccessIterator>::difference_type>(length));
+			range.second = boost::next(range.first,
+									   static_cast<typename std::iterator_traits<ByteRandomAccessIterator>::difference_type>(length));
 		}
 
 	private:
@@ -101,7 +101,7 @@ namespace szn
 				assert(NULL == "TODO");
 				return;
 			}
-			const auto * const data = source.data();
+			const char * const data = source.data();
 			destination.assign(data, data + length);
 			source.drop(length);
 		}

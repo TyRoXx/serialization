@@ -7,6 +7,7 @@
 #include <vector>
 #include <string>
 #include <iterator>
+#include <boost/typeof/typeof.hpp>
 
 
 namespace szn
@@ -53,9 +54,9 @@ namespace szn
 
 	template <class Byte,
 			  class Allocator>
-	auto makeContainerSink(std::vector<Byte, Allocator> &destination,
-						   typename std::enable_if<sizeof(Byte) == 1, void>::type * = NULL)
-		-> IteratorSink<std::back_insert_iterator<std::vector<Byte, Allocator> > >
+	IteratorSink<std::back_insert_iterator<std::vector<Byte, Allocator> > >
+	makeContainerSink(std::vector<Byte, Allocator> &destination,
+	                  typename std::enable_if<sizeof(Byte) == 1, void>::type * = NULL)
 	{
 		return makeIteratorSink(std::back_inserter(destination));
 	}
@@ -63,13 +64,15 @@ namespace szn
 	template <class Byte,
 			  class Traits,
 			  class Allocator>
-	auto makeContainerSink(std::basic_string<Byte, Traits, Allocator> &destination,
-						   typename std::enable_if<sizeof(Byte) == 1, void>::type * = NULL)
-		-> IteratorSink<std::back_insert_iterator<std::basic_string<Byte, Traits, Allocator> > >
+	IteratorSink<std::back_insert_iterator<std::basic_string<Byte, Traits, Allocator> > >
+	makeContainerSink(std::basic_string<Byte, Traits, Allocator> &destination,
+	                  typename std::enable_if<sizeof(Byte) == 1, void>::type * = NULL)
 	{
 		return makeIteratorSink(std::back_inserter(destination));
 	}
 }
+
+BOOST_TYPEOF_REGISTER_TEMPLATE(::szn::IteratorSink, 1)
 
 
 #endif

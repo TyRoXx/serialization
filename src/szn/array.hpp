@@ -19,7 +19,7 @@ namespace szn
 		template <class Element>
 		void serialize(Sink &sink, const std::array<Element, Length> &a) const
 		{
-			BOOST_FOREACH (const auto &e, a)
+			BOOST_FOREACH (const Element &e, a)
 			{
 				szn::serialize(sink, e, ElementFormat());
 			}
@@ -38,7 +38,7 @@ namespace szn
 		template <class Element>
 		void serialize(Sink &sink, const Element (&a)[Length]) const
 		{
-			BOOST_FOREACH (const auto &e, a)
+			BOOST_FOREACH (const Element &e, a)
 			{
 				szn::serialize(sink, e, ElementFormat());
 			}

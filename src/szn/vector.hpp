@@ -20,7 +20,7 @@ namespace szn
 		{
 			szn::serialize(sink, v.size(), LengthFormat());
 
-			BOOST_FOREACH (const auto &e, v)
+			BOOST_FOREACH (const Element &e, v)
 			{
 				szn::serialize(sink, e, ElementFormat());
 			}

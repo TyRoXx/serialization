@@ -73,12 +73,14 @@ namespace szn
 				return std::equal(&left[0], &left[N], &right[0]);
 			}
 
+#if SZN_HAS_UNIQUE_PTR
 			template <class T>
 			bool operator ()(std::unique_ptr<T> const &left,
 							 std::unique_ptr<T> const &right) const
 			{
 				return *left == *right;
 			}
+#endif
 		};
 
 		template <class Value, class Format>
@@ -89,11 +91,11 @@ namespace szn
 
 			std::vector<char> generated;
 			{
-				auto sink = szn::makeContainerSink(generated);
+				BOOST_AUTO(sink, szn::makeContainerSink(generated));
 				szn::serialize(sink, value, format);
 			}
 
-			auto source = szn::makeRangeSource(generated);
+			BOOST_AUTO(source, szn::makeRangeSource(generated));
 			mutable_value readValue;
 			szn::deserialize(source, readValue, format);
 
@@ -104,7 +106,7 @@ namespace szn
 	BOOST_AUTO_TEST_CASE(Serialization_Struct_serialize)
 	{
 		std::vector<unsigned char> generated;
-		auto sink = szn::makeContainerSink(generated);
+		BOOST_AUTO(sink, szn::makeContainerSink(generated));
 
 		TestStruct b;
 		b.le32 = 32;
@@ -159,7 +161,7 @@ namespace szn
 	BOOST_AUTO_TEST_CASE(Serialization_EmptyStruct_serialize)
 	{
 		std::string generated;
-		auto sink = szn::makeContainerSink(generated);
+		BOOST_AUTO(sink, szn::makeContainerSink(generated));
 
 		EmptyStruct().serialize(sink);
 
@@ -180,7 +182,7 @@ namespace szn
 		bool testMakeContainerSink()
 		{
 			Container c;
-			auto sink = szn::makeContainerSink(c);
+			BOOST_AUTO(sink, szn::makeContainerSink(c));
 			sink.write("hello", 5);
 
 			return c.size() == 5 &&
@@ -243,7 +245,7 @@ namespace szn
 		typedef szn::ASCIIFloat<4> Format;
 
 		std::vector<char> generated;
-		auto sink = szn::makeContainerSink(generated);
+		BOOST_AUTO(sink, szn::makeContainerSink(generated));
 
 		Format().serialize(sink, 1.234f);
 
@@ -269,7 +271,7 @@ namespace szn
 		BOOST_CHECK(serializationRoundtrip(testArray, ArrayFormat()));
 
 		std::vector<unsigned char> generated;
-		auto sink = szn::makeContainerSink(generated);
+		BOOST_AUTO(sink, szn::makeContainerSink(generated));
 		szn::serialize(sink, testArray, ArrayFormat());
 
 		BOOST_REQUIRE(generated.size() == 4);
@@ -290,7 +292,7 @@ namespace szn
 		BOOST_CHECK(serializationRoundtrip(testArray, ArrayFormat()));
 
 		std::vector<unsigned char> generated;
-		auto sink = szn::makeContainerSink(generated);
+		BOOST_AUTO(sink, szn::makeContainerSink(generated));
 		szn::serialize(sink, testArray, ArrayFormat());
 
 		BOOST_REQUIRE(generated.size() == 4);
@@ -313,13 +315,13 @@ namespace szn
 		{
 			NoMethods no;
 			no.i = 123;
-			auto sink = szn::makeContainerSink(generated);
+			BOOST_AUTO(sink, szn::makeContainerSink(generated));
 			szn::Struct().serialize(sink, no);
 		}
 
 		NoMethods no;
 		{
-			auto source = szn::makeRangeSource(generated);
+			BOOST_AUTO(source, szn::makeRangeSource(generated));
 			szn::Struct().deserialize(source, no);
 		}
 
@@ -399,13 +401,13 @@ namespace szn
 			tester.vec.push_back(42);
 			tester.range = std::make_pair(rangePointee.data(),
 										  rangePointee.data() + rangePointee.size());
-			auto sink = szn::makeContainerSink(generated);
+			BOOST_AUTO(sink, szn::makeContainerSink(generated));
 			szn::Struct().serialize(sink, tester);
 		}
 
 		BytesTester<ConstStringRange> tester;
 		{
-			auto source = szn::makeRangeSource(generated);
+			BOOST_AUTO(source, szn::makeRangeSource(generated));
 			szn::Struct().deserialize(source, tester);
 		}
 
@@ -421,12 +423,14 @@ namespace szn
 		BOOST_CHECK(serializationRoundtrip(false, szn::Bool()));
 	}
 
+#if SZN_HAS_UNIQUE_PTR
 	BOOST_AUTO_TEST_CASE(Serialization_UniquePtr)
 	{
 		BOOST_CHECK(serializationRoundtrip(
 						std::unique_ptr<long>(new long(123)),
 						szn::UniquePtr<szn::LE32>()));
 	}
+#endif
 
 	namespace
 	{
@@ -605,6 +609,8 @@ namespace szn
 
 		BOOST_CHECK(testMinMaxSize(szn::Bytes<szn::LE32>(), 4, std::numeric_limits<std::size_t>::max()));
 
+#if SZN_HAS_UNIQUE_PTR
 		BOOST_CHECK(testExactSize(szn::UniquePtr<szn::LE64>(), 8));
+#endif
 	}
 }

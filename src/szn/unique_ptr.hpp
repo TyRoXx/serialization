@@ -9,6 +9,7 @@
 
 namespace szn
 {
+#if SZN_HAS_UNIQUE_PTR
 	template <class PointeeFormat>
 	struct UniquePtr
 	{
@@ -35,6 +36,7 @@ namespace szn
 			deserialize(source, *p, PointeeFormat());
 		}
 	};
+#endif
 }
 
 

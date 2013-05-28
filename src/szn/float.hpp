@@ -59,21 +59,21 @@ namespace szn
 
 
 		template <class Float>
-		auto serialize(Sink &sink, Float value) const
-			-> typename std::enable_if<FloatPredicate<Float>::value, void>::type
+		typename std::enable_if<FloatPredicate<Float>::value, void>::type
+		serialize(Sink &sink, Float value) const
 		{
 			//TODO optimize
 			std::ostringstream converter;
 			converter.precision(DecimalPrecision);
 			converter << value;
 
-			const auto str = converter.str();
+			const std::string str = converter.str();
 			sink.write(str.c_str(), str.size() + 1);
 		}
 
 		template <class Float>
-		auto deserialize(Sink &sink, Float &value) const
-			-> typename std::enable_if<FloatPredicate<Float>::value, void>::type
+		typename std::enable_if<FloatPredicate<Float>::value, void>::type
+		deserialize(Sink &sink, Float &value) const
 		{
 			assert(NULL == "TODO");
 		}
