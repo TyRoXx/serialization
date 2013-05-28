@@ -11,6 +11,9 @@ namespace szn
 	template <class Value>
 	struct POD SZN_FINAL
 	{
+		static std::size_t const minSize = sizeof(Value);
+		static std::size_t const maxSize = sizeof(Value);
+
 		template <class Sink>
 		void serialize(Sink &sink, const Value &value) const
 		{
