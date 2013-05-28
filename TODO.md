@@ -18,7 +18,7 @@ Things to do in no particular order
 * provide usage examples
   * garbage collector
   * custom format
-* allow recursion in data structures
+* support pointers and recursion in data structures
 * std::istream/ostream in binary mode should be valid Source/Sink
 * use C++11 noexcept
 * allow custom field properties
@@ -28,7 +28,7 @@ Things to do in no particular order
 * conditionals for versioning etc. (compile time and run time)
 * default values for fields (like C++11 data member initializers)
 * find shorter and more distinguishable namings for de/serialization
-  * maybe read/write?
+  * maybe read/write or load/save
 * write a manual and introduction
 * default value optimization (so that a field only needs 1 bit in the stream if
   it has the default value)
@@ -43,6 +43,6 @@ Things to do in no particular order
   * METHOD(name, result, (parameters...), (annotations)...)
 * ignore trailing comma in v2 field sequence
 * polymorphism
-* check enum / enum class support
+* check enum class support
 * check possible bit field support
 * investigate sign extension problems to find safe solutions
