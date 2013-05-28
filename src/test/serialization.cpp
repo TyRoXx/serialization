@@ -14,7 +14,7 @@
 #include <szn/pod.hpp>
 #include <szn/unique_ptr.hpp>
 #include <szn/endianness.hpp>
-
+#include <szn/format.hpp>
 
 namespace szn
 {
