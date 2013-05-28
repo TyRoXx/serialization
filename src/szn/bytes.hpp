@@ -98,7 +98,7 @@ namespace szn
 			source.load(length);
 			if (source.size() < length)
 			{
-				assert(nullptr == "TODO");
+				assert(NULL == "TODO");
 				return;
 			}
 			const auto * const data = source.data();

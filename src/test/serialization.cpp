@@ -121,8 +121,8 @@ namespace szn
 		serialize(sink, b, szn::ByMethod());
 
 		BOOST_REQUIRE_EQUAL(generated.size(), sizeof(structureData));
-		BOOST_CHECK(std::equal(std::begin(structureData),
-							   std::end(structureData),
+		BOOST_CHECK(std::equal(boost::begin(structureData),
+							   boost::end(structureData),
 							   generated.begin()));
 	}
 
@@ -181,6 +181,8 @@ namespace szn
 			auto sink = szn::makeContainerSink(c);
 			sink.write("hello", 5);
 
+			using boost::begin;
+			using boost::end;
 			return c.size() == 5 &&
 					std::equal(begin(c), end(c), "hello");
 		}
@@ -208,6 +210,8 @@ namespace szn
 		template <class Container>
 		bool equalBytes(const Container &left, const std::string &right)
 		{
+			using boost::begin;
+			using boost::end;
 			return (left.size() == right.size()) &&
 					std::equal(begin(left), end(left), begin(right));
 		}
@@ -507,7 +511,7 @@ namespace szn
 		BOOST_CHECK(serializationRoundtrip(-50, szn::BE64()));
 	}
 
-	BOOST_AUTO_TEST_CASE(Serialization_enum)
+	namespace
 	{
 		enum TestEnum
 		{
@@ -515,6 +519,10 @@ namespace szn
 			NonZero = 12,
 			Ones = 0xff
 		};
+	}
+
+	BOOST_AUTO_TEST_CASE(Serialization_enum)
+	{
 
 #define SZNTEST_ENUM_VALUES(endianness, bitsize) \
 		BOOST_CHECK(serializationRoundtrip(Zero, szn:: BOOST_PP_CAT(endianness, bitsize) ())); \
@@ -534,19 +542,22 @@ namespace szn
 #undef SZNTEST_ENUM_VALUES
 	}
 
-	BOOST_AUTO_TEST_CASE(Serialization_enum_class)
+	namespace
 	{
-		enum class TestEnum
+		enum class TestEnumClass
 		{
 			Zero = 0,
 			NonZero = 12,
 			Ones = 0xff
 		};
+	}
 
+	BOOST_AUTO_TEST_CASE(Serialization_enum_class)
+	{
 #define SZNTEST_ENUM_VALUES(endianness, bitsize) \
-		BOOST_CHECK(serializationRoundtrip(TestEnum::Zero, szn:: BOOST_PP_CAT(endianness, bitsize) ())); \
-		BOOST_CHECK(serializationRoundtrip(TestEnum::NonZero, szn:: BOOST_PP_CAT(endianness, bitsize) ())); \
-		BOOST_CHECK(serializationRoundtrip(TestEnum::Ones, szn:: BOOST_PP_CAT(endianness, bitsize) ()));
+		BOOST_CHECK(serializationRoundtrip(TestEnumClass::Zero, szn:: BOOST_PP_CAT(endianness, bitsize) ())); \
+		BOOST_CHECK(serializationRoundtrip(TestEnumClass::NonZero, szn:: BOOST_PP_CAT(endianness, bitsize) ())); \
+		BOOST_CHECK(serializationRoundtrip(TestEnumClass::Ones, szn:: BOOST_PP_CAT(endianness, bitsize) ()));
 
 		SZNTEST_ENUM_VALUES(LE, 8)
 		SZNTEST_ENUM_VALUES(LE, 16)

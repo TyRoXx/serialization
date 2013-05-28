@@ -28,6 +28,6 @@ namespace szn
 
 	const char *EmptySource::data()
 	{
-		return nullptr;
+		return NULL;
 	}
 }

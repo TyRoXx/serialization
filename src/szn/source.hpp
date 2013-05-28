@@ -6,6 +6,8 @@
 #include <algorithm>
 #include <stdexcept>
 #include <boost/range/iterator_range.hpp>
+#include <boost/range/begin.hpp>
+#include <boost/range/end.hpp>
 
 
 namespace szn
@@ -67,8 +69,8 @@ namespace szn
 		explicit RangeSource(Range const &range)
 			: m_position(0)
 		{
-			using std::begin;
-			using std::end;
+			using boost::begin;
+			using boost::end;
 			m_range = range_type(detail::castIterator<const_iterator>(begin(range)),
 								 detail::castIterator<const_iterator>(end(range)));
 		}
@@ -80,8 +82,8 @@ namespace szn
 
 		virtual std::size_t size() SZN_OVERRIDE
 		{
-			using std::begin;
-			using std::end;
+			using boost::begin;
+			using boost::end;
 			return static_cast<std::size_t>(
 						std::distance(begin(m_range), end(m_range)) - m_position);
 		}
@@ -89,7 +91,7 @@ namespace szn
 		virtual char get(std::size_t index) SZN_OVERRIDE
 		{
 			assert(index < size());
-			using std::begin;
+			using boost::begin;
 			return std::next(begin(m_range), m_position)[index];
 		}
 
@@ -101,7 +103,7 @@ namespace szn
 
 		virtual const char *data() SZN_OVERRIDE
 		{
-			using std::begin;
+			using boost::begin;
 			return reinterpret_cast<const char *>(&*(begin(m_range)) + m_position);
 		}
 

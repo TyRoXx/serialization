@@ -75,7 +75,7 @@ namespace szn
 		auto deserialize(Sink &sink, Float &value) const
 			-> typename std::enable_if<FloatPredicate<Float>::value, void>::type
 		{
-			assert(nullptr == "TODO");
+			assert(NULL == "TODO");
 		}
 	};
 }
