@@ -3,6 +3,7 @@
 #include <boost/cstdint.hpp>
 
 #include <szn/struct.hpp>
+#include <szn/struct2.hpp>
 #include <szn/little_endian.hpp>
 #include <szn/big_endian.hpp>
 #include <szn/bytes.hpp>
@@ -556,5 +557,28 @@ namespace szn
 		SZNTEST_ENUM_VALUES(BE, 64)
 
 #undef SZNTEST_ENUM_VALUES
+	}
+
+	namespace
+	{
+		template <class Format>
+		bool testExactSize(Format const &, std::size_t expectedSize)
+		{
+			std::size_t const min = szn::MinSize<Format>::value;
+			//TODO max
+			return (min == expectedSize);
+		}
+	}
+	BOOST_AUTO_TEST_CASE(Serialization_min_size)
+	{
+		BOOST_CHECK(testExactSize(szn::BE8(), 1));
+		BOOST_CHECK(testExactSize(szn::BE16(), 2));
+		BOOST_CHECK(testExactSize(szn::BE32(), 4));
+		BOOST_CHECK(testExactSize(szn::BE64(), 8));
+
+		BOOST_CHECK(testExactSize(szn::LE8(), 1));
+		BOOST_CHECK(testExactSize(szn::LE16(), 2));
+		BOOST_CHECK(testExactSize(szn::LE32(), 4));
+		BOOST_CHECK(testExactSize(szn::LE64(), 8));
 	}
 }

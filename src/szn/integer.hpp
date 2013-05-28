@@ -11,6 +11,9 @@ namespace szn
 	template <std::size_t ByteSize, class ByteOrder>
 	struct Integer SZN_FINAL
 	{
+		static std::size_t const minSize = ByteSize;
+		static std::size_t const maxSize = ByteSize;
+
 		template <class Sink, class Value>
 		void serialize(Sink &sink, Value value) const
 		{
