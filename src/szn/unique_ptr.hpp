@@ -3,6 +3,7 @@
 
 
 #include <szn/util.hpp>
+#include <szn/format.hpp>
 #include <memory>
 
 
@@ -11,6 +12,9 @@ namespace szn
 	template <class PointeeFormat>
 	struct UniquePtr
 	{
+		static std::size_t const minSize = MinSize<PointeeFormat>::value;
+		static std::size_t const maxSize = MaxSize<PointeeFormat>::value;
+
 		template <class Pointee, class Deleter>
 		void serialize(Sink &sink, const std::unique_ptr<Pointee, Deleter> &p) const
 		{

@@ -5,6 +5,7 @@
 #include <szn/sink.hpp>
 #include <szn/source.hpp>
 #include <szn/util.hpp>
+#include <szn/format.hpp>
 #include <boost/static_assert.hpp>
 #include <string>
 #include <vector>
@@ -21,6 +22,9 @@ namespace szn
 	template <class LengthFormat>
 	struct Bytes
 	{
+		static std::size_t const minSize = MinSize<LengthFormat>::value;
+		static std::size_t const maxSize = ~static_cast<std::size_t>(0);
+
 		//std::string
 		void serialize(Sink &sink, const std::string &str) const
 		{

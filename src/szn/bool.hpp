@@ -10,6 +10,9 @@ namespace szn
 	template <class Format, class ValuePolicy>
 	struct BasicBool
 	{
+		static std::size_t const minSize = MinSize<Format>::value;
+		static std::size_t const maxSize = MaxSize<Format>::value;
+
 		template <class Sink>
 		void serialize(Sink &sink, bool value) const
 		{
