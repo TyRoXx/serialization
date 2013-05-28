@@ -527,6 +527,34 @@ namespace szn
 		SZNTEST_ENUM_VALUES(BE, 16)
 		SZNTEST_ENUM_VALUES(BE, 32)
 		SZNTEST_ENUM_VALUES(BE, 64)
+
+#undef SZNTEST_ENUM_VALUES
+	}
+
+	BOOST_AUTO_TEST_CASE(Serialization_enum_class)
+	{
+		enum class TestEnum
+		{
+			Zero = 0,
+			NonZero = 12,
+			Ones = 0xff
+		};
+
+#define SZNTEST_ENUM_VALUES(endianness, bitsize) \
+		BOOST_CHECK(serializationRoundtrip(TestEnum::Zero, szn:: BOOST_PP_CAT(endianness, bitsize) ())); \
+		BOOST_CHECK(serializationRoundtrip(TestEnum::NonZero, szn:: BOOST_PP_CAT(endianness, bitsize) ())); \
+		BOOST_CHECK(serializationRoundtrip(TestEnum::Ones, szn:: BOOST_PP_CAT(endianness, bitsize) ()));
+
+		SZNTEST_ENUM_VALUES(LE, 8)
+		SZNTEST_ENUM_VALUES(LE, 16)
+		SZNTEST_ENUM_VALUES(LE, 32)
+		SZNTEST_ENUM_VALUES(LE, 64)
+
+		SZNTEST_ENUM_VALUES(BE, 8)
+		SZNTEST_ENUM_VALUES(BE, 16)
+		SZNTEST_ENUM_VALUES(BE, 32)
+		SZNTEST_ENUM_VALUES(BE, 64)
+
 #undef SZNTEST_ENUM_VALUES
 	}
 }

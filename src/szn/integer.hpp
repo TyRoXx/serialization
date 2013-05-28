@@ -14,10 +14,15 @@ namespace szn
 		template <class Sink, class Value>
 		void serialize(Sink &sink, Value value) const
 		{
+			//Value could be an enum class which is not implicitly convertible
+			//to any integer. We have to do the conversion explicitly.
+			typedef typename boost::uint_t<sizeof(value) * 8>::least ArithUValue;
+			ArithUValue const arithValue = static_cast<ArithUValue>(value);
+
 			for (std::size_t b = 0; b < ByteSize; ++b)
 			{
 				std::size_t const byteShift = ByteOrder::getByteShift(b, ByteSize);
-				char const byte = static_cast<unsigned char>(value >> (byteShift * 8));
+				char const byte = static_cast<unsigned char>(arithValue >> (byteShift * 8));
 				sink.write(&byte, 1);
 			}
 		}

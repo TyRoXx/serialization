@@ -43,6 +43,5 @@ Things to do in no particular order
   * METHOD(name, result, (parameters...), (annotations)...)
 * ignore trailing comma in v2 field sequence
 * polymorphism
-* check enum class support
 * check possible bit field support
 * investigate sign extension problems to find safe solutions
