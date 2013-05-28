@@ -565,10 +565,11 @@ namespace szn
 		bool testExactSize(Format const &, std::size_t expectedSize)
 		{
 			std::size_t const min = szn::MinSize<Format>::value;
-			//TODO max
-			return (min == expectedSize);
+			std::size_t const max = szn::MaxSize<Format>::value;
+			return (min == max) && (min == expectedSize);
 		}
 	}
+
 	BOOST_AUTO_TEST_CASE(Serialization_min_size)
 	{
 		BOOST_CHECK(testExactSize(szn::BE8(), 1));

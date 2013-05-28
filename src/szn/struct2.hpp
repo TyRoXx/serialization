@@ -19,6 +19,18 @@ namespace szn
 		: std::integral_constant<std::size_t, Format::minSize>
 	{
 	};
+
+
+	template <class Format, class SFINAE = void>
+	struct MaxSize : std::integral_constant<std::size_t, ~static_cast<std::size_t>(0)>
+	{
+	};
+
+	template <class Format>
+	struct MaxSize<Format, typename std::enable_if<std::is_scalar<decltype(Format::maxSize)>::value, void>::type>
+		: std::integral_constant<std::size_t, Format::maxSize>
+	{
+	};
 }
 
 
