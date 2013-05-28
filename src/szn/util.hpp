@@ -13,23 +13,27 @@
 #	endif
 //	GCC 4.6 introduced noexcept
 #	define SZN_NOEXCEPT noexcept
+#	define SZN_HAS_ENUM_CLASS 1
 
 #elif defined(__clang__)
 //	Clang has supported override, final and noexcept since 3.0
 #	define SZN_FINAL final
 #	define SZN_OVERRIDE override
 #	define SZN_NOEXCEPT noexcept
+#	define SZN_HAS_ENUM_CLASS 1
 
 #elif defined(_MSC_VER)
 //	VC++ 2010 has override
 #	define SZN_FINAL
 #	define SZN_OVERRIDE override
 #	define SZN_NOEXCEPT
+#	define SZN_HAS_ENUM_CLASS 0
 
 #else
 #	define SZN_FINAL
 #	define SZN_OVERRIDE
 #	define SZN_NOEXCEPT
+#	define SZN_HAS_ENUM_CLASS 0
 #endif
 
 

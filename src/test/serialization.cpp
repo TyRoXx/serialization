@@ -27,7 +27,7 @@ namespace szn
 
 			SZN_FIELD( be32,          int,                   BE32)
 			SZN_FIELD( be16,     unsigned,                   BE16)
-			SZN_FIELD(  be8, std::uint8_t,                   BE8 )
+			SZN_FIELD(  be8, boost::uint8_t,                 BE8 )
 
 			SZN_FIELD(str16,  std::string,            Bytes<LE16>)
 			SZN_FIELD( str8,  std::string,            Bytes<LE8 >)
@@ -85,6 +85,8 @@ namespace szn
 		bool serializationRoundtrip(Value const &value,
 									Format const &format)
 		{
+			typedef typename boost::remove_const<Value>::type mutable_value;
+
 			std::vector<char> generated;
 			{
 				auto sink = szn::makeContainerSink(generated);
@@ -92,7 +94,7 @@ namespace szn
 			}
 
 			auto source = szn::makeRangeSource(generated);
-			Value readValue;
+			mutable_value readValue;
 			szn::deserialize(source, readValue, format);
 
 			return Equal()(value, readValue);
@@ -258,7 +260,7 @@ namespace szn
 
 	BOOST_AUTO_TEST_CASE(Serialization_Array_std_array)
 	{
-		const std::array<std::uint16_t, 2> testArray =
+		const std::array<boost::uint16_t, 2> testArray =
 		{{
 			0x1122, 0x3344
 		}};
@@ -279,7 +281,7 @@ namespace szn
 
 	BOOST_AUTO_TEST_CASE(Serialization_Array_C_array)
 	{
-		const std::uint16_t testArray[2] =
+		const boost::uint16_t testArray[2] =
 		{
 			0x1122, 0x3344
 		};
@@ -301,7 +303,7 @@ namespace szn
 	namespace
 	{
 		SZN_BEGIN2(NoMethods)
-			SZN_FIELD(i, std::uint32_t, szn::LE32)
+			SZN_FIELD(i, boost::uint32_t, szn::LE32)
 		SZN_END()
 	}
 
@@ -538,6 +540,7 @@ namespace szn
 #undef SZNTEST_ENUM_VALUES
 	}
 
+#if SZN_HAS_ENUM_CLASS
 	namespace
 	{
 		enum class TestEnumClass
@@ -567,6 +570,7 @@ namespace szn
 
 #undef SZNTEST_ENUM_VALUES
 	}
+#endif
 
 	namespace
 	{

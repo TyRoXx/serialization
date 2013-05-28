@@ -38,17 +38,33 @@ if(CMAKE_COMPILER_IS_GNUCXX)
 	list(APPEND CMAKE_CXX_FLAGS ${flags})
 endif()
 
-if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 	message(STATUS "Using Clang")
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -pedantic")
 endif()
 
+if(MSVC)
+	#disable warnings about deprecation
+	set(flags "/wd4996")
+
+	#enable concurrency
+	set(flags "${flags} /MP")
+
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${flags}")
+endif()
+
 option(SZN_BOOST_DYNAMIC "change if linker complains about Boost" ON)
-if(SZN_BOOST_DYNAMIC)
+if(SZN_BOOST_DYNAMIC AND NOT MSVC)
 	add_definitions("-DBOOST_TEST_DYN_LINK")
 endif()
 
-find_package(Boost REQUIRED system unit_test_framework)
+#have to set these for Visual C++
+set(Boost_USE_STATIC_LIBS        ON)
+set(Boost_USE_MULTITHREADED      ON)
+set(Boost_USE_STATIC_RUNTIME     OFF)
+set(BOOST_ALL_DYN_LINK           OFF)
+
+find_package(Boost COMPONENTS system unit_test_framework REQUIRED)
 if(NOT Boost_FOUND)
 	message(FATAL_ERROR "Did not find Boost (required)")
 endif()
