@@ -69,10 +69,8 @@ namespace szn
 		explicit RangeSource(Range const &range)
 			: m_position(0)
 		{
-			using boost::begin;
-			using boost::end;
-			m_range = range_type(detail::castIterator<const_iterator>(begin(range)),
-								 detail::castIterator<const_iterator>(end(range)));
+			m_range = range_type(detail::castIterator<const_iterator>(boost::begin(range)),
+								 detail::castIterator<const_iterator>(boost::end(range)));
 		}
 
 		virtual void load(std::size_t n) SZN_OVERRIDE
@@ -82,17 +80,14 @@ namespace szn
 
 		virtual std::size_t size() SZN_OVERRIDE
 		{
-			using boost::begin;
-			using boost::end;
 			return static_cast<std::size_t>(
-						std::distance(begin(m_range), end(m_range)) - m_position);
+						std::distance(boost::begin(m_range), boost::end(m_range)) - m_position);
 		}
 
 		virtual char get(std::size_t index) SZN_OVERRIDE
 		{
 			assert(index < size());
-			using boost::begin;
-			return std::next(begin(m_range), m_position)[index];
+			return std::next(boost::begin(m_range), m_position)[index];
 		}
 
 		virtual void drop(std::size_t n) SZN_OVERRIDE
@@ -103,8 +98,8 @@ namespace szn
 
 		virtual const char *data() SZN_OVERRIDE
 		{
-			using boost::begin;
-			return reinterpret_cast<const char *>(&*(begin(m_range)) + m_position);
+			return reinterpret_cast<const char *>(
+						&*(boost::begin(m_range)) + m_position);
 		}
 
 		virtual bool isStable() const SZN_OVERRIDE

@@ -181,10 +181,8 @@ namespace szn
 			auto sink = szn::makeContainerSink(c);
 			sink.write("hello", 5);
 
-			using boost::begin;
-			using boost::end;
 			return c.size() == 5 &&
-					std::equal(begin(c), end(c), "hello");
+					std::equal(boost::begin(c), boost::end(c), "hello");
 		}
 
 		struct TestAllocator : std::allocator<char>
@@ -210,10 +208,8 @@ namespace szn
 		template <class Container>
 		bool equalBytes(const Container &left, const std::string &right)
 		{
-			using boost::begin;
-			using boost::end;
 			return (left.size() == right.size()) &&
-					std::equal(begin(left), end(left), begin(right));
+					std::equal(boost::begin(left), boost::end(left), boost::begin(right));
 		}
 
 		namespace for_adl_tests
