@@ -13,7 +13,9 @@ namespace szn
 	};
 
 	template <class Format>
-	struct MinSize<Format, typename std::enable_if<std::is_scalar<decltype(Format::minSize)>::value, void>::type>
+	struct MinSize<Format,
+	               typename std::enable_if<std::is_integral<typename std::remove_reference<
+				       decltype(Format::minSize)>::type>::value, void>::type>
 		: std::integral_constant<std::size_t, Format::minSize>
 	{
 	};
@@ -28,7 +30,9 @@ namespace szn
 	};
 
 	template <class Format>
-	struct MaxSize<Format, typename std::enable_if<std::is_scalar<decltype(Format::maxSize)>::value, void>::type>
+	struct MaxSize<Format,
+	               typename std::enable_if<std::is_integral<typename std::remove_reference<
+				       decltype(Format::maxSize)>::type>::value, void>::type>
 		: std::integral_constant<std::size_t, Format::maxSize>
 	{
 	};
