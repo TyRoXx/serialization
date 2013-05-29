@@ -44,7 +44,7 @@ namespace szn
 	struct MinSize<Format, false> : std::integral_constant<std::size_t, 0>
 	{
 	};
-	
+
 
 	SZN_DEFINE_HAS_MEMBER_TRAIT(has_max_size, maxSize, std::size_t)
 
