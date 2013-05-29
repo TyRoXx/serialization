@@ -3,37 +3,61 @@
 
 
 #include <type_traits>
+#include <boost/utility/declval.hpp>
 
 
 namespace szn
 {
-	template <class Format, class SFINAE = void>
-	struct MinSize : std::integral_constant<std::size_t, 0>
+#define SZN_DEFINE_HAS_MEMBER_TRAIT(trait_name, member_name, member_type) \
+	template <class T> \
+	struct trait_name \
+	{ \
+	private: \
+	 \
+		typedef char yes[1]; \
+		typedef char no[2]; \
+		 \
+		template <class U> \
+		static yes &has_member(decltype(U::member_name) *); \
+		 \
+		template <class U> \
+		static no &has_member(void const *); \
+		 \
+	public: \
+		enum \
+		{ \
+			value = (sizeof(has_member<T>(boost::declval<member_type *>())) == sizeof(yes)) \
+		}; \
+	};
+
+	SZN_DEFINE_HAS_MEMBER_TRAIT(has_min_size, minSize, std::size_t)
+
+	template <class Format, bool HasMinSize = has_min_size<Format>::value>
+	struct MinSize;
+
+	template <class Format>
+	struct MinSize<Format, true> : std::integral_constant<std::size_t, Format::minSize>
 	{
 	};
 
 	template <class Format>
-	struct MinSize<Format,
-	               typename std::enable_if<std::is_integral<typename std::remove_reference<
-				       decltype(Format::minSize)>::type>::value, void>::type>
-		: std::integral_constant<std::size_t, Format::minSize>
+	struct MinSize<Format, false> : std::integral_constant<std::size_t, 0>
 	{
 	};
+	
 
+	SZN_DEFINE_HAS_MEMBER_TRAIT(has_max_size, maxSize, std::size_t)
 
-	template <class Format, class SFINAE = void>
-	struct MaxSize : std::integral_constant<std::size_t,
-			~static_cast<std::size_t>(0)>
-	//      not using numeric_limits here because max() is not
-	//      a compile-time constant for every compiler
+	template <class Format, bool HasMaxSize = has_max_size<Format>::value>
+	struct MaxSize;
+
+	template <class Format>
+	struct MaxSize<Format, true> : std::integral_constant<std::size_t, Format::maxSize>
 	{
 	};
 
 	template <class Format>
-	struct MaxSize<Format,
-	               typename std::enable_if<std::is_integral<typename std::remove_reference<
-				       decltype(Format::maxSize)>::type>::value, void>::type>
-		: std::integral_constant<std::size_t, Format::maxSize>
+	struct MaxSize<Format, false> : std::integral_constant<std::size_t, 0>
 	{
 	};
 }
