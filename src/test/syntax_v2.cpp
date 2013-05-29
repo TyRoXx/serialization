@@ -97,7 +97,7 @@ namespace szn
 		};
 
 #define SZNTEST_MARK_CHILD(name, type, annotations) \
-	RXN_REMOVE_PAREN(BOOST_PP_SEQ_ELEM(0, annotations))().serialize(NULL, this->name);
+	RXN_REMOVE_PAREN(BOOST_PP_SEQ_ELEM(0, annotations))().handle_value(this->name);
 
 #define SZNTEST_GC(fields) \
 		private: virtual void mark_children() SZN_OVERRIDE { \
@@ -106,16 +106,15 @@ namespace szn
 
 		struct NonManaged SZN_FINAL
 		{
-			template <class Unused, class Value>
-			void serialize(Unused, Value const &) const
+			template <class Value>
+			void handle_value(Value const &) const
 			{
 			}
 		};
 
 		struct Managed SZN_FINAL
 		{
-			template <class Unused>
-			void serialize(Unused, Object *object) const
+			inline void handle_value(Object *object) const
 			{
 				if (object)
 				{
@@ -124,9 +123,11 @@ namespace szn
 			}
 		};
 
+#define SZNTEST_OBJECT(...) RXN_REFLECT((RXN_MEMBERS) (SZNTEST_GC), __VA_ARGS__)
+
 		struct Pair : Object
 		{
-			RXN_REFLECT((RXN_MEMBERS) (SZNTEST_GC),
+			SZNTEST_OBJECT(
 						(first, Object *) (Managed),
 						(second, Object *) (Managed)
 						)
