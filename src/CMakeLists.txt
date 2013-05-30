@@ -32,7 +32,12 @@ if(CMAKE_COMPILER_IS_GNUCXX)
 		#they seem to be disabled by default on MinGW
 		set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,--nxcompat -Wl,--dynamicbase")
 	else()
-		set(flags "${flags} -std=c++0x")
+		execute_process(COMMAND ${CMAKE_C_COMPILER} -dumpversion
+                		OUTPUT_VARIABLE GCC_VERSION)
+		if (GCC_VERSION VERSION_GREATER 4.3 OR GCC_VERSION VERSION_EQUAL 4.3)
+			set(flags "${flags} -std=c++0x")
+        		message(STATUS "C++0x enabled")
+		endif()
 	endif()
 
 	list(APPEND CMAKE_CXX_FLAGS ${flags})
