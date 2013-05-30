@@ -4,18 +4,24 @@ Serialization library for C++
 How to use
 ----------
 
-You can find samples of usage in src/examples/.
+You can find samples of usage in src/examples/ (more to do).
 
 
-Requirements
+Supported compilers
+-------------------
+
+* GCC >= 4.3
+* Visual C++ 2010
+
+GCC 4.2 and Clang have problems with Boost.Preprocessor.  I will try to fix that.
+
+
+Dependencies
 ------------
 
-Currently the code works with GCC 4.4+ and Clang 3.0+.  Visual C++ 2010 will be
-supported.  We will try to support older versions of GCC, Clang and VC++ as
-well.
-
-Some utilities and the unit test framework from Boost are required.  Any Boost
-release since 1.40 should work.  We recommend more recent releases though.
+Some header-only libraries and the unit test framework from Boost are required.
+Any Boost release since 1.48 should work.
+We recommend more recent releases though.
 
 
 Things to do

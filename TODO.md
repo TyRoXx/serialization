@@ -20,7 +20,6 @@ Things to do in no particular order
   * custom format
 * support pointers and recursion in data structures
 * std::istream/ostream in binary mode should be valid Source/Sink
-* use C++11 noexcept
 * allow custom field properties
 * support stateful formats
 * bit-wise serialization
