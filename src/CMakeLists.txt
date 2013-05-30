@@ -50,7 +50,7 @@ if(CMAKE_COMPILER_IS_GNUCXX)
 		endif()
 
 		if(SZN_NO_CPP11)
-			set(flags "${flags} -std=c++03")
+			set(flags "${flags} -std=c++98")
 		else()
 			set(flags "${flags} -std=c++0x")
 			message(STATUS "C++0x enabled")
