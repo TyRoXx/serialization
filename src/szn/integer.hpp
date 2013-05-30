@@ -5,6 +5,7 @@
 #include <szn/util.hpp>
 #include <boost/integer.hpp>
 #include <boost/type_traits/make_unsigned.hpp>
+#include <boost/type_traits/is_enum.hpp>
 
 
 namespace szn
@@ -54,7 +55,9 @@ namespace szn
 			//the intermediate result. This can be achieved with a cast to
 			//a signed integer type of the same size, followed by a widening
 			//and sign-entending cast to the Value type.
-			if (std::is_signed<Value>::value) //boost::is_signed seems to be different with enums
+			//Enums can be signed, but it makes no sense to sign-extend them.
+			if (boost::is_signed<Value>::value &&
+				!boost::is_enum<Value>::value)
 			{
 				typedef typename boost::int_t<ByteSize * 8>::least SignExtender;
 				SignExtender const signedResult = static_cast<SignExtender>(result);
