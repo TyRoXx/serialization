@@ -200,11 +200,11 @@ namespace szn
 
 	BOOST_AUTO_TEST_CASE(Serialization_makeContainerSink)
 	{
-		BOOST_CHECK(testMakeContainerSink<std::vector<char>>());
-		BOOST_CHECK(testMakeContainerSink<std::vector<unsigned char>>());
-		BOOST_CHECK(testMakeContainerSink<std::vector<signed char>>());
+		BOOST_CHECK(testMakeContainerSink<std::vector<char> >());
+		BOOST_CHECK(testMakeContainerSink<std::vector<unsigned char> >());
+		BOOST_CHECK(testMakeContainerSink<std::vector<signed char> >());
 		BOOST_CHECK(testMakeContainerSink<std::string>());
-		BOOST_CHECK((testMakeContainerSink<std::basic_string<char, TestCharTraits, TestAllocator>>()));
+		BOOST_CHECK((testMakeContainerSink<std::basic_string<char, TestCharTraits, TestAllocator> >()));
 	}
 
 	namespace
@@ -262,7 +262,7 @@ namespace szn
 
 	BOOST_AUTO_TEST_CASE(Serialization_Array_std_array)
 	{
-		const std::array<boost::uint16_t, 2> testArray =
+		const boost::array<boost::uint16_t, 2> testArray =
 		{{
 			0x1122, 0x3344
 		}};
@@ -475,8 +475,8 @@ namespace szn
 #undef SZNTEST_POD
 
 		{
-			std::array<int, 3> array = {{1, 2, 3}};
-			BOOST_CHECK(serializationRoundtrip(array, szn::POD<decltype(array)>()));
+			boost::array<int, 3> array = {{1, 2, 3}};
+			BOOST_CHECK(serializationRoundtrip(array, szn::POD<boost::array<int, 3> >()));
 		}
 
 		{

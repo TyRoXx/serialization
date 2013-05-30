@@ -3,7 +3,11 @@
 
 
 #include <szn/util.hpp>
-#include <array>
+#include <boost/array.hpp>
+
+#ifndef SZN_NO_CPP11
+#	include <array>
+#endif
 
 
 namespace szn
@@ -13,9 +17,27 @@ namespace szn
 	template <std::size_t Length, class ElementFormat>
 	struct Array
 	{
-		typedef std::array<typename ElementFormat::default_type, Length> default_type;
+		typedef boost::array<typename ElementFormat::default_type, Length> default_type;
 
-		//std::array
+		template <class Element>
+		void serialize(Sink &sink, const boost::array<Element, Length> &a) const
+		{
+			BOOST_FOREACH (const Element &e, a)
+			{
+				szn::serialize(sink, e, ElementFormat());
+			}
+		}
+
+		template <class Element>
+		void deserialize(Source &source, boost::array<Element, Length> &a) const
+		{
+			for (std::size_t i = 0; i < Length; ++i)
+			{
+				szn::deserialize(source, a[i], ElementFormat());
+			}
+		}
+
+#ifndef SZN_NO_CPP11
 		template <class Element>
 		void serialize(Sink &sink, const std::array<Element, Length> &a) const
 		{
@@ -33,6 +55,7 @@ namespace szn
 				szn::deserialize(source, a[i], ElementFormat());
 			}
 		}
+#endif
 
 		//C style array
 		template <class Element>

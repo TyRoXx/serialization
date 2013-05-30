@@ -2,6 +2,11 @@ cmake_minimum_required(VERSION 2.8)
 
 project(serialization)
 
+option(SZN_NO_CPP11 "Disable use of C++11 if available for the compiler" OFF)
+if(SZN_NO_CPP11)
+	add_definitions("-DSZN_NO_CPP11")
+endif()
+
 if(CMAKE_COMPILER_IS_GNUCXX)
 	message(STATUS "Using GCC")
 
@@ -26,17 +31,29 @@ if(CMAKE_COMPILER_IS_GNUCXX)
 
 	if(MINGW)
 		#otherwise MinGW complains about undeclared "swprintf"
-		set(flags "${flags} -std=gnu++11")
+		if(SZN_NO_CPP11)
+			set(flags "${flags} -std=gnu++03")
+		else()
+			set(flags "${flags} -std=gnu++11")
+		endif()
 
 		#enable security features (DEP, ASLR)
 		#they seem to be disabled by default on MinGW
 		set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,--nxcompat -Wl,--dynamicbase")
 	else()
-		execute_process(COMMAND ${CMAKE_C_COMPILER} -dumpversion
-                		OUTPUT_VARIABLE GCC_VERSION)
-		if (GCC_VERSION VERSION_GREATER 4.3 OR GCC_VERSION VERSION_EQUAL 4.3)
+		if(NOT SZN_NO_CPP11)
+			execute_process(COMMAND ${CMAKE_C_COMPILER} -dumpversion
+							OUTPUT_VARIABLE GCC_VERSION)
+			if(GCC_VERSION VERSION_LESS 4.3)
+				set(SZN_NO_CPP11 ON)
+			endif()
+		endif()
+
+		if(SZN_NO_CPP11)
+			set(flags "${flags} -std=c++03")
+		else()
 			set(flags "${flags} -std=c++0x")
-        		message(STATUS "C++0x enabled")
+			message(STATUS "C++0x enabled")
 		endif()
 	endif()
 
@@ -45,7 +62,11 @@ endif()
 
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 	message(STATUS "Using Clang")
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -pedantic -fmacro-backtrace-limit=0")
+	set(flags "-Wall -pedantic -fmacro-backtrace-limit=0")
+	if(SZN_CPP11)
+		set(flags "${flags} -std=c++11")
+	endif()
+	set(CMAKE_CXX_FLAGS ${flags})
 endif()
 
 if(MSVC)

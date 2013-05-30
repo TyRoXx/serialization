@@ -8,6 +8,7 @@
 #include <string>
 #include <iterator>
 #include <boost/typeof/typeof.hpp>
+#include <boost/move/move.hpp>
 
 
 namespace szn
@@ -30,8 +31,8 @@ namespace szn
 	struct IteratorSink : Sink
 	{
 		template <class T>
-		explicit IteratorSink(T &&begin)
-			: m_pos(std::forward<T>(begin))
+		explicit IteratorSink(BOOST_FWD_REF(T) begin)
+			: m_pos(boost::forward<T>(begin))
 		{
 		}
 
@@ -42,6 +43,8 @@ namespace szn
 
 	private:
 
+		BOOST_COPYABLE_AND_MOVABLE(IteratorSink)
+
 		OutputIterator m_pos;
 	};
 
@@ -49,14 +52,14 @@ namespace szn
 	template <class OutputIterator>
 	IteratorSink<OutputIterator> makeIteratorSink(OutputIterator begin)
 	{
-		return IteratorSink<OutputIterator>(std::move(begin));
+		return IteratorSink<OutputIterator>(boost::move(begin));
 	}
 
 	template <class Byte,
 			  class Allocator>
 	IteratorSink<std::back_insert_iterator<std::vector<Byte, Allocator> > >
 	makeContainerSink(std::vector<Byte, Allocator> &destination,
-	                  typename std::enable_if<sizeof(Byte) == 1, void>::type * = NULL)
+					  typename boost::enable_if_c<sizeof(Byte) == 1, void>::type * = NULL)
 	{
 		return makeIteratorSink(std::back_inserter(destination));
 	}
@@ -66,7 +69,7 @@ namespace szn
 			  class Allocator>
 	IteratorSink<std::back_insert_iterator<std::basic_string<Byte, Traits, Allocator> > >
 	makeContainerSink(std::basic_string<Byte, Traits, Allocator> &destination,
-	                  typename std::enable_if<sizeof(Byte) == 1, void>::type * = NULL)
+					  typename boost::enable_if_c<sizeof(Byte) == 1, void>::type * = NULL)
 	{
 		return makeIteratorSink(std::back_inserter(destination));
 	}

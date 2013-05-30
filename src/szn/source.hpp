@@ -57,8 +57,8 @@ namespace szn
 	}
 
 	template <class LValueRandomAccessByteRange,
-			  class PointsToLValue = typename std::enable_if<
-				  std::is_lvalue_reference<typename std::iterator_traits<typename LValueRandomAccessByteRange::const_iterator>::reference>::value, void>::type
+			  class PointsToLValue = typename boost::enable_if<
+				  boost::is_lvalue_reference<typename std::iterator_traits<typename LValueRandomAccessByteRange::const_iterator>::reference>, void>::type
 			  >
 	struct RangeSource : Source
 	{
@@ -120,7 +120,7 @@ namespace szn
 		return RangeSource<Range>(range);
 	}
 
-	typedef RangeSource<boost::iterator_range<const char *>> MemorySource;
+	typedef RangeSource<boost::iterator_range<const char *> > MemorySource;
 
 
 	struct EmptySource : Source

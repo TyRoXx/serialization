@@ -39,7 +39,7 @@ namespace szn
 			{
 				Element e;
 				szn::deserialize(source, e, ElementFormat());
-				v.push_back(std::move(e));
+				v.push_back(boost::move(e));
 			}
 		}
 	};

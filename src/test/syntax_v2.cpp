@@ -11,7 +11,7 @@ namespace szn
 	{
 		struct TestStruct
 		{
-			typedef std::vector<int, std::allocator<int>> VectorInt;
+			typedef std::vector<int, std::allocator<int> > VectorInt;
 			typedef szn::Vector<szn::BE8, szn::BE16> Vector8_16;
 
 			RXN_REFLECT(

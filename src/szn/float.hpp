@@ -4,6 +4,7 @@
 
 #include <szn/util.hpp>
 #include <boost/integer.hpp>
+#include <boost/type_traits/is_floating_point.hpp>
 
 
 namespace szn
@@ -55,11 +56,11 @@ namespace szn
 	struct ASCIIFloat
 	{
 		template <class Float>
-		struct FloatPredicate : std::is_floating_point<Float> {};
+		struct FloatPredicate : boost::is_floating_point<Float> {};
 
 
 		template <class Float>
-		typename std::enable_if<FloatPredicate<Float>::value, void>::type
+		typename boost::enable_if_c<FloatPredicate<Float>::value, void>::type
 		serialize(Sink &sink, Float value) const
 		{
 			//TODO optimize
@@ -72,7 +73,7 @@ namespace szn
 		}
 
 		template <class Float>
-		typename std::enable_if<FloatPredicate<Float>::value, void>::type
+		typename boost::enable_if_c<FloatPredicate<Float>::value, void>::type
 		deserialize(Sink &sink, Float &value) const
 		{
 			assert(NULL == "TODO");

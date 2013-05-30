@@ -4,6 +4,7 @@
 
 #include <szn/util.hpp>
 #include <boost/integer.hpp>
+#include <boost/type_traits/make_unsigned.hpp>
 
 
 namespace szn
@@ -36,7 +37,7 @@ namespace szn
 		void deserialize(Source &source, Value &value) const
 		{
 			//We do the calculations with unsigned integers to keep the code simple.
-			typedef typename std::make_unsigned<Value>::type UValue;
+			typedef typename boost::make_unsigned<Value>::type UValue;
 
 			UValue result = 0;
 			for (std::size_t b = 0; b < ByteSize; ++b)
@@ -53,7 +54,7 @@ namespace szn
 			//the intermediate result. This can be achieved with a cast to
 			//a signed integer type of the same size, followed by a widening
 			//and sign-entending cast to the Value type.
-			if (std::is_signed<Value>::value)
+			if (std::is_signed<Value>::value) //boost::is_signed seems to be different with enums
 			{
 				typedef typename boost::int_t<ByteSize * 8>::least SignExtender;
 				SignExtender const signedResult = static_cast<SignExtender>(result);

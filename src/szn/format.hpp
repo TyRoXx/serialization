@@ -36,12 +36,12 @@ namespace szn
 	struct MinSize;
 
 	template <class Format>
-	struct MinSize<Format, true> : std::integral_constant<std::size_t, Format::minSize>
+	struct MinSize<Format, true> : boost::integral_constant<std::size_t, Format::minSize>
 	{
 	};
 
 	template <class Format>
-	struct MinSize<Format, false> : std::integral_constant<std::size_t, 0>
+	struct MinSize<Format, false> : boost::integral_constant<std::size_t, 0>
 	{
 	};
 
@@ -52,12 +52,12 @@ namespace szn
 	struct MaxSize;
 
 	template <class Format>
-	struct MaxSize<Format, true> : std::integral_constant<std::size_t, Format::maxSize>
+	struct MaxSize<Format, true> : boost::integral_constant<std::size_t, Format::maxSize>
 	{
 	};
 
 	template <class Format>
-	struct MaxSize<Format, false> : std::integral_constant<std::size_t, 0>
+	struct MaxSize<Format, false> : boost::integral_constant<std::size_t, 0>
 	{
 	};
 }

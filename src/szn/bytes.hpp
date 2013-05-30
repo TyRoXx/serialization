@@ -41,14 +41,14 @@ namespace szn
 
 		//std::vector
 		template <class Byte, class Allocator>
-		typename std::enable_if<sizeof(Byte) == 1, void>::type
+		typename boost::enable_if_c<sizeof(Byte) == 1, void>::type
 		serialize(Sink &sink, const std::vector<Byte, Allocator> &v) const
 		{
 			return serialize(sink, std::make_pair(v.begin(), v.end()));
 		}
 
 		template <class Byte, class Allocator>
-		typename std::enable_if<sizeof(Byte) == 1, void>::type
+		typename boost::enable_if_c<sizeof(Byte) == 1, void>::type
 		deserialize(Source &source, std::vector<Byte, Allocator> &v) const
 		{
 			return deserializeContainer(source, v);
@@ -56,7 +56,7 @@ namespace szn
 
 		//std::pair<Iterator, Iterator>
 		template <class ByteRandomAccessIterator>
-		typename std::enable_if<sizeof(typename std::iterator_traits<ByteRandomAccessIterator>::value_type) == 1, void>::type
+		typename boost::enable_if_c<sizeof(typename std::iterator_traits<ByteRandomAccessIterator>::value_type) == 1, void>::type
 		serialize(Sink &sink,
 				  std::pair<ByteRandomAccessIterator, ByteRandomAccessIterator> range) const
 		{
@@ -69,8 +69,8 @@ namespace szn
 		}
 
 		template <class ByteRandomAccessIterator>
-		typename std::enable_if<(std::is_pointer<ByteRandomAccessIterator>::value) &&
-								(sizeof(typename std::iterator_traits<ByteRandomAccessIterator>::value_type) == 1), void>::type
+		typename boost::enable_if_c<(boost::is_pointer<ByteRandomAccessIterator>::value) &&
+									(sizeof(typename std::iterator_traits<ByteRandomAccessIterator>::value_type) == 1), void>::type
 		deserialize(Source &source,
 					std::pair<ByteRandomAccessIterator, ByteRandomAccessIterator> &range) const
 		{
