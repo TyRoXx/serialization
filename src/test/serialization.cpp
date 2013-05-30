@@ -466,8 +466,10 @@ namespace szn
 		SZNTEST_POD(unsigned int)
 		SZNTEST_POD(signed long)
 		SZNTEST_POD(unsigned long)
+#ifndef SZN_NO_CPP11
 		SZNTEST_POD(signed long long)
 		SZNTEST_POD(unsigned long long)
+#endif
 		SZNTEST_POD(wchar_t)
 		SZNTEST_POD(std::size_t)
 		SZNTEST_POD(std::ptrdiff_t)
