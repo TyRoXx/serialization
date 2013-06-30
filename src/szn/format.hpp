@@ -18,7 +18,7 @@ namespace szn
 		typedef char no[2]; \
 		 \
 		template <class U> \
-		static yes &has_member(typename SZN_DECLTYPE(U::member_name) *); \
+		static yes &has_member(/*typename*/ SZN_DECLTYPE(U::member_name) *); \
 		 \
 		template <class U> \
 		static no &has_member(void const *); \

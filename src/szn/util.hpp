@@ -13,6 +13,7 @@
 #		define SZN_FINAL final
 #		define SZN_OVERRIDE override
 #		define SZN_HAS_UNIQUE_PTR 1
+#		define SZN_DECLTYPE(v) decltype(v)
 #	else
 #		if (__GNUC_MINOR__ >= 4)
 #			define SZN_HAS_UNIQUE_PTR 1
@@ -21,11 +22,11 @@
 #		endif
 #		define SZN_FINAL
 #		define SZN_OVERRIDE
+#		define SZN_DECLTYPE(v) BOOST_TYPEOF(v)
 #	endif
 //	GCC 4.6 introduced noexcept
 #	define SZN_NOEXCEPT noexcept
 #	define SZN_HAS_ENUM_CLASS 1
-#	define SZN_DECLTYPE(v) BOOST_TYPEOF(v)
 
 #elif defined(__clang__)
 //	Clang has supported override, final and noexcept since 3.0
