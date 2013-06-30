@@ -13,7 +13,7 @@ namespace szn
 	BOOST_AUTO_TEST_CASE(Serialization_dynamic_message)
 	{
 		std::string generated;
-		BOOST_AUTO(sink, makeContainerSink(generated));
+		auto sink = makeContainerSink(generated);
 
 		//this should be possible with less typing:
 		szn::serialize(sink, 12, szn::BE32());
