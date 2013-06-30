@@ -37,15 +37,18 @@
 #	define SZN_DECLTYPE(v) BOOST_TYPEOF(v)
 
 #elif defined(_MSC_VER)
-//	VC++ 2010 has override
-//	currently, only 2010 is supported
-#	define SZN_FINAL
-#	define SZN_OVERRIDE override
 #	define SZN_NOEXCEPT
+#	define SZN_FINAL
 #	define SZN_HAS_ENUM_CLASS 0
-#	define SZN_HAS_UNIQUE_PTR 1
-#	define SZN_DECLTYPE(v) decltype(v)
-
+#	if _MSC_VER >= 1600
+#		define SZN_OVERRIDE override
+#		define SZN_HAS_UNIQUE_PTR 1
+#		define SZN_DECLTYPE(v) decltype(v)
+#	else
+#		define SZN_OVERRIDE
+#		define SZN_HAS_UNIQUE_PTR 0
+#		define SZN_DECLTYPE(v) BOOST_TYPEOF(v)
+#	endif
 #endif
 
 #endif //#ifndef SZN_NO_CPP11
@@ -56,6 +59,7 @@
 #	define SZN_NOEXCEPT
 #	define SZN_HAS_ENUM_CLASS 0
 #	define SZN_HAS_UNIQUE_PTR 0
+#	define SZN_DECLTYPE(v) BOOST_TYPEOF(v)
 #endif
 
 

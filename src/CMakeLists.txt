@@ -2,7 +2,11 @@ cmake_minimum_required(VERSION 2.8)
 
 project(serialization)
 
-option(SZN_NO_CPP11 "Disable use of C++11 if available for the compiler" OFF)
+if(MSVC_VERSION VERSION_LESS 1600)
+	set(SZN_NO_CPP11 ON)
+else()
+	option(SZN_NO_CPP11 "Disable use of C++11 if available for the compiler" OFF)
+endif()
 if(SZN_NO_CPP11)
 	add_definitions("-DSZN_NO_CPP11")
 endif()
