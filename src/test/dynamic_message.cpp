@@ -33,7 +33,7 @@ namespace szn
 
 		char const expectedBytes[] =
 		{
-			0, 0, 0, 12,
+		    0, 0, 0, 12,
 		    0, 5, 'h', 'e', 'l', 'l', 'o',
 		    1
 		};

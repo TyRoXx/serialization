@@ -36,16 +36,6 @@ Things to do in no particular order
 * shortcuts for common things
   * SZN_LE8(a) instead of SZN_FIELD(a, std::uint8_t, szn::LE8)
 * syntax v2 transformations (lexically, semantically with templates)
-* create syntax v3
-  * maybe FIELD(name, (type), (annotations)...)
-  * METHOD(name, result, (parameters...), (annotations)...)
-* syntax idea
-  * (name, format) [(type)]
-  * C++ type is infered from the format in most cases
-    * (name, szn::UTF8<szn::BE32>) (std::string)
-    * (name, szn::BE16)
-    * (name, MyStructure)
-    * (name, szn::POD<int>)
 * ignore trailing comma in v2 field sequence
 * polymorphism
 * check possible bit field support
