@@ -13,9 +13,9 @@
 
 namespace szn
 {
-	struct Source
+	struct source
 	{
-		virtual ~Source();
+		virtual ~source();
 		virtual void load(std::size_t n) = 0;
 		virtual std::size_t size() = 0;
 		virtual char get(std::size_t index) = 0;
@@ -60,14 +60,14 @@ namespace szn
 			  class PointsToLValue = typename boost::enable_if<
 				  boost::is_lvalue_reference<typename std::iterator_traits<typename LValueRandomAccessByteRange::const_iterator>::reference>, void>::type
 			  >
-	struct RangeSource : Source
+	struct range_source : source
 	{
 		typedef LValueRandomAccessByteRange range_type;
 		typedef typename range_type::const_iterator const_iterator;
 		typedef typename std::iterator_traits<const_iterator>::difference_type difference_type;
 
 		template <class Range>
-		explicit RangeSource(Range const &range)
+		explicit range_source(Range const &range)
 			: m_position(0)
 		{
 			m_range = range_type(detail::castIterator<const_iterator>(boost::begin(range)),
@@ -115,15 +115,15 @@ namespace szn
 	};
 
 	template <class Range>
-	RangeSource<Range> makeRangeSource(Range const &range)
+	range_source<Range> makeRangeSource(Range const &range)
 	{
-		return RangeSource<Range>(range);
+		return range_source<Range>(range);
 	}
 
-	typedef RangeSource<boost::iterator_range<const char *> > MemorySource;
+	typedef range_source<boost::iterator_range<const char *> > MemorySource;
 
 
-	struct EmptySource : Source
+	struct empty_source : source
 	{
 		virtual void load(std::size_t n) SZN_OVERRIDE;
 		virtual std::size_t size() SZN_OVERRIDE;
@@ -133,7 +133,7 @@ namespace szn
 	};
 }
 
-BOOST_TYPEOF_REGISTER_TEMPLATE(::szn::RangeSource, 2)
+BOOST_TYPEOF_REGISTER_TEMPLATE(::szn::range_source, 2)
 
 
 #endif

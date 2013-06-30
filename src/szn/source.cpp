@@ -3,30 +3,30 @@
 
 namespace szn
 {
-	Source::~Source()
+	source::~source()
 	{
 	}
 
 
-	void EmptySource::load(std::size_t)
+	void empty_source::load(std::size_t)
 	{
 	}
 
-	std::size_t EmptySource::size()
+	std::size_t empty_source::size()
 	{
 		return 0;
 	}
 
-	char EmptySource::get(std::size_t)
+	char empty_source::get(std::size_t)
 	{
 		throw std::runtime_error("szn::EmptySource cannot be read from");
 	}
 
-	void EmptySource::drop(std::size_t)
+	void empty_source::drop(std::size_t)
 	{
 	}
 
-	const char *EmptySource::data()
+	const char *empty_source::data()
 	{
 		return NULL;
 	}

@@ -13,14 +13,14 @@
 
 namespace szn
 {
-	struct Sink
+	struct sink
 	{
-		virtual ~Sink();
+		virtual ~sink();
 		virtual void write(const char *data, std::size_t n) = 0;
 	};
 
 	/// does nothing when being written to
-	struct NullSink : Sink
+	struct null_sink : sink
 	{
 		virtual void write(const char *data, std::size_t n) SZN_OVERRIDE;
 	};
@@ -28,10 +28,10 @@ namespace szn
 	/// copies the data byte-wise to an output iterator.
 	/// Works with std::ostreambuf_iterator<char>, std::back_inserter etc.
 	template <class OutputIterator>
-	struct IteratorSink : Sink
+	struct iterator_sink : sink
 	{
 		template <class T>
-		explicit IteratorSink(BOOST_FWD_REF(T) begin)
+		explicit iterator_sink(BOOST_FWD_REF(T) begin)
 			: m_pos(boost::forward<T>(begin))
 		{
 		}
@@ -50,14 +50,14 @@ namespace szn
 
 	/// creates a sink from an output iterator for chars
 	template <class OutputIterator>
-	IteratorSink<OutputIterator> makeIteratorSink(OutputIterator begin)
+	iterator_sink<OutputIterator> makeIteratorSink(OutputIterator begin)
 	{
-		return IteratorSink<OutputIterator>(boost::move(begin));
+		return iterator_sink<OutputIterator>(boost::move(begin));
 	}
 
 	template <class Byte,
 			  class Allocator>
-	IteratorSink<std::back_insert_iterator<std::vector<Byte, Allocator> > >
+	iterator_sink<std::back_insert_iterator<std::vector<Byte, Allocator> > >
 	makeContainerSink(std::vector<Byte, Allocator> &destination,
 					  typename boost::enable_if_c<sizeof(Byte) == 1, void>::type * = NULL)
 	{
@@ -67,7 +67,7 @@ namespace szn
 	template <class Byte,
 			  class Traits,
 			  class Allocator>
-	IteratorSink<std::back_insert_iterator<std::basic_string<Byte, Traits, Allocator> > >
+	iterator_sink<std::back_insert_iterator<std::basic_string<Byte, Traits, Allocator> > >
 	makeContainerSink(std::basic_string<Byte, Traits, Allocator> &destination,
 					  typename boost::enable_if_c<sizeof(Byte) == 1, void>::type * = NULL)
 	{
@@ -75,7 +75,7 @@ namespace szn
 	}
 }
 
-BOOST_TYPEOF_REGISTER_TEMPLATE(::szn::IteratorSink, 1)
+BOOST_TYPEOF_REGISTER_TEMPLATE(::szn::iterator_sink, 1)
 
 
 #endif

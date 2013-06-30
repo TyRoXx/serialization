@@ -223,12 +223,12 @@ namespace szn
 				bool ok;
 			};
 
-			void serialize(Sink &, const Custom &custom, szn::by_adl)
+			void serialize(sink &, const Custom &custom, szn::by_adl)
 			{
 				BOOST_REQUIRE(custom.ok);
 			}
 
-			void deserialize(Source &, Custom &custom, szn::by_adl)
+			void deserialize(source &, Custom &custom, szn::by_adl)
 			{
 				BOOST_REQUIRE(!custom.ok);
 				custom.ok = true;
@@ -254,7 +254,7 @@ namespace szn
 
 	BOOST_AUTO_TEST_CASE(Serialization_ByADL)
 	{
-		szn::NullSink sink;
+		szn::null_sink sink;
 		for_adl_tests::Wrapper w;
 		w.c.ok = true;
 		szn::serialize(sink, w, szn::by_method());
@@ -456,7 +456,7 @@ namespace szn
 
 	BOOST_AUTO_TEST_CASE(Serialization_POD)
 	{
-#define SZNTEST_POD(type) BOOST_CHECK(serializationRoundtrip<type>(13, szn::POD<type>()));
+#define SZNTEST_POD(type) BOOST_CHECK(serializationRoundtrip<type>(13, szn::pod<type>()));
 		SZNTEST_POD(char)
 		SZNTEST_POD(signed char)
 		SZNTEST_POD(unsigned char)
@@ -478,14 +478,14 @@ namespace szn
 
 		{
 			boost::array<int, 3> array = {{1, 2, 3}};
-			BOOST_CHECK(serializationRoundtrip(array, szn::POD<boost::array<int, 3> >()));
+			BOOST_CHECK(serializationRoundtrip(array, szn::pod<boost::array<int, 3> >()));
 		}
 
 		{
 			int dummy;
 			int * const pointer = &dummy;
-			BOOST_CHECK(serializationRoundtrip(pointer, szn::POD<int *>()));
-			BOOST_CHECK(serializationRoundtrip(&pointer, szn::POD<int * const *>()));
+			BOOST_CHECK(serializationRoundtrip(pointer, szn::pod<int *>()));
+			BOOST_CHECK(serializationRoundtrip(&pointer, szn::pod<int * const *>()));
 		}
 	}
 

@@ -16,7 +16,7 @@ namespace szn
 		typedef std::vector<typename ElementFormat::default_type> default_type;
 
 		template <class Element>
-		void serialize(Sink &sink, const std::vector<Element> &v) const
+		void serialize(sink &sink, const std::vector<Element> &v) const
 		{
 			szn::serialize(sink, v.size(), LengthFormat());
 
@@ -27,7 +27,7 @@ namespace szn
 		}
 
 		template <class Element>
-		void deserialize(Source &source, std::vector<Element> &v) const
+		void deserialize(source &source, std::vector<Element> &v) const
 		{
 			std::size_t length = 0;
 			szn::deserialize(source, length, LengthFormat());

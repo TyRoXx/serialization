@@ -3,11 +3,11 @@
 
 namespace szn
 {
-	Sink::~Sink()
+	sink::~sink()
 	{
 	}
 
-	void NullSink::write(const char *data, std::size_t n)
+	void null_sink::write(const char *data, std::size_t n)
 	{
 		(void)data;
 		(void)n;

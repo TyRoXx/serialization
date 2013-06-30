@@ -28,13 +28,13 @@ namespace szn
 		typedef std::vector<char> default_type;
 
 		//std::string
-		void serialize(Sink &sink, const std::string &str) const
+		void serialize(sink &sink, const std::string &str) const
 		{
 			szn::serialize(sink, str.length(), LengthFormat());
 			sink.write(str.data(), str.length());
 		}
 
-		void deserialize(Source &source, std::string &str) const
+		void deserialize(source &source, std::string &str) const
 		{
 			return deserializeContainer(source, str);
 		}
@@ -42,14 +42,14 @@ namespace szn
 		//std::vector
 		template <class Byte, class Allocator>
 		typename boost::enable_if_c<sizeof(Byte) == 1, void>::type
-		serialize(Sink &sink, const std::vector<Byte, Allocator> &v) const
+		serialize(sink &sink, const std::vector<Byte, Allocator> &v) const
 		{
 			return serialize(sink, std::make_pair(v.begin(), v.end()));
 		}
 
 		template <class Byte, class Allocator>
 		typename boost::enable_if_c<sizeof(Byte) == 1, void>::type
-		deserialize(Source &source, std::vector<Byte, Allocator> &v) const
+		deserialize(source &source, std::vector<Byte, Allocator> &v) const
 		{
 			return deserializeContainer(source, v);
 		}
@@ -57,7 +57,7 @@ namespace szn
 		//std::pair<Iterator, Iterator>
 		template <class ByteRandomAccessIterator>
 		typename boost::enable_if_c<sizeof(typename std::iterator_traits<ByteRandomAccessIterator>::value_type) == 1, void>::type
-		serialize(Sink &sink,
+		serialize(sink &sink,
 				  std::pair<ByteRandomAccessIterator, ByteRandomAccessIterator> range) const
 		{
 			using szn::serialize;
@@ -71,7 +71,7 @@ namespace szn
 		template <class ByteRandomAccessIterator>
 		typename boost::enable_if_c<(boost::is_pointer<ByteRandomAccessIterator>::value) &&
 									(sizeof(typename std::iterator_traits<ByteRandomAccessIterator>::value_type) == 1), void>::type
-		deserialize(Source &source,
+		deserialize(source &source,
 					std::pair<ByteRandomAccessIterator, ByteRandomAccessIterator> &range) const
 		{
 			if (!source.isStable())
@@ -91,7 +91,7 @@ namespace szn
 	private:
 
 		template <class Container>
-		void deserializeContainer(Source &source, Container &destination) const
+		void deserializeContainer(source &source, Container &destination) const
 		{
 			std::size_t length = 0;
 			szn::deserialize(source, length, LengthFormat());

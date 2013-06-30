@@ -62,20 +62,20 @@
 
 namespace szn
 {
-	struct Sink;
-	struct Source;
+	struct sink;
+	struct source;
 
 
 	/// just an alternative way of calling format.serialize
 	template <class Value, class Format>
-	void serialize(Sink &sink, const Value &value, const Format &format)
+	void serialize(sink &sink, const Value &value, const Format &format)
 	{
 		format.serialize(sink, value);
 	}
 
 	/// just an alternative way of calling format.deserialize
 	template <class Value, class Format>
-	void deserialize(Source &source, Value &value, const Format &format)
+	void deserialize(source &source, Value &value, const Format &format)
 	{
 		format.deserialize(source, value);
 	}
@@ -84,13 +84,13 @@ namespace szn
 	struct by_method SZN_FINAL
 	{
 		template <class Value>
-		void serialize(Sink &sink, const Value &value) const
+		void serialize(sink &sink, const Value &value) const
 		{
 			value.serialize(sink);
 		}
 
 		template <class Value>
-		void deserialize(Source &source, Value &value) const
+		void deserialize(source &source, Value &value) const
 		{
 			value.deserialize(source);
 		}
@@ -99,14 +99,14 @@ namespace szn
 	struct by_adl SZN_FINAL
 	{
 		template <class Value>
-		void serialize(Sink &sink, const Value &value) const
+		void serialize(sink &sink, const Value &value) const
 		{
 			using szn::serialize;
 			serialize(sink, value);
 		}
 
 		template <class Value>
-		void deserialize(Source &source, Value &value) const
+		void deserialize(source &source, Value &value) const
 		{
 			using szn::deserialize;
 			deserialize(source, value);

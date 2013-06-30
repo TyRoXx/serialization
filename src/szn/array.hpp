@@ -20,7 +20,7 @@ namespace szn
 		typedef boost::array<typename ElementFormat::default_type, Length> default_type;
 
 		template <class Element>
-		void serialize(Sink &sink, const boost::array<Element, Length> &a) const
+		void serialize(sink &sink, const boost::array<Element, Length> &a) const
 		{
 			BOOST_FOREACH (const Element &e, a)
 			{
@@ -29,7 +29,7 @@ namespace szn
 		}
 
 		template <class Element>
-		void deserialize(Source &source, boost::array<Element, Length> &a) const
+		void deserialize(source &source, boost::array<Element, Length> &a) const
 		{
 			for (std::size_t i = 0; i < Length; ++i)
 			{
@@ -39,7 +39,7 @@ namespace szn
 
 #ifndef SZN_NO_CPP11
 		template <class Element>
-		void serialize(Sink &sink, const std::array<Element, Length> &a) const
+		void serialize(sink &sink, const std::array<Element, Length> &a) const
 		{
 			BOOST_FOREACH (const Element &e, a)
 			{
@@ -48,7 +48,7 @@ namespace szn
 		}
 
 		template <class Element>
-		void deserialize(Source &source, std::array<Element, Length> &a) const
+		void deserialize(source &source, std::array<Element, Length> &a) const
 		{
 			for (std::size_t i = 0; i < Length; ++i)
 			{
@@ -59,7 +59,7 @@ namespace szn
 
 		//C style array
 		template <class Element>
-		void serialize(Sink &sink, const Element (&a)[Length]) const
+		void serialize(sink &sink, const Element (&a)[Length]) const
 		{
 			BOOST_FOREACH (const Element &e, a)
 			{
@@ -68,7 +68,7 @@ namespace szn
 		}
 
 		template <class Element>
-		void deserialize(Source &source, Element (&a)[Length]) const
+		void deserialize(source &source, Element (&a)[Length]) const
 		{
 			for (std::size_t i = 0; i < Length; ++i)
 			{
