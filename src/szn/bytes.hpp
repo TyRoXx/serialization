@@ -20,7 +20,7 @@ namespace szn
 	/// its length.
 	/// Can be used with std::string
 	template <class LengthFormat>
-	struct Bytes
+	struct bytes
 	{
 		static std::size_t const minSize = MinSize<LengthFormat>::value;
 		static std::size_t const maxSize = ~static_cast<std::size_t>(0);

@@ -17,8 +17,8 @@ namespace szn
 
 		//this should be possible with less typing:
 		szn::serialize(sink, 12, szn::BE32());
-		szn::serialize(sink, "hello", szn::Bytes<szn::BE16>());
-		szn::serialize(sink, true, szn::Bool());
+		szn::serialize(sink, "hello", szn::bytes<szn::BE16>());
+		szn::serialize(sink, true, szn::boolean());
 
 		/* //ideas:
 		szn::writer(sink)

@@ -8,7 +8,7 @@
 namespace szn
 {
 	template <class Format, class ValuePolicy>
-	struct BasicBool
+	struct basic_bool
 	{
 		static std::size_t const minSize = MinSize<Format>::value;
 		static std::size_t const maxSize = MaxSize<Format>::value;
@@ -30,7 +30,7 @@ namespace szn
 		}
 	};
 
-	struct ByteBool
+	struct byte_bool
 	{
 		typedef unsigned char value_type;
 
@@ -46,7 +46,7 @@ namespace szn
 		}
 	};
 
-	typedef BasicBool<BE8, ByteBool> Bool;
+	typedef basic_bool<BE8, byte_bool> boolean;
 }
 
 

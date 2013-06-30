@@ -29,8 +29,8 @@ namespace szn
 			SZN_FIELD( be16,     unsigned,                   BE16)
 			SZN_FIELD(  be8, boost::uint8_t,                 BE8 )
 
-			SZN_FIELD(str16,  std::string,            Bytes<LE16>)
-			SZN_FIELD( str8,  std::string,            Bytes<LE8 >)
+			SZN_FIELD(str16,  std::string,            bytes<LE16>)
+			SZN_FIELD( str8,  std::string,            bytes<LE8 >)
 
 			SZN_FIELD( vec8, std::vector<int>, Vector<LE8 BOOST_PP_COMMA() LE32>)
 
@@ -266,7 +266,7 @@ namespace szn
 		{{
 			0x1122, 0x3344
 		}};
-		typedef szn::Array<2, szn::BE16> ArrayFormat;
+		typedef szn::array<2, szn::BE16> ArrayFormat;
 
 		BOOST_CHECK(serializationRoundtrip(testArray, ArrayFormat()));
 
@@ -287,7 +287,7 @@ namespace szn
 		{
 			0x1122, 0x3344
 		};
-		typedef szn::Array<2, szn::BE16> ArrayFormat;
+		typedef szn::array<2, szn::BE16> ArrayFormat;
 
 		BOOST_CHECK(serializationRoundtrip(testArray, ArrayFormat()));
 
@@ -383,9 +383,9 @@ namespace szn
 		//For example C++ field types could be different for the sender and receiver.
 		template <class Range>
 		SZN_BEGIN2(BytesTester)
-			SZN_FIELD(str, std::string, szn::Bytes<szn::BE64>)
-			SZN_FIELD(vec, std::vector<signed char>, szn::Bytes<szn::BE64>)
-			SZN_FIELD(range, Range, szn::Bytes<szn::BE64>)
+			SZN_FIELD(str, std::string, szn::bytes<szn::BE64>)
+			SZN_FIELD(vec, std::vector<signed char>, szn::bytes<szn::BE64>)
+			SZN_FIELD(range, Range, szn::bytes<szn::BE64>)
 		SZN_END()
 	}
 
@@ -419,8 +419,8 @@ namespace szn
 
 	BOOST_AUTO_TEST_CASE(Serialization_Bool)
 	{
-		BOOST_CHECK(serializationRoundtrip(true, szn::Bool()));
-		BOOST_CHECK(serializationRoundtrip(false, szn::Bool()));
+		BOOST_CHECK(serializationRoundtrip(true, szn::boolean()));
+		BOOST_CHECK(serializationRoundtrip(false, szn::boolean()));
 	}
 
 #if SZN_HAS_UNIQUE_PTR
@@ -607,9 +607,9 @@ namespace szn
 		BOOST_CHECK(testExactSize(szn::LE32(), 4));
 		BOOST_CHECK(testExactSize(szn::LE64(), 8));
 
-		BOOST_CHECK(testExactSize(szn::Bool(), 1));
+		BOOST_CHECK(testExactSize(szn::boolean(), 1));
 
-		BOOST_CHECK(testMinMaxSize(szn::Bytes<szn::LE32>(), 4, std::numeric_limits<std::size_t>::max()));
+		BOOST_CHECK(testMinMaxSize(szn::bytes<szn::LE32>(), 4, std::numeric_limits<std::size_t>::max()));
 
 #if SZN_HAS_UNIQUE_PTR
 		BOOST_CHECK(testExactSize(szn::UniquePtr<szn::LE64>(), 8));

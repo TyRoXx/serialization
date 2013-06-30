@@ -5,5 +5,5 @@
 int main()
 {
 	szn::NullSink sink;
-	szn::Bytes<szn::BE8>().serialize(sink, "Hello, world!");
+	szn::bytes<szn::BE8>().serialize(sink, "Hello, world!");
 }

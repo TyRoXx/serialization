@@ -15,8 +15,8 @@ namespace szn
 				(SZN_AUTO_MEMBERS) (SZN_ITERATE),
 				(a, szn::BE16) (int),
 				(b, szn::BE32),
-				(c, szn::Bytes<szn::BE8>),
-				(d, szn::Bytes<szn::BE8>) (std::string),
+				(c, szn::bytes<szn::BE8>),
+				(d, szn::bytes<szn::BE8>) (std::string),
 				(v, szn::Vector<szn::BE8, szn::BE16>)
 			)
 		};

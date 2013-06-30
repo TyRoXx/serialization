@@ -15,7 +15,7 @@ namespace szn
 	/// a format for fixed-length sequences of a certain type.
 	/// Works with std::array and C arrays.
 	template <std::size_t Length, class ElementFormat>
-	struct Array
+	struct array
 	{
 		typedef boost::array<typename ElementFormat::default_type, Length> default_type;
 

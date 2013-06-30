@@ -7,7 +7,7 @@
 
 namespace szn
 {
-	struct BigEndianByteOrder SZN_FINAL
+	struct big_endian_byte_order SZN_FINAL
 	{
 		static std::size_t getByteShift(std::size_t byteIndex,
 										std::size_t wordSize)
@@ -16,10 +16,10 @@ namespace szn
 		}
 	};
 
-	typedef Integer<1, BigEndianByteOrder> BE8;
-	typedef Integer<2, BigEndianByteOrder> BE16;
-	typedef Integer<4, BigEndianByteOrder> BE32;
-	typedef Integer<8, BigEndianByteOrder> BE64;
+	typedef Integer<1, big_endian_byte_order> BE8;
+	typedef Integer<2, big_endian_byte_order> BE16;
+	typedef Integer<4, big_endian_byte_order> BE32;
+	typedef Integer<8, big_endian_byte_order> BE64;
 }
 
 
