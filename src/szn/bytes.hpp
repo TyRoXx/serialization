@@ -25,7 +25,7 @@ namespace szn
 		static std::size_t const minSize = MinSize<LengthFormat>::value;
 		static std::size_t const maxSize = ~static_cast<std::size_t>(0);
 
-		typedef std::string default_type;
+		typedef std::vector<char> default_type;
 
 		//std::string
 		void serialize(Sink &sink, const std::string &str) const
