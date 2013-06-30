@@ -115,7 +115,7 @@ namespace szn
 	};
 
 	template <class Range>
-	range_source<Range> makeRangeSource(Range const &range)
+	range_source<Range> make_range_source(Range const &range)
 	{
 		return range_source<Range>(range);
 	}

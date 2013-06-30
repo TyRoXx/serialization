@@ -50,7 +50,7 @@ namespace szn
 
 	/// creates a sink from an output iterator for chars
 	template <class OutputIterator>
-	iterator_sink<OutputIterator> makeIteratorSink(OutputIterator begin)
+	iterator_sink<OutputIterator> make_iterator_sink(OutputIterator begin)
 	{
 		return iterator_sink<OutputIterator>(boost::move(begin));
 	}
@@ -58,20 +58,20 @@ namespace szn
 	template <class Byte,
 			  class Allocator>
 	iterator_sink<std::back_insert_iterator<std::vector<Byte, Allocator> > >
-	makeContainerSink(std::vector<Byte, Allocator> &destination,
-					  typename boost::enable_if_c<sizeof(Byte) == 1, void>::type * = NULL)
+	make_container_sink(std::vector<Byte, Allocator> &destination,
+	                    typename boost::enable_if_c<sizeof(Byte) == 1, void>::type * = NULL)
 	{
-		return makeIteratorSink(std::back_inserter(destination));
+		return make_iterator_sink(std::back_inserter(destination));
 	}
 
 	template <class Byte,
 			  class Traits,
 			  class Allocator>
 	iterator_sink<std::back_insert_iterator<std::basic_string<Byte, Traits, Allocator> > >
-	makeContainerSink(std::basic_string<Byte, Traits, Allocator> &destination,
-					  typename boost::enable_if_c<sizeof(Byte) == 1, void>::type * = NULL)
+	make_container_sink(std::basic_string<Byte, Traits, Allocator> &destination,
+	                    typename boost::enable_if_c<sizeof(Byte) == 1, void>::type * = NULL)
 	{
-		return makeIteratorSink(std::back_inserter(destination));
+		return make_iterator_sink(std::back_inserter(destination));
 	}
 }
 

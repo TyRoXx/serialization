@@ -9,10 +9,10 @@ namespace szn
 {
 	struct big_endian_byte_order SZN_FINAL
 	{
-		static std::size_t getByteShift(std::size_t byteIndex,
-										std::size_t wordSize)
+		static std::size_t get_byte_shift(std::size_t byte_index,
+		                                  std::size_t word_size)
 		{
-			return wordSize - 1u - byteIndex;
+			return word_size - 1u - byte_index;
 		}
 	};
 

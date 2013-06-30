@@ -24,12 +24,12 @@ namespace szn
 			//Value could be an enum class which is not implicitly convertible
 			//to any integer. We have to do the conversion explicitly.
 			typedef typename boost::uint_t<sizeof(value) * 8>::least ArithUValue;
-			ArithUValue const arithValue = static_cast<ArithUValue>(value);
+			ArithUValue const arith_value = static_cast<ArithUValue>(value);
 
 			for (std::size_t b = 0; b < ByteSize; ++b)
 			{
-				std::size_t const byteShift = ByteOrder::getByteShift(b, ByteSize);
-				char const byte = static_cast<unsigned char>(arithValue >> (byteShift * 8));
+				std::size_t const byte_shift = ByteOrder::get_byte_shift(b, ByteSize);
+				char const byte = static_cast<unsigned char>(arith_value >> (byte_shift * 8));
 				sink.write(&byte, 1);
 			}
 		}
@@ -45,8 +45,8 @@ namespace szn
 			{
 				unsigned char byte;
 				source.read(reinterpret_cast<char *>(&byte), 1);
-				std::size_t const byteShift = ByteOrder::getByteShift(b, ByteSize);
-				result = static_cast<UValue>(result | static_cast<UValue>(static_cast<UValue>(byte) << (byteShift * 8)));
+				std::size_t const byte_shift = ByteOrder::get_byte_shift(b, ByteSize);
+				result = static_cast<UValue>(result | static_cast<UValue>(static_cast<UValue>(byte) << (byte_shift * 8)));
 			}
 
 			//If Value is signed and ByteSize is less than sizeof(Value)
@@ -60,8 +60,8 @@ namespace szn
 				!boost::is_enum<Value>::value)
 			{
 				typedef typename boost::int_t<ByteSize * 8>::least SignExtender;
-				SignExtender const signedResult = static_cast<SignExtender>(result);
-				value = static_cast<Value>(signedResult);
+				SignExtender const signed_result = static_cast<SignExtender>(result);
+				value = static_cast<Value>(signed_result);
 			}
 			else
 			{

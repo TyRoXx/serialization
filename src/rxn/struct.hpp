@@ -18,7 +18,7 @@ public: \
 private: \
 	template <class Visitor> \
 	static void _internal_iterate_ ## name_(Visitor &visitor) { \
-		visitor.visitField(&rxn_this_type::name_, format_(), #name_ );
+		visitor.visit_field(&rxn_this_type::name_, format_(), #name_ );
 
 
 #define RXN_END() \

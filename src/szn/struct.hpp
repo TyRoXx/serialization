@@ -24,9 +24,9 @@ namespace szn
 			}
 
 			template <class Value, class Format>
-			void visitField(Value Structure::*value,
-							const Format &format,
-							const char * /*name*/) const
+			void visit_field(Value Structure::*value,
+			                 const Format &format,
+			                 const char * /*name*/) const
 			{
 				serialize(m_sink, m_object.*value, format);
 			}
@@ -49,9 +49,9 @@ namespace szn
 			}
 
 			template <class Value, class Format>
-			void visitField(Value Structure::*value,
-							const Format &format,
-							const char * /*name*/) const
+			void visit_field(Value Structure::*value,
+			                 const Format &format,
+			                 const char * /*name*/) const
 			{
 				deserialize(m_source,
 							m_object.*value,

@@ -9,11 +9,11 @@ namespace szn
 {
 	struct little_endian_byte_order SZN_FINAL
 	{
-		static std::size_t getByteShift(std::size_t byteIndex,
-										std::size_t wordSize)
+		static std::size_t get_byte_shift(std::size_t byte_index,
+		                                  std::size_t word_size)
 		{
-			(void)wordSize;
-			return byteIndex;
+			(void)word_size;
+			return byte_index;
 		}
 	};
 

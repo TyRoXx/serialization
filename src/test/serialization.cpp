@@ -91,11 +91,11 @@ namespace szn
 
 			std::vector<char> generated;
 			{
-				BOOST_AUTO(sink, szn::makeContainerSink(generated));
+				BOOST_AUTO(sink, szn::make_container_sink(generated));
 				szn::serialize(sink, value, format);
 			}
 
-			BOOST_AUTO(source, szn::makeRangeSource(generated));
+			BOOST_AUTO(source, szn::make_range_source(generated));
 			mutable_value readValue;
 			szn::deserialize(source, readValue, format);
 
@@ -106,7 +106,7 @@ namespace szn
 	BOOST_AUTO_TEST_CASE(Serialization_Struct_serialize)
 	{
 		std::vector<unsigned char> generated;
-		BOOST_AUTO(sink, szn::makeContainerSink(generated));
+		BOOST_AUTO(sink, szn::make_container_sink(generated));
 
 		TestStruct b;
 		b.le32_ = 32;
@@ -161,7 +161,7 @@ namespace szn
 	BOOST_AUTO_TEST_CASE(Serialization_EmptyStruct_serialize)
 	{
 		std::string generated;
-		BOOST_AUTO(sink, szn::makeContainerSink(generated));
+		BOOST_AUTO(sink, szn::make_container_sink(generated));
 
 		EmptyStruct().serialize(sink);
 
@@ -182,7 +182,7 @@ namespace szn
 		bool testMakeContainerSink()
 		{
 			Container c;
-			BOOST_AUTO(sink, szn::makeContainerSink(c));
+			BOOST_AUTO(sink, szn::make_container_sink(c));
 			sink.write("hello", 5);
 
 			return c.size() == 5 &&
@@ -245,7 +245,7 @@ namespace szn
 		typedef szn::ascii_float<4> Format;
 
 		std::vector<char> generated;
-		BOOST_AUTO(sink, szn::makeContainerSink(generated));
+		BOOST_AUTO(sink, szn::make_container_sink(generated));
 
 		Format().serialize(sink, 1.234f);
 
@@ -271,7 +271,7 @@ namespace szn
 		BOOST_CHECK(serializationRoundtrip(testArray, ArrayFormat()));
 
 		std::vector<unsigned char> generated;
-		BOOST_AUTO(sink, szn::makeContainerSink(generated));
+		BOOST_AUTO(sink, szn::make_container_sink(generated));
 		szn::serialize(sink, testArray, ArrayFormat());
 
 		BOOST_REQUIRE(generated.size() == 4);
@@ -292,7 +292,7 @@ namespace szn
 		BOOST_CHECK(serializationRoundtrip(testArray, ArrayFormat()));
 
 		std::vector<unsigned char> generated;
-		BOOST_AUTO(sink, szn::makeContainerSink(generated));
+		BOOST_AUTO(sink, szn::make_container_sink(generated));
 		szn::serialize(sink, testArray, ArrayFormat());
 
 		BOOST_REQUIRE(generated.size() == 4);
@@ -315,13 +315,13 @@ namespace szn
 		{
 			NoMethods no;
 			no.i = 123;
-			BOOST_AUTO(sink, szn::makeContainerSink(generated));
+			BOOST_AUTO(sink, szn::make_container_sink(generated));
 			szn::structure().serialize(sink, no);
 		}
 
 		NoMethods no;
 		{
-			BOOST_AUTO(source, szn::makeRangeSource(generated));
+			BOOST_AUTO(source, szn::make_range_source(generated));
 			szn::structure().deserialize(source, no);
 		}
 
@@ -336,26 +336,26 @@ namespace szn
 			SZN_FIELD(fieldC, char, szn::le8)
 		SZN_END()
 
-		struct IterationTestVisitor SZN_FINAL
+		struct iteration_test_visitor SZN_FINAL
 		{
-			explicit IterationTestVisitor(IterationTester &tester)
+			explicit iteration_test_visitor(IterationTester &tester)
 				: m_tester(tester)
 			{
 			}
 
-			void visitField(int IterationTester::*a, szn::be32, const char *name)
+			void visit_field(int IterationTester::*a, szn::be32, const char *name)
 			{
 				BOOST_CHECK(m_tester.*a == 2);
 				BOOST_CHECK(std::string(name) == "fieldA");
 			}
 
-			void visitField(long IterationTester::*b, szn::le32, const char *name)
+			void visit_field(long IterationTester::*b, szn::le32, const char *name)
 			{
 				BOOST_CHECK(m_tester.*b == 7);
 				BOOST_CHECK(std::string(name) == "fieldB");
 			}
 
-			void visitField(char IterationTester::*c, szn::le8, const char *name)
+			void visit_field(char IterationTester::*c, szn::le8, const char *name)
 			{
 				BOOST_CHECK(m_tester.*c == '!');
 				BOOST_CHECK(std::string(name) == "fieldC");
@@ -373,7 +373,7 @@ namespace szn
 		tester.fieldA = 2;
 		tester.fieldB = 7;
 		tester.fieldC = '!';
-		IterationTestVisitor visitor((tester));
+		iteration_test_visitor visitor((tester));
 		tester.iterate(visitor);
 	}
 
@@ -401,13 +401,13 @@ namespace szn
 			tester.vec.push_back(42);
 			tester.range = std::make_pair(rangePointee.data(),
 										  rangePointee.data() + rangePointee.size());
-			BOOST_AUTO(sink, szn::makeContainerSink(generated));
+			BOOST_AUTO(sink, szn::make_container_sink(generated));
 			szn::structure().serialize(sink, tester);
 		}
 
 		BytesTester<ConstStringRange> tester;
 		{
-			BOOST_AUTO(source, szn::makeRangeSource(generated));
+			BOOST_AUTO(source, szn::make_range_source(generated));
 			szn::structure().deserialize(source, tester);
 		}
 
