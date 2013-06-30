@@ -81,7 +81,7 @@ namespace szn
 	}
 
 	/// a format for structures with serialize/deserialize methods
-	struct ByMethod SZN_FINAL
+	struct by_method SZN_FINAL
 	{
 		template <class Value>
 		void serialize(Sink &sink, const Value &value) const
@@ -96,7 +96,7 @@ namespace szn
 		}
 	};
 
-	struct ByADL SZN_FINAL
+	struct by_adl SZN_FINAL
 	{
 		template <class Value>
 		void serialize(Sink &sink, const Value &value) const

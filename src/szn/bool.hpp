@@ -10,8 +10,8 @@ namespace szn
 	template <class Format, class ValuePolicy>
 	struct basic_bool
 	{
-		static std::size_t const minSize = MinSize<Format>::value;
-		static std::size_t const maxSize = MaxSize<Format>::value;
+		static std::size_t const min_size = min_size<Format>::value;
+		static std::size_t const max_size = max_size<Format>::value;
 
 		typedef bool default_type;
 

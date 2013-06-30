@@ -17,7 +17,7 @@ namespace szn
 				(b, szn::BE32),
 				(c, szn::bytes<szn::BE8>),
 				(d, szn::bytes<szn::BE8>) (std::string),
-				(v, szn::Vector<szn::BE8, szn::BE16>)
+				(v, szn::vector<szn::BE8, szn::BE16>)
 			)
 		};
 

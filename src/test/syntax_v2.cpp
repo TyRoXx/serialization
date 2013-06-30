@@ -12,14 +12,14 @@ namespace szn
 		struct TestStruct
 		{
 			typedef std::vector<int, std::allocator<int> > VectorInt;
-			typedef szn::Vector<szn::BE8, szn::BE16> Vector8_16;
+			typedef szn::vector<szn::BE8, szn::BE16> Vector8_16;
 
 			RXN_REFLECT(
 				(RXN_MEMBERS) (RXN_ITERATE),
 				(a, int) (szn::BE16),
 				(b, long) (szn::BE32),
 				(c, std::string) (szn::bytes<szn::BE8>),
-				(v, std::vector<int, std::allocator<int>>) (szn::Vector<szn::BE8, szn::BE16>)
+				(v, std::vector<int, std::allocator<int>>) (szn::vector<szn::BE8, szn::BE16>)
 			)
 		};
 

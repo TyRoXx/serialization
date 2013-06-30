@@ -29,34 +29,34 @@ namespace szn
 		}; \
 	};
 
-	SZN_DEFINE_HAS_MEMBER_TRAIT(has_min_size, minSize, std::size_t)
+	SZN_DEFINE_HAS_MEMBER_TRAIT(has_min_size, min_size, std::size_t)
 
 	template <class Format, bool HasMinSize = has_min_size<Format>::value>
-	struct MinSize;
+	struct min_size;
 
 	template <class Format>
-	struct MinSize<Format, true> : boost::integral_constant<std::size_t, Format::minSize>
+	struct min_size<Format, true> : boost::integral_constant<std::size_t, Format::min_size>
 	{
 	};
 
 	template <class Format>
-	struct MinSize<Format, false> : boost::integral_constant<std::size_t, 0>
+	struct min_size<Format, false> : boost::integral_constant<std::size_t, 0>
 	{
 	};
 
 
-	SZN_DEFINE_HAS_MEMBER_TRAIT(has_max_size, maxSize, std::size_t)
+	SZN_DEFINE_HAS_MEMBER_TRAIT(has_max_size, max_size, std::size_t)
 
 	template <class Format, bool HasMaxSize = has_max_size<Format>::value>
-	struct MaxSize;
+	struct max_size;
 
 	template <class Format>
-	struct MaxSize<Format, true> : boost::integral_constant<std::size_t, Format::maxSize>
+	struct max_size<Format, true> : boost::integral_constant<std::size_t, Format::max_size>
 	{
 	};
 
 	template <class Format>
-	struct MaxSize<Format, false> : boost::integral_constant<std::size_t, 0>
+	struct max_size<Format, false> : boost::integral_constant<std::size_t, 0>
 	{
 	};
 }

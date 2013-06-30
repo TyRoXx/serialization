@@ -7,7 +7,7 @@
 
 namespace szn
 {
-	struct LittleEndianByteOrder SZN_FINAL
+	struct little_endian_byte_order SZN_FINAL
 	{
 		static std::size_t getByteShift(std::size_t byteIndex,
 										std::size_t wordSize)
@@ -17,10 +17,10 @@ namespace szn
 		}
 	};
 
-	typedef Integer<1, LittleEndianByteOrder> LE8;
-	typedef Integer<2, LittleEndianByteOrder> LE16;
-	typedef Integer<4, LittleEndianByteOrder> LE32;
-	typedef Integer<8, LittleEndianByteOrder> LE64;
+	typedef integer<1, little_endian_byte_order> LE8;
+	typedef integer<2, little_endian_byte_order> LE16;
+	typedef integer<4, little_endian_byte_order> LE32;
+	typedef integer<8, little_endian_byte_order> LE64;
 }
 
 

@@ -11,10 +11,10 @@ namespace szn
 {
 #if SZN_HAS_UNIQUE_PTR
 	template <class PointeeFormat>
-	struct UniquePtr
+	struct unique_ptr
 	{
-		static std::size_t const minSize = MinSize<PointeeFormat>::value;
-		static std::size_t const maxSize = MaxSize<PointeeFormat>::value;
+		static std::size_t const min_size = min_size<PointeeFormat>::value;
+		static std::size_t const max_size = max_size<PointeeFormat>::value;
 
 		typedef std::unique_ptr<typename PointeeFormat::default_type> default_type;
 

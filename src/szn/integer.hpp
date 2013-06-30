@@ -11,10 +11,10 @@
 namespace szn
 {
 	template <std::size_t ByteSize, class ByteOrder>
-	struct Integer SZN_FINAL
+	struct integer SZN_FINAL
 	{
-		static std::size_t const minSize = ByteSize;
-		static std::size_t const maxSize = ByteSize;
+		static std::size_t const min_size = ByteSize;
+		static std::size_t const max_size = ByteSize;
 
 		typedef typename boost::uint_t<ByteSize * 8>::least default_type;
 

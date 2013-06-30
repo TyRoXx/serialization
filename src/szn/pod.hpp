@@ -11,8 +11,8 @@ namespace szn
 	template <class Value>
 	struct POD SZN_FINAL
 	{
-		static std::size_t const minSize = sizeof(Value);
-		static std::size_t const maxSize = sizeof(Value);
+		static std::size_t const min_size = sizeof(Value);
+		static std::size_t const max_size = sizeof(Value);
 
 		typedef Value default_type;
 

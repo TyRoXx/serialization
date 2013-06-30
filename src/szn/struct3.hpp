@@ -10,20 +10,20 @@ namespace szn
 	namespace detail
 	{
 		template <class Format, class AnnotatedType>
-		struct AutoMemberType
+		struct auto_member_type
 		{
 			typedef typename Format::default_type type;
 		};
 
 		template <class Format, class Ignored, class AnnotatedType>
-		struct AutoMemberType<Format, Ignored (AnnotatedType)>
+		struct auto_member_type<Format, Ignored (AnnotatedType)>
 		{
 			typedef AnnotatedType type;
 		};
 	}
 }
 #define SZN_AUTO_MEMBER(name, format, annotations) \
-	::szn::detail::AutoMemberType<RXN_IDENTITY format, void annotations>::type name;
+	::szn::detail::auto_member_type<RXN_IDENTITY format, void annotations>::type name;
 
 #define SZN_AUTO_MEMBERS(fields) BOOST_PP_SEQ_FOR_EACH_I(RXN_GENERATE_FIELD, SZN_AUTO_MEMBER, fields)
 

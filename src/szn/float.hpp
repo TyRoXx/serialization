@@ -14,12 +14,12 @@ namespace szn
 
 
 	template <class IntegerFormat>
-	struct BinaryFloat
+	struct binary_float
 	{
 		template <class Float>
 		void serialize(Sink &sink, Float value) const
 		{
-			typename CompatibleInteger<Float>::type intValue;
+			typename compatible_int<Float>::type intValue;
 
 			std::copy(reinterpret_cast<const char *>(&value),
 					  reinterpret_cast<const char *>(&value) + sizeof(value),
@@ -32,7 +32,7 @@ namespace szn
 		template <class Float>
 		void deserialize(Source &source, Float &value) const
 		{
-			typename CompatibleInteger<Float>::type intValue;
+			typename compatible_int<Float>::type intValue;
 
 			using szn::deserialize;
 			deserialize(source, intValue, IntegerFormat());
@@ -45,7 +45,7 @@ namespace szn
 	private:
 
 		template <class Float>
-		struct CompatibleInteger
+		struct compatible_int
 		{
 			typedef typename boost::int_t<sizeof(Float) * 8>::exact type;
 		};
@@ -53,14 +53,14 @@ namespace szn
 
 
 	template <std::size_t DecimalPrecision>
-	struct ASCIIFloat
+	struct ascii_float
 	{
 		template <class Float>
-		struct FloatPredicate : boost::is_floating_point<Float> {};
+		struct float_predicate : boost::is_floating_point<Float> {};
 
 
 		template <class Float>
-		typename boost::enable_if_c<FloatPredicate<Float>::value, void>::type
+		typename boost::enable_if_c<float_predicate<Float>::value, void>::type
 		serialize(Sink &sink, Float value) const
 		{
 			//TODO optimize
@@ -73,7 +73,7 @@ namespace szn
 		}
 
 		template <class Float>
-		typename boost::enable_if_c<FloatPredicate<Float>::value, void>::type
+		typename boost::enable_if_c<float_predicate<Float>::value, void>::type
 		deserialize(Sink &sink, Float &value) const
 		{
 			assert(NULL == "TODO");

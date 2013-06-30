@@ -32,10 +32,10 @@ namespace szn
 			SZN_FIELD(str16,  std::string,            bytes<LE16>)
 			SZN_FIELD( str8,  std::string,            bytes<LE8 >)
 
-			SZN_FIELD( vec8, std::vector<int>, Vector<LE8 BOOST_PP_COMMA() LE32>)
+			SZN_FIELD( vec8, std::vector<int>, vector<LE8 BOOST_PP_COMMA() LE32>)
 
-			SZN_FIELD( f32,         float,      BinaryFloat<LE32>)
-			SZN_FIELD( f64,        double,      BinaryFloat<LE64>)
+			SZN_FIELD( f32,         float,     binary_float<LE32>)
+			SZN_FIELD( f64,        double,     binary_float<LE64>)
 		SZN_END()
 
 		const unsigned char structureData[] =
@@ -122,7 +122,7 @@ namespace szn
 		b.f32 = 0.0f;
 		b.f64 = 0.0;
 
-		serialize(sink, b, szn::ByMethod());
+		serialize(sink, b, szn::by_method());
 
 		BOOST_REQUIRE_EQUAL(generated.size(), sizeof(structureData));
 		BOOST_CHECK(std::equal(boost::begin(structureData),
@@ -135,7 +135,7 @@ namespace szn
 		szn::MemorySource source(structureData);
 
 		TestStruct b;
-		deserialize(source, b, szn::ByMethod());
+		deserialize(source, b, szn::by_method());
 
 		BOOST_CHECK_EQUAL(b.le32, 32);
 		BOOST_CHECK_EQUAL(b.le16, 0xffff);
@@ -223,26 +223,26 @@ namespace szn
 				bool ok;
 			};
 
-			void serialize(Sink &, const Custom &custom, szn::ByADL)
+			void serialize(Sink &, const Custom &custom, szn::by_adl)
 			{
 				BOOST_REQUIRE(custom.ok);
 			}
 
-			void deserialize(Source &, Custom &custom, szn::ByADL)
+			void deserialize(Source &, Custom &custom, szn::by_adl)
 			{
 				BOOST_REQUIRE(!custom.ok);
 				custom.ok = true;
 			}
 
 			SZN_BEGIN(Wrapper)
-				SZN_FIELD(c, Custom, szn::ByADL)
+				SZN_FIELD(c, Custom, szn::by_adl)
 			SZN_END()
 		}
 	}
 
 	BOOST_AUTO_TEST_CASE(Serialization_ASCIIFloat_serialize)
 	{
-		typedef szn::ASCIIFloat<4> Format;
+		typedef szn::ascii_float<4> Format;
 
 		std::vector<char> generated;
 		BOOST_AUTO(sink, szn::makeContainerSink(generated));
@@ -257,7 +257,7 @@ namespace szn
 		szn::NullSink sink;
 		for_adl_tests::Wrapper w;
 		w.c.ok = true;
-		szn::serialize(sink, w, szn::ByMethod());
+		szn::serialize(sink, w, szn::by_method());
 	}
 
 	BOOST_AUTO_TEST_CASE(Serialization_Array_std_array)
@@ -428,7 +428,7 @@ namespace szn
 	{
 		BOOST_CHECK(serializationRoundtrip(
 						std::unique_ptr<long>(new long(123)),
-						szn::UniquePtr<szn::LE32>()));
+						szn::unique_ptr<szn::LE32>()));
 	}
 #endif
 
@@ -583,8 +583,8 @@ namespace szn
 		template <class Format>
 		bool testMinMaxSize(Format const &, std::size_t expectedMin, std::size_t expectedMax)
 		{
-			std::size_t const min = szn::MinSize<Format>::value;
-			std::size_t const max = szn::MaxSize<Format>::value;
+			std::size_t const min = szn::min_size<Format>::value;
+			std::size_t const max = szn::max_size<Format>::value;
 			return (min == expectedMin) && (max == expectedMax);
 		}
 
@@ -609,10 +609,11 @@ namespace szn
 
 		BOOST_CHECK(testExactSize(szn::boolean(), 1));
 
-		BOOST_CHECK(testMinMaxSize(szn::bytes<szn::LE32>(), 4, std::numeric_limits<std::size_t>::max()));
+		BOOST_CHECK(testMinMaxSize(szn::bytes<szn::LE32>(), 4,
+		                           std::numeric_limits<std::size_t>::max()));
 
 #if SZN_HAS_UNIQUE_PTR
-		BOOST_CHECK(testExactSize(szn::UniquePtr<szn::LE64>(), 8));
+		BOOST_CHECK(testExactSize(szn::unique_ptr<szn::LE64>(), 8));
 #endif
 	}
 }

@@ -11,7 +11,7 @@ namespace szn
 	/// a format for variable-length sequences of a certain type.
 	/// Works with std::vector.
 	template <class LengthFormat, class ElementFormat>
-	struct Vector
+	struct vector
 	{
 		typedef std::vector<typename ElementFormat::default_type> default_type;
 
