@@ -3,7 +3,6 @@
 
 
 #include <boost/utility/declval.hpp>
-#include <boost/typeof/typeof.hpp>
 
 
 namespace szn
@@ -18,7 +17,7 @@ namespace szn
 		typedef char no[2]; \
 		 \
 		template <class U> \
-		static yes &has_member(BOOST_TYPEOF(U::member_name) *); \
+		static yes &has_member(SZN_DECLTYPE(U::member_name) *); \
 		 \
 		template <class U> \
 		static no &has_member(void const *); \

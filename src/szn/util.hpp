@@ -2,6 +2,9 @@
 #define SERIALIZATION_UTIL_HPP_5595449D_4B56_4FD3_983C_CC91E7E873D2
 
 
+#include <boost/typeof/typeof.hpp> //for SZN_DECLTYPE
+
+
 #ifndef SZN_NO_CPP11
 
 #if defined(__GNUC__) && (__GNUC__ >= 4) && (__GNUC_MINOR__ >= 6)
@@ -22,6 +25,7 @@
 //	GCC 4.6 introduced noexcept
 #	define SZN_NOEXCEPT noexcept
 #	define SZN_HAS_ENUM_CLASS 1
+#	define SZN_DECLTYPE(v) BOOST_TYPEOF(v)
 
 #elif defined(__clang__)
 //	Clang has supported override, final and noexcept since 3.0
@@ -30,14 +34,17 @@
 #	define SZN_NOEXCEPT noexcept
 #	define SZN_HAS_ENUM_CLASS 1
 #	define SZN_HAS_UNIQUE_PTR 1
+#	define SZN_DECLTYPE(v) BOOST_TYPEOF(v)
 
 #elif defined(_MSC_VER)
 //	VC++ 2010 has override
+//	currently, only 2010 is supported
 #	define SZN_FINAL
 #	define SZN_OVERRIDE override
 #	define SZN_NOEXCEPT
 #	define SZN_HAS_ENUM_CLASS 0
 #	define SZN_HAS_UNIQUE_PTR 1
+#	define SZN_DECLTYPE(v) decltype(v)
 
 #endif
 
