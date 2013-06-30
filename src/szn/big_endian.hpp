@@ -16,10 +16,10 @@ namespace szn
 		}
 	};
 
-	typedef integer<1, big_endian_byte_order> BE8;
-	typedef integer<2, big_endian_byte_order> BE16;
-	typedef integer<4, big_endian_byte_order> BE32;
-	typedef integer<8, big_endian_byte_order> BE64;
+	typedef integer<1, big_endian_byte_order> be8;
+	typedef integer<2, big_endian_byte_order> be16;
+	typedef integer<4, big_endian_byte_order> be32;
+	typedef integer<8, big_endian_byte_order> be64;
 }
 
 

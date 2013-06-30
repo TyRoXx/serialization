@@ -46,7 +46,7 @@ namespace szn
 		}
 	};
 
-	typedef basic_bool<BE8, byte_bool> boolean;
+	typedef basic_bool<be8, byte_bool> boolean;
 }
 
 

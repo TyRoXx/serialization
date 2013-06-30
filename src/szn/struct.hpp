@@ -14,10 +14,10 @@ namespace szn
 	{
 		/// Serializes the fields it visits to a given sink.
 		template <class Structure>
-		struct SerializingFieldVisitor SZN_FINAL
+		struct serializing_field_visitor SZN_FINAL
 		{
-			explicit SerializingFieldVisitor(sink &sink,
-											 Structure const &object)
+			explicit serializing_field_visitor(sink &sink,
+											   Structure const &object)
 				: m_sink(sink)
 				, m_object(object)
 			{
@@ -39,10 +39,10 @@ namespace szn
 
 		/// Deserializes the fields it visits from a given source.
 		template <class Structure>
-		struct DeserializingFieldVisitor SZN_FINAL
+		struct deserializing_field_visitor SZN_FINAL
 		{
-			explicit DeserializingFieldVisitor(source &source,
-											   Structure &object)
+			explicit deserializing_field_visitor(source &source,
+											     Structure &object)
 				: m_source(source)
 				, m_object(object)
 			{
@@ -69,11 +69,11 @@ namespace szn
 #define SZN_BEGIN(name_) \
 struct name_ SZN_FINAL { \
 	void serialize(::szn::sink &sink) const { \
-		const ::szn::detail::SerializingFieldVisitor<name_> visitor(sink, *this); \
+		const ::szn::detail::serializing_field_visitor<name_> visitor(sink, *this); \
 		iterate(visitor); \
 	} \
 	void deserialize(::szn::source &source) { \
-		const ::szn::detail::DeserializingFieldVisitor<name_> visitor(source, *this); \
+		const ::szn::detail::deserializing_field_visitor<name_> visitor(source, *this); \
 		iterate(visitor); \
 	} \
 	RXN_BEGIN(name_)
@@ -92,19 +92,19 @@ struct name_ { \
 };
 
 
-	struct Struct SZN_FINAL
+	struct structure SZN_FINAL
 	{
 		template <class Value>
 		void serialize(sink &sink, const Value &value) const
 		{
-			const detail::SerializingFieldVisitor<Value> visitor(sink, value);
+			const detail::serializing_field_visitor<Value> visitor(sink, value);
 			Value::iterate(visitor);
 		}
 
 		template <class Value>
 		void deserialize(source &source, Value &value) const
 		{
-			const detail::DeserializingFieldVisitor<Value> visitor(source, value);
+			const detail::deserializing_field_visitor<Value> visitor(source, value);
 			Value::iterate(visitor);
 		}
 	};

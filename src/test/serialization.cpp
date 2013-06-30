@@ -21,21 +21,21 @@ namespace szn
 	namespace
 	{
 		SZN_BEGIN(TestStruct)
-			SZN_FIELD( le32,          int,                   LE32)
-			SZN_FIELD( le16,     unsigned,                   LE16)
-			SZN_FIELD(  le8,         char,                   LE8 )
+			SZN_FIELD(le32_,          int,                   le32)
+			SZN_FIELD(le16_,     unsigned,                   le16)
+			SZN_FIELD( le8_,         char,                   le8 )
 
-			SZN_FIELD( be32,          int,                   BE32)
-			SZN_FIELD( be16,     unsigned,                   BE16)
-			SZN_FIELD(  be8, boost::uint8_t,                 BE8 )
+			SZN_FIELD(be32_,          int,                   be32)
+			SZN_FIELD(be16_,     unsigned,                   be16)
+			SZN_FIELD( be8_, boost::uint8_t,                 be8 )
 
-			SZN_FIELD(str16,  std::string,            bytes<LE16>)
-			SZN_FIELD( str8,  std::string,            bytes<LE8 >)
+			SZN_FIELD(str16,  std::string,            bytes<le16>)
+			SZN_FIELD( str8,  std::string,            bytes<le8 >)
 
-			SZN_FIELD( vec8, std::vector<int>, vector<LE8 BOOST_PP_COMMA() LE32>)
+			SZN_FIELD( vec8, std::vector<int>, vector<le8 BOOST_PP_COMMA() le32>)
 
-			SZN_FIELD( f32,         float,     binary_float<LE32>)
-			SZN_FIELD( f64,        double,     binary_float<LE64>)
+			SZN_FIELD( f32,         float,     binary_float<le32>)
+			SZN_FIELD( f64,        double,     binary_float<le64>)
 		SZN_END()
 
 		const unsigned char structureData[] =
@@ -109,12 +109,12 @@ namespace szn
 		BOOST_AUTO(sink, szn::makeContainerSink(generated));
 
 		TestStruct b;
-		b.le32 = 32;
-		b.le16 = 0xffff;
-		b.le8 = 7;
-		b.be32 = 0x01010101;
-		b.be16 = 0x8000;
-		b.be8 = 0xff;
+		b.le32_ = 32;
+		b.le16_ = 0xffff;
+		b.le8_ = 7;
+		b.be32_ = 0x01010101;
+		b.be16_ = 0x8000;
+		b.be8_ = 0xff;
 		b.str16 = "hallo";
 		b.str8 = "";
 		b.vec8.push_back(0xdeadbeef);
@@ -137,12 +137,12 @@ namespace szn
 		TestStruct b;
 		deserialize(source, b, szn::by_method());
 
-		BOOST_CHECK_EQUAL(b.le32, 32);
-		BOOST_CHECK_EQUAL(b.le16, 0xffff);
-		BOOST_CHECK_EQUAL(b.le8, 7);
-		BOOST_CHECK_EQUAL(b.be32, 0x01010101);
-		BOOST_CHECK_EQUAL(b.be16, 0x8000);
-		BOOST_CHECK_EQUAL(b.be8, 0xff);
+		BOOST_CHECK_EQUAL(b.le32_, 32);
+		BOOST_CHECK_EQUAL(b.le16_, 0xffff);
+		BOOST_CHECK_EQUAL(b.le8_, 7);
+		BOOST_CHECK_EQUAL(b.be32_, 0x01010101);
+		BOOST_CHECK_EQUAL(b.be16_, 0x8000);
+		BOOST_CHECK_EQUAL(b.be8_, 0xff);
 		BOOST_CHECK_EQUAL(b.str16, "hallo");
 		BOOST_CHECK_EQUAL(b.str8, "");
 		BOOST_REQUIRE_EQUAL(b.vec8.size(), 2);
@@ -266,7 +266,7 @@ namespace szn
 		{{
 			0x1122, 0x3344
 		}};
-		typedef szn::array<2, szn::BE16> ArrayFormat;
+		typedef szn::array<2, szn::be16> ArrayFormat;
 
 		BOOST_CHECK(serializationRoundtrip(testArray, ArrayFormat()));
 
@@ -287,7 +287,7 @@ namespace szn
 		{
 			0x1122, 0x3344
 		};
-		typedef szn::array<2, szn::BE16> ArrayFormat;
+		typedef szn::array<2, szn::be16> ArrayFormat;
 
 		BOOST_CHECK(serializationRoundtrip(testArray, ArrayFormat()));
 
@@ -305,7 +305,7 @@ namespace szn
 	namespace
 	{
 		SZN_BEGIN2(NoMethods)
-			SZN_FIELD(i, boost::uint32_t, szn::LE32)
+			SZN_FIELD(i, boost::uint32_t, szn::le32)
 		SZN_END()
 	}
 
@@ -316,13 +316,13 @@ namespace szn
 			NoMethods no;
 			no.i = 123;
 			BOOST_AUTO(sink, szn::makeContainerSink(generated));
-			szn::Struct().serialize(sink, no);
+			szn::structure().serialize(sink, no);
 		}
 
 		NoMethods no;
 		{
 			BOOST_AUTO(source, szn::makeRangeSource(generated));
-			szn::Struct().deserialize(source, no);
+			szn::structure().deserialize(source, no);
 		}
 
 		BOOST_CHECK(no.i == 123);
@@ -331,9 +331,9 @@ namespace szn
 	namespace
 	{
 		SZN_BEGIN2(IterationTester)
-			SZN_FIELD(fieldA, int, szn::BE32)
-			SZN_FIELD(fieldB, long, szn::LE32)
-			SZN_FIELD(fieldC, char, szn::LE8)
+			SZN_FIELD(fieldA, int, szn::be32)
+			SZN_FIELD(fieldB, long, szn::le32)
+			SZN_FIELD(fieldC, char, szn::le8)
 		SZN_END()
 
 		struct IterationTestVisitor SZN_FINAL
@@ -343,19 +343,19 @@ namespace szn
 			{
 			}
 
-			void visitField(int IterationTester::*a, szn::BE32, const char *name)
+			void visitField(int IterationTester::*a, szn::be32, const char *name)
 			{
 				BOOST_CHECK(m_tester.*a == 2);
 				BOOST_CHECK(std::string(name) == "fieldA");
 			}
 
-			void visitField(long IterationTester::*b, szn::LE32, const char *name)
+			void visitField(long IterationTester::*b, szn::le32, const char *name)
 			{
 				BOOST_CHECK(m_tester.*b == 7);
 				BOOST_CHECK(std::string(name) == "fieldB");
 			}
 
-			void visitField(char IterationTester::*c, szn::LE8, const char *name)
+			void visitField(char IterationTester::*c, szn::le8, const char *name)
 			{
 				BOOST_CHECK(m_tester.*c == '!');
 				BOOST_CHECK(std::string(name) == "fieldC");
@@ -383,9 +383,9 @@ namespace szn
 		//For example C++ field types could be different for the sender and receiver.
 		template <class Range>
 		SZN_BEGIN2(BytesTester)
-			SZN_FIELD(str, std::string, szn::bytes<szn::BE64>)
-			SZN_FIELD(vec, std::vector<signed char>, szn::bytes<szn::BE64>)
-			SZN_FIELD(range, Range, szn::bytes<szn::BE64>)
+			SZN_FIELD(str, std::string, szn::bytes<szn::be64>)
+			SZN_FIELD(vec, std::vector<signed char>, szn::bytes<szn::be64>)
+			SZN_FIELD(range, Range, szn::bytes<szn::be64>)
 		SZN_END()
 	}
 
@@ -402,13 +402,13 @@ namespace szn
 			tester.range = std::make_pair(rangePointee.data(),
 										  rangePointee.data() + rangePointee.size());
 			BOOST_AUTO(sink, szn::makeContainerSink(generated));
-			szn::Struct().serialize(sink, tester);
+			szn::structure().serialize(sink, tester);
 		}
 
 		BytesTester<ConstStringRange> tester;
 		{
 			BOOST_AUTO(source, szn::makeRangeSource(generated));
-			szn::Struct().deserialize(source, tester);
+			szn::structure().deserialize(source, tester);
 		}
 
 		BOOST_CHECK(tester.str == "hallo");
@@ -428,7 +428,7 @@ namespace szn
 	{
 		BOOST_CHECK(serializationRoundtrip(
 						std::unique_ptr<long>(new long(123)),
-						szn::unique_ptr<szn::LE32>()));
+						szn::unique_ptr<szn::le32>()));
 	}
 #endif
 
@@ -491,28 +491,28 @@ namespace szn
 
 	BOOST_AUTO_TEST_CASE(Serialization_LittleEndian)
 	{
-		BOOST_CHECK(serializationRoundtrip<boost::int8_t>(-50, szn::LE8()));
-		BOOST_CHECK(serializationRoundtrip<boost::int16_t>(-50, szn::LE16()));
-		BOOST_CHECK(serializationRoundtrip<boost::int32_t>(-50, szn::LE32()));
-		BOOST_CHECK(serializationRoundtrip<boost::int64_t>(-50, szn::LE64()));
+		BOOST_CHECK(serializationRoundtrip<boost::int8_t>(-50, szn::le8()));
+		BOOST_CHECK(serializationRoundtrip<boost::int16_t>(-50, szn::le16()));
+		BOOST_CHECK(serializationRoundtrip<boost::int32_t>(-50, szn::le32()));
+		BOOST_CHECK(serializationRoundtrip<boost::int64_t>(-50, szn::le64()));
 
-		BOOST_CHECK(serializationRoundtrip(-50, szn::LE8()));
-		BOOST_CHECK(serializationRoundtrip(-50, szn::LE16()));
-		BOOST_CHECK(serializationRoundtrip(-50, szn::LE32()));
-		BOOST_CHECK(serializationRoundtrip(-50, szn::LE64()));
+		BOOST_CHECK(serializationRoundtrip(-50, szn::le8()));
+		BOOST_CHECK(serializationRoundtrip(-50, szn::le16()));
+		BOOST_CHECK(serializationRoundtrip(-50, szn::le32()));
+		BOOST_CHECK(serializationRoundtrip(-50, szn::le64()));
 	}
 
 	BOOST_AUTO_TEST_CASE(Serialization_BigEndian)
 	{
-		BOOST_CHECK(serializationRoundtrip<boost::int8_t>(-50, szn::BE8()));
-		BOOST_CHECK(serializationRoundtrip<boost::int16_t>(-50, szn::BE16()));
-		BOOST_CHECK(serializationRoundtrip<boost::int32_t>(-50, szn::BE32()));
-		BOOST_CHECK(serializationRoundtrip<boost::int64_t>(-50, szn::BE64()));
+		BOOST_CHECK(serializationRoundtrip<boost::int8_t>(-50, szn::be8()));
+		BOOST_CHECK(serializationRoundtrip<boost::int16_t>(-50, szn::be16()));
+		BOOST_CHECK(serializationRoundtrip<boost::int32_t>(-50, szn::be32()));
+		BOOST_CHECK(serializationRoundtrip<boost::int64_t>(-50, szn::be64()));
 
-		BOOST_CHECK(serializationRoundtrip(-50, szn::BE8()));
-		BOOST_CHECK(serializationRoundtrip(-50, szn::BE16()));
-		BOOST_CHECK(serializationRoundtrip(-50, szn::BE32()));
-		BOOST_CHECK(serializationRoundtrip(-50, szn::BE64()));
+		BOOST_CHECK(serializationRoundtrip(-50, szn::be8()));
+		BOOST_CHECK(serializationRoundtrip(-50, szn::be16()));
+		BOOST_CHECK(serializationRoundtrip(-50, szn::be32()));
+		BOOST_CHECK(serializationRoundtrip(-50, szn::be64()));
 	}
 
 	namespace
@@ -533,15 +533,15 @@ namespace szn
 		BOOST_CHECK(serializationRoundtrip(NonZero, szn:: BOOST_PP_CAT(endianness, bitsize) ())); \
 		BOOST_CHECK(serializationRoundtrip(Ones, szn:: BOOST_PP_CAT(endianness, bitsize) ()));
 
-		SZNTEST_ENUM_VALUES(LE, 8)
-		SZNTEST_ENUM_VALUES(LE, 16)
-		SZNTEST_ENUM_VALUES(LE, 32)
-		SZNTEST_ENUM_VALUES(LE, 64)
+		SZNTEST_ENUM_VALUES(le, 8)
+		SZNTEST_ENUM_VALUES(le, 16)
+		SZNTEST_ENUM_VALUES(le, 32)
+		SZNTEST_ENUM_VALUES(le, 64)
 
-		SZNTEST_ENUM_VALUES(BE, 8)
-		SZNTEST_ENUM_VALUES(BE, 16)
-		SZNTEST_ENUM_VALUES(BE, 32)
-		SZNTEST_ENUM_VALUES(BE, 64)
+		SZNTEST_ENUM_VALUES(be, 8)
+		SZNTEST_ENUM_VALUES(be, 16)
+		SZNTEST_ENUM_VALUES(be, 32)
+		SZNTEST_ENUM_VALUES(be, 64)
 
 #undef SZNTEST_ENUM_VALUES
 	}
@@ -564,15 +564,15 @@ namespace szn
 		BOOST_CHECK(serializationRoundtrip(TestEnumClass::NonZero, szn:: BOOST_PP_CAT(endianness, bitsize) ())); \
 		BOOST_CHECK(serializationRoundtrip(TestEnumClass::Ones, szn:: BOOST_PP_CAT(endianness, bitsize) ()));
 
-		SZNTEST_ENUM_VALUES(LE, 8)
-		SZNTEST_ENUM_VALUES(LE, 16)
-		SZNTEST_ENUM_VALUES(LE, 32)
-		SZNTEST_ENUM_VALUES(LE, 64)
+		SZNTEST_ENUM_VALUES(le, 8)
+		SZNTEST_ENUM_VALUES(le, 16)
+		SZNTEST_ENUM_VALUES(le, 32)
+		SZNTEST_ENUM_VALUES(le, 64)
 
-		SZNTEST_ENUM_VALUES(BE, 8)
-		SZNTEST_ENUM_VALUES(BE, 16)
-		SZNTEST_ENUM_VALUES(BE, 32)
-		SZNTEST_ENUM_VALUES(BE, 64)
+		SZNTEST_ENUM_VALUES(be, 8)
+		SZNTEST_ENUM_VALUES(be, 16)
+		SZNTEST_ENUM_VALUES(be, 32)
+		SZNTEST_ENUM_VALUES(be, 64)
 
 #undef SZNTEST_ENUM_VALUES
 	}
@@ -597,23 +597,23 @@ namespace szn
 
 	BOOST_AUTO_TEST_CASE(Serialization_min_size)
 	{
-		BOOST_CHECK(testExactSize(szn::BE8(), 1));
-		BOOST_CHECK(testExactSize(szn::BE16(), 2));
-		BOOST_CHECK(testExactSize(szn::BE32(), 4));
-		BOOST_CHECK(testExactSize(szn::BE64(), 8));
+		BOOST_CHECK(testExactSize(szn::be8(), 1));
+		BOOST_CHECK(testExactSize(szn::be16(), 2));
+		BOOST_CHECK(testExactSize(szn::be32(), 4));
+		BOOST_CHECK(testExactSize(szn::be64(), 8));
 
-		BOOST_CHECK(testExactSize(szn::LE8(), 1));
-		BOOST_CHECK(testExactSize(szn::LE16(), 2));
-		BOOST_CHECK(testExactSize(szn::LE32(), 4));
-		BOOST_CHECK(testExactSize(szn::LE64(), 8));
+		BOOST_CHECK(testExactSize(szn::le8(), 1));
+		BOOST_CHECK(testExactSize(szn::le16(), 2));
+		BOOST_CHECK(testExactSize(szn::le32(), 4));
+		BOOST_CHECK(testExactSize(szn::le64(), 8));
 
 		BOOST_CHECK(testExactSize(szn::boolean(), 1));
 
-		BOOST_CHECK(testMinMaxSize(szn::bytes<szn::LE32>(), 4,
+		BOOST_CHECK(testMinMaxSize(szn::bytes<szn::le32>(), 4,
 		                           std::numeric_limits<std::size_t>::max()));
 
 #if SZN_HAS_UNIQUE_PTR
-		BOOST_CHECK(testExactSize(szn::unique_ptr<szn::LE64>(), 8));
+		BOOST_CHECK(testExactSize(szn::unique_ptr<szn::le64>(), 8));
 #endif
 	}
 }

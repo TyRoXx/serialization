@@ -17,10 +17,10 @@ namespace szn
 		}
 	};
 
-	typedef integer<1, little_endian_byte_order> LE8;
-	typedef integer<2, little_endian_byte_order> LE16;
-	typedef integer<4, little_endian_byte_order> LE32;
-	typedef integer<8, little_endian_byte_order> LE64;
+	typedef integer<1, little_endian_byte_order> le8;
+	typedef integer<2, little_endian_byte_order> le16;
+	typedef integer<4, little_endian_byte_order> le32;
+	typedef integer<8, little_endian_byte_order> le64;
 }
 
 

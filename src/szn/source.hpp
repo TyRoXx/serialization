@@ -44,13 +44,13 @@ namespace szn
 	namespace detail
 	{
 		template <class To, class From>
-		To castIterator(From const &from)
+		To cast_iterator(From const &from)
 		{
 			return from;
 		}
 
 		template <class To, class From>
-		To castIterator(From const *from)
+		To cast_iterator(From const *from)
 		{
 			return reinterpret_cast<To>(from);
 		}
@@ -70,8 +70,8 @@ namespace szn
 		explicit range_source(Range const &range)
 			: m_position(0)
 		{
-			m_range = range_type(detail::castIterator<const_iterator>(boost::begin(range)),
-								 detail::castIterator<const_iterator>(boost::end(range)));
+			m_range = range_type(detail::cast_iterator<const_iterator>(boost::begin(range)),
+								 detail::cast_iterator<const_iterator>(boost::end(range)));
 		}
 
 		virtual void load(std::size_t n) SZN_OVERRIDE

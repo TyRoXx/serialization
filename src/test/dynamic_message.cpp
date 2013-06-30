@@ -16,8 +16,8 @@ namespace szn
 		auto sink = makeContainerSink(generated);
 
 		//this should be possible with less typing:
-		szn::serialize(sink, 12, szn::BE32());
-		szn::serialize(sink, "hello", szn::bytes<szn::BE16>());
+		szn::serialize(sink, 12, szn::be32());
+		szn::serialize(sink, "hello", szn::bytes<szn::be16>());
 		szn::serialize(sink, true, szn::boolean());
 
 		/* //ideas:

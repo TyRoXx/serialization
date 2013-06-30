@@ -13,11 +13,11 @@ namespace szn
 		{
 			RXN_REFLECT(
 				(SZN_AUTO_MEMBERS) (SZN_ITERATE),
-				(a, szn::BE16) (int),
-				(b, szn::BE32),
-				(c, szn::bytes<szn::BE8>),
-				(d, szn::bytes<szn::BE8>) (std::string),
-				(v, szn::vector<szn::BE8, szn::BE16>)
+				(a, szn::be16) (int),
+				(b, szn::be32),
+				(c, szn::bytes<szn::be8>),
+				(d, szn::bytes<szn::be8>) (std::string),
+				(v, szn::vector<szn::be8, szn::be16>)
 			)
 		};
 

@@ -12,20 +12,20 @@ namespace szn
 		struct TestStruct
 		{
 			typedef std::vector<int, std::allocator<int> > VectorInt;
-			typedef szn::vector<szn::BE8, szn::BE16> Vector8_16;
+			typedef szn::vector<szn::be8, szn::be16> Vector8_16;
 
 			RXN_REFLECT(
 				(RXN_MEMBERS) (RXN_ITERATE),
-				(a, int) (szn::BE16),
-				(b, long) (szn::BE32),
-				(c, std::string) (szn::bytes<szn::BE8>),
-				(v, std::vector<int, std::allocator<int>>) (szn::vector<szn::BE8, szn::BE16>)
+				(a, int) (szn::be16),
+				(b, long) (szn::be32),
+				(c, std::string) (szn::bytes<szn::be8>),
+				(v, std::vector<int, std::allocator<int>>) (szn::vector<szn::be8, szn::be16>)
 			)
 		};
 
 #define TEST_STRUCT_2_MEMBERS \
-		(name, std::string) (szn::bytes<szn::BE32>), \
-		(id, int) (szn::BE16)
+		(name, std::string) (szn::bytes<szn::be32>), \
+		(id, int) (szn::be16)
 
 		struct TestStruct2
 		{
@@ -44,8 +44,8 @@ namespace szn
 
 	BOOST_AUTO_TEST_CASE(Serialization_Syntax_v2)
 	{
-	//	static_assert(false, BOOST_PP_STRINGIZE((RXN_VISIT(name, (type), ((szn::BE8))))));
-	//	static_assert(false, BOOST_PP_STRINGIZE((RXN_VISIT(name, (type), ((szn::Vector<szn::BE8, szn::BE16>))))));
+	//	static_assert(false, BOOST_PP_STRINGIZE((RXN_VISIT(name, (type), ((szn::be8))))));
+	//	static_assert(false, BOOST_PP_STRINGIZE((RXN_VISIT(name, (type), ((szn::Vector<szn::be8, szn::be16>))))));
 
 		TestStruct t;
 		t.a = 0;
