@@ -28,4 +28,19 @@ namespace szn
 #define SZN_AUTO_MEMBERS(fields) BOOST_PP_SEQ_FOR_EACH_I(RXN_GENERATE_FIELD, SZN_AUTO_MEMBER, fields)
 
 
+#define SZN_ITERATE_ACCEPT_MEMBER(name, format, annotations) \
+	visitor.template accept<RXN_REMOVE_PAREN(format)> \
+						   (this->name);
+
+#define SZN_ITERATE(fields) \
+	template <class Visitor> \
+	void iterate(Visitor &visitor) { \
+		BOOST_PP_SEQ_FOR_EACH_I(RXN_GENERATE_FIELD, SZN_ITERATE_ACCEPT_MEMBER, fields) \
+	} \
+	template <class Visitor> \
+	void iterate(Visitor &visitor) const { \
+		BOOST_PP_SEQ_FOR_EACH_I(RXN_GENERATE_FIELD, SZN_ITERATE_ACCEPT_MEMBER, fields) \
+	}
+
+
 #endif

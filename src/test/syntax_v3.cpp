@@ -11,21 +11,27 @@ namespace szn
 	{
 		struct TestStruct
 		{
-			typedef std::vector<int, std::allocator<int> > VectorInt;
-			typedef szn::Vector<szn::BE8, szn::BE16> Vector8_16;
-
 			RXN_REFLECT(
-				(SZN_AUTO_MEMBERS),
+				(SZN_AUTO_MEMBERS) (SZN_ITERATE),
 				(a, szn::BE16) (int),
 				(b, szn::BE32),
 				(c, szn::Bytes<szn::BE8>),
-			    (d, szn::Bytes<szn::BE8>) (std::string),
+				(d, szn::Bytes<szn::BE8>) (std::string),
 				(v, szn::Vector<szn::BE8, szn::BE16>)
 			)
 		};
+
+		struct TestVisitor
+		{
+			template <class Format, class Value>
+			void accept(Value &value)
+			{
+				(void)value;
+			}
+		};
 	}
 
-	BOOST_AUTO_TEST_CASE(Serialization_Syntax_v3)
+	BOOST_AUTO_TEST_CASE(Serialization_Syntax_v3_auto_members)
 	{
 		TestStruct t;
 		t.a = 0;
@@ -33,5 +39,8 @@ namespace szn
 		t.c.resize(32);
 		t.d = "hallo";
 		t.v.resize(2, 12);
+
+		TestVisitor v;
+		t.iterate(v);
 	}
 }
