@@ -18,15 +18,15 @@ namespace szn
 
 		typedef std::unique_ptr<typename PointeeFormat::default_type> default_type;
 
-		template <class Pointee, class Deleter>
-		void serialize(sink &sink, const std::unique_ptr<Pointee, Deleter> &p) const
+		template <class Sink, class Pointee, class Deleter>
+		void serialize(Sink &sink, const std::unique_ptr<Pointee, Deleter> &p) const
 		{
 			using szn::serialize;
 			serialize(sink, *p, PointeeFormat());
 		}
 
-		template <class Pointee, class Deleter>
-		void deserialize(source &source, std::unique_ptr<Pointee, Deleter> &p) const
+		template <class Source, class Pointee, class Deleter>
+		void deserialize(Source &source, std::unique_ptr<Pointee, Deleter> &p) const
 		{
 			using szn::deserialize;
 			if (!p)

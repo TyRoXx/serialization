@@ -9,15 +9,11 @@
 
 namespace szn
 {
-	struct sink;
-	struct source;
-
-
 	template <class IntegerFormat>
 	struct binary_float
 	{
-		template <class Float>
-		void serialize(sink &sink, Float value) const
+		template <class Sink, class Float>
+		void serialize(Sink &sink, Float value) const
 		{
 			typename compatible_int<Float>::type intValue;
 
@@ -29,8 +25,8 @@ namespace szn
 			serialize(sink, intValue, IntegerFormat());
 		}
 
-		template <class Float>
-		void deserialize(source &source, Float &value) const
+		template <class Source, class Float>
+		void deserialize(Source &source, Float &value) const
 		{
 			typename compatible_int<Float>::type intValue;
 
@@ -59,9 +55,9 @@ namespace szn
 		struct float_predicate : boost::is_floating_point<Float> {};
 
 
-		template <class Float>
+		template <class Sink, class Float>
 		typename boost::enable_if_c<float_predicate<Float>::value, void>::type
-		serialize(sink &sink, Float value) const
+		serialize(Sink &sink, Float value) const
 		{
 			//TODO optimize
 			std::ostringstream converter;
@@ -72,9 +68,9 @@ namespace szn
 			sink.write(str.c_str(), str.size() + 1);
 		}
 
-		template <class Float>
+		template <class Sink, class Float>
 		typename boost::enable_if_c<float_predicate<Float>::value, void>::type
-		deserialize(sink &sink, Float &value) const
+		deserialize(Sink &sink, Float &value) const
 		{
 			assert(NULL == "TODO");
 		}

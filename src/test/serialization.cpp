@@ -15,6 +15,9 @@
 #include <szn/unique_ptr.hpp>
 #include <szn/endianness.hpp>
 #include <szn/format.hpp>
+#include <szn/sink.hpp>
+#include <szn/source.hpp>
+
 
 namespace szn
 {
