@@ -1,7 +1,6 @@
 #include <boost/test/unit_test.hpp>
 
 #include <szn/writer.hpp>
-#include <szn/big_endian.hpp>
 
 namespace szn
 {

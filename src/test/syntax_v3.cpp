@@ -23,7 +23,7 @@ namespace szn
 			)
 		};
 
-		struct TestVisitor
+		struct NullVisitor
 		{
 			template <class Format, class Value>
 			void accept(Value &value)
@@ -55,19 +55,37 @@ namespace szn
 
 			std::ostream &out;
 		};
+
+		TestStruct createTestStruct()
+		{
+			TestStruct t;
+			t.a = 0;
+			t.b = 3;
+			t.c.resize(32);
+			t.d = "hallo";
+			t.v.resize(2, 12);
+			return t;
+		}
 	}
 
 	BOOST_AUTO_TEST_CASE(Serialization_Syntax_v3_auto_members)
 	{
-		TestStruct t;
-		t.a = 0;
-		t.b = 3;
-		t.c.resize(32);
-		t.d = "hallo";
-		t.v.resize(2, 12);
+		TestStruct const t = createTestStruct();
+		BOOST_CHECK_EQUAL(t.a, 0);
+		BOOST_CHECK_EQUAL(t.b, 3);
+		BOOST_CHECK(t.c == std::vector<char>(32));
+		BOOST_CHECK_EQUAL(t.d, "hallo");
+		BOOST_CHECK(t.v == std::vector<be16::default_type>(2, 12));
+	}
 
-		TestVisitor v;
-		t.iterate(v);
+	BOOST_AUTO_TEST_CASE(Serialization_Syntax_v3_iterate)
+	{
+		TestStruct const t = createTestStruct();
+
+		{
+			NullVisitor v;
+			t.iterate(v);
+		}
 
 		std::ostringstream buffer;
 		PrintingVisitor p((buffer));
