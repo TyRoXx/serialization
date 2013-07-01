@@ -23,6 +23,12 @@ namespace szn
 			)
 		};
 
+		struct Empty
+		{
+			//TODO: make empty structures compile
+//			RXN_REFLECT((SZN_AUTO_MEMBERS) (SZN_ITERATE))
+		};
+
 		struct NullVisitor
 		{
 			template <class Format, class Value>

@@ -42,3 +42,4 @@ Things to do in no particular order
 * investigate sign extension problems to find safe solutions
 * use 64-bit integer for sizes in bits or bytes instead of std::size_t
   * boost::uintmax_t is an option
+* RXN_REFLECT should support an empty field list
