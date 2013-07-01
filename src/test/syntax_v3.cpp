@@ -1,9 +1,11 @@
 #include <boost/test/unit_test.hpp>
+#include <boost/assign/list_of.hpp>
 
 #include <szn/struct3.hpp>
 #include <szn/bytes.hpp>
 #include <szn/big_endian.hpp>
 #include <szn/vector.hpp>
+#include <szn/struct.hpp>
 
 #include <sstream>
 
@@ -11,7 +13,7 @@ namespace szn
 {
 	namespace
 	{
-		struct TestStruct
+		struct SimpleStruct
 		{
 			RXN_REFLECT(
 				(SZN_AUTO_MEMBERS) (SZN_ITERATE),
@@ -62,9 +64,9 @@ namespace szn
 			std::ostream &out;
 		};
 
-		TestStruct createTestStruct()
+		SimpleStruct createSimpleStruct()
 		{
-			TestStruct t;
+			SimpleStruct t;
 			t.a = 0;
 			t.b = 3;
 			t.c.resize(32);
@@ -72,11 +74,49 @@ namespace szn
 			t.v.resize(2, 12);
 			return t;
 		}
+
+		struct Tree
+		{
+			RXN_REFLECT((SZN_AUTO_MEMBERS) (SZN_ITERATE),
+			            (value, be64),
+			            (children, vector<be32, structure>) (std::vector<Tree>)
+			            )
+
+			explicit Tree(be64::default_type value)
+			    : value(value)
+			{
+			}
+		};
+
+		struct TreeFlattener
+		{
+			std::vector<be64::default_type> values;
+
+			template <class Format>
+			void accept(be64::default_type value)
+			{
+				values.push_back(value);
+			}
+
+			template <class Format>
+			void accept(std::vector<Tree> const &children)
+			{
+				BOOST_FOREACH (Tree const &child, children)
+				{
+					visit(child);
+				}
+			}
+
+			void visit(Tree const &tree)
+			{
+				tree.iterate(*this);
+			}
+		};
 	}
 
 	BOOST_AUTO_TEST_CASE(Serialization_Syntax_v3_auto_members)
 	{
-		TestStruct const t = createTestStruct();
+		SimpleStruct const t = createSimpleStruct();
 		BOOST_CHECK_EQUAL(t.a, 0);
 		BOOST_CHECK_EQUAL(t.b, 3);
 		BOOST_CHECK(t.c == std::vector<char>(32));
@@ -86,7 +126,7 @@ namespace szn
 
 	BOOST_AUTO_TEST_CASE(Serialization_Syntax_v3_iterate)
 	{
-		TestStruct const t = createTestStruct();
+		SimpleStruct const t = createSimpleStruct();
 
 		{
 			NullVisitor v;
@@ -97,5 +137,21 @@ namespace szn
 		PrintingVisitor p((buffer));
 		t.iterate(p);
 		BOOST_CHECK_EQUAL("0\n3\nvector\nhallo\nvector\n", buffer.str());
+	}
+
+	BOOST_AUTO_TEST_CASE(Serialization_Syntax_v3_recursion)
+	{
+		Tree root((8));
+		root.children.push_back(Tree(7));
+		root.children.push_back(Tree(6));
+		root.children.push_back(root);
+
+		TreeFlattener v;
+		v.visit(root);
+
+		std::vector<be64::default_type> const expectedValues =
+		        boost::assign::list_of(8)(7)(6)(8)(7)(6);
+
+		BOOST_CHECK(v.values == expectedValues);
 	}
 }
