@@ -13,7 +13,7 @@ namespace szn
 		szn::writer(sink)
 			.be32(12)
 			.bytes<be16>("hello")
-			.boolean(true)
+			.boolean8(true)
 			;
 
 		char const expectedBytes[] =
