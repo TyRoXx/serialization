@@ -3,6 +3,7 @@
 
 
 #include <szn/big_endian.hpp>
+#include <szn/format.hpp>
 
 
 namespace szn

@@ -1,35 +1,20 @@
 #include <boost/test/unit_test.hpp>
 
-#include <szn/bytes.hpp>
+#include <szn/writer.hpp>
 #include <szn/big_endian.hpp>
-#include <szn/bool.hpp>
 
 namespace szn
 {
-	namespace
-	{
-	}
-
 	BOOST_AUTO_TEST_CASE(Serialization_dynamic_message)
 	{
 		std::string generated;
 		auto sink = make_container_sink(generated);
 
-		//this should be possible with less typing:
-		szn::serialize(sink, 12, szn::be32());
-		szn::serialize(sink, "hello", szn::bytes<szn::be16>());
-		szn::serialize(sink, true, szn::boolean());
-
-		/* //ideas:
 		szn::writer(sink)
 			.be32(12)
-		    .be<32>(12)
-			.bytes16("hello")
-		    .utf8<16>("hello")
+			.bytes<be16>("hello")
 			.boolean(true)
-		    .bool_(true)
 			;
-		*/
 
 		char const expectedBytes[] =
 		{
