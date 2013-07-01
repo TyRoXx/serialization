@@ -5,6 +5,8 @@
 #include <szn/big_endian.hpp>
 #include <szn/vector.hpp>
 
+#include <sstream>
+
 namespace szn
 {
 	namespace
@@ -13,11 +15,11 @@ namespace szn
 		{
 			RXN_REFLECT(
 				(SZN_AUTO_MEMBERS) (SZN_ITERATE),
-				(a, szn::be16) (int),
-				(b, szn::be32),
-				(c, szn::bytes<szn::be8>),
-				(d, szn::bytes<szn::be8>) (std::string),
-				(v, szn::vector<szn::be8, szn::be16>)
+				(a, be16) (int),
+				(b, be32),
+				(c, bytes<be8>),
+				(d, bytes<be8>) (std::string),
+				(v, vector<be8, be16>)
 			)
 		};
 
@@ -28,6 +30,30 @@ namespace szn
 			{
 				(void)value;
 			}
+		};
+
+		struct PrintingVisitor
+		{
+			explicit PrintingVisitor(std::ostream &out)
+			    : out(out)
+			{
+			}
+
+			template <class Format, class Value>
+			void accept(Value const &value)
+			{
+				out << value << '\n';
+			}
+
+			template <class Format, class T>
+			void accept(std::vector<T> const &)
+			{
+				out << "vector\n";
+			}
+
+		private:
+
+			std::ostream &out;
 		};
 	}
 
@@ -42,5 +68,10 @@ namespace szn
 
 		TestVisitor v;
 		t.iterate(v);
+
+		std::ostringstream buffer;
+		PrintingVisitor p((buffer));
+		t.iterate(p);
+		BOOST_CHECK_EQUAL("0\n3\nvector\nhallo\nvector\n", buffer.str());
 	}
 }
