@@ -619,4 +619,21 @@ namespace szn
 		BOOST_CHECK(testExactSize(szn::unique_ptr<szn::le64>(), 8));
 #endif
 	}
+
+	BOOST_AUTO_TEST_CASE(Serialization_bytes_non_pointer)
+	{
+		std::string generated;
+		{
+			BOOST_AUTO(sink, make_container_sink(generated));
+			szn::bytes<szn::be8> format;
+			std::string const value = "value";
+			format.serialize(sink, boost::make_iterator_range(value.begin(),
+															  value.end()));
+		}
+		char const expected[] =
+		{
+		    5, 'v', 'a', 'l', 'u', 'e'
+		};
+		BOOST_CHECK_EQUAL(generated, expected);
+	}
 }
