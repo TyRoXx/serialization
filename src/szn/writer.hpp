@@ -27,8 +27,8 @@ namespace szn
 		writer &boolean8(bool value);
 		writer &raw(char const *data, size_t length);
 
-		template <class LengthFormat, class ByteContainer>
-		writer &bytes(ByteContainer const &value)
+		template <class LengthFormat, class FlexibleByteRange>
+		writer &bytes(FlexibleByteRange const &value)
 		{
 			return this->value<szn::bytes<LengthFormat>>(value);
 		}
