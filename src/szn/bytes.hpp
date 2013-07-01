@@ -6,6 +6,7 @@
 #include <szn/source.hpp>
 #include <szn/util.hpp>
 #include <szn/format.hpp>
+#include <szn/to_bytes.hpp>
 #include <boost/static_assert.hpp>
 #include <string>
 #include <vector>
@@ -27,11 +28,12 @@ namespace szn
 
 		typedef std::vector<char> default_type;
 
-		//std::string
-		void serialize(sink &sink, const std::string &str) const
+		template <class ByteRange>
+		void serialize(sink &sink, const ByteRange &range) const
 		{
-			szn::serialize(sink, str.length(), LengthFormat());
-			sink.write(str.data(), str.length());
+			auto const data = to_bytes(range);
+			LengthFormat().serialize(sink, data.second);
+			sink.write(data.first, data.second);
 		}
 
 		void deserialize(source &source, std::string &str) const
@@ -39,33 +41,11 @@ namespace szn
 			return deserializeContainer(source, str);
 		}
 
-		//std::vector
-		template <class Byte, class Allocator>
-		typename boost::enable_if_c<sizeof(Byte) == 1, void>::type
-		serialize(sink &sink, const std::vector<Byte, Allocator> &v) const
-		{
-			return serialize(sink, std::make_pair(v.begin(), v.end()));
-		}
-
 		template <class Byte, class Allocator>
 		typename boost::enable_if_c<sizeof(Byte) == 1, void>::type
 		deserialize(source &source, std::vector<Byte, Allocator> &v) const
 		{
 			return deserializeContainer(source, v);
-		}
-
-		//std::pair<Iterator, Iterator>
-		template <class ByteRandomAccessIterator>
-		typename boost::enable_if_c<sizeof(typename std::iterator_traits<ByteRandomAccessIterator>::value_type) == 1, void>::type
-		serialize(sink &sink,
-				  std::pair<ByteRandomAccessIterator, ByteRandomAccessIterator> range) const
-		{
-			using szn::serialize;
-			const typename std::iterator_traits<ByteRandomAccessIterator>::difference_type size = std::distance(range.first, range.second);
-			serialize(sink, size, LengthFormat());
-			const char * const data = reinterpret_cast<const char *>(&*range.first);
-			BOOST_STATIC_ASSERT(sizeof(*data) == 1);
-			sink.write(data, size);
 		}
 
 		template <class ByteRandomAccessIterator>
