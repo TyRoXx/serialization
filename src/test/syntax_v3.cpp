@@ -13,7 +13,7 @@ namespace szn
 {
 	namespace
 	{
-		struct SimpleStruct
+		struct simple_struct
 		{
 			RXN_REFLECT(
 				(SZN_AUTO_MEMBERS) (SZN_ITERATE),
@@ -25,13 +25,13 @@ namespace szn
 			)
 		};
 
-		struct Empty
+		struct empty
 		{
 			//TODO: make empty structures compile
 //			RXN_REFLECT((SZN_AUTO_MEMBERS) (SZN_ITERATE))
 		};
 
-		struct NullVisitor
+		struct null_visitor
 		{
 			template <class Format, class Value>
 			void accept(Value &value)
@@ -40,9 +40,9 @@ namespace szn
 			}
 		};
 
-		struct PrintingVisitor
+		struct printing_visitor
 		{
-			explicit PrintingVisitor(std::ostream &out)
+			explicit printing_visitor(std::ostream &out)
 			    : out(out)
 			{
 			}
@@ -64,9 +64,9 @@ namespace szn
 			std::ostream &out;
 		};
 
-		SimpleStruct createSimpleStruct()
+		simple_struct create_simple_struct()
 		{
-			SimpleStruct t;
+			simple_struct t;
 			t.a = 0;
 			t.b = 3;
 			t.c.resize(32);
@@ -75,20 +75,20 @@ namespace szn
 			return t;
 		}
 
-		struct Tree
+		struct tree
 		{
 			RXN_REFLECT((SZN_AUTO_MEMBERS) (SZN_ITERATE),
 			            (value, be64),
-			            (children, vector<be32, structure>) (std::vector<Tree>)
+			            (children, vector<be32, structure>) (std::vector<tree>)
 			            )
 
-			explicit Tree(be64::default_type value)
+			explicit tree(be64::default_type value)
 			    : value(value)
 			{
 			}
 		};
 
-		struct TreeFlattener
+		struct tree_flattener
 		{
 			std::vector<be64::default_type> values;
 
@@ -99,15 +99,15 @@ namespace szn
 			}
 
 			template <class Format>
-			void accept(std::vector<Tree> const &children)
+			void accept(std::vector<tree> const &children)
 			{
-				BOOST_FOREACH (Tree const &child, children)
+				BOOST_FOREACH (tree const &child, children)
 				{
 					visit(child);
 				}
 			}
 
-			void visit(Tree const &tree)
+			void visit(tree const &tree)
 			{
 				tree.iterate(*this);
 			}
@@ -116,7 +116,7 @@ namespace szn
 
 	BOOST_AUTO_TEST_CASE(Serialization_Syntax_v3_auto_members)
 	{
-		SimpleStruct const t = createSimpleStruct();
+		simple_struct const t = create_simple_struct();
 		BOOST_CHECK_EQUAL(t.a, 0);
 		BOOST_CHECK_EQUAL(t.b, 3);
 		BOOST_CHECK(t.c == std::vector<char>(32));
@@ -126,27 +126,27 @@ namespace szn
 
 	BOOST_AUTO_TEST_CASE(Serialization_Syntax_v3_iterate)
 	{
-		SimpleStruct const t = createSimpleStruct();
+		simple_struct const t = create_simple_struct();
 
 		{
-			NullVisitor v;
+			null_visitor v;
 			t.iterate(v);
 		}
 
 		std::ostringstream buffer;
-		PrintingVisitor p((buffer));
+		printing_visitor p((buffer));
 		t.iterate(p);
 		BOOST_CHECK_EQUAL("0\n3\nvector\nhallo\nvector\n", buffer.str());
 	}
 
 	BOOST_AUTO_TEST_CASE(Serialization_Syntax_v3_recursion)
 	{
-		Tree root((8));
-		root.children.push_back(Tree(7));
-		root.children.push_back(Tree(6));
+		tree root((8));
+		root.children.push_back(tree(7));
+		root.children.push_back(tree(6));
 		root.children.push_back(root);
 
-		TreeFlattener v;
+		tree_flattener v;
 		v.visit(root);
 
 		std::vector<be64::default_type> const expectedValues =
