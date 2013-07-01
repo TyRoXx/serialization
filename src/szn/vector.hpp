@@ -4,6 +4,7 @@
 
 #include <szn/util.hpp>
 #include <boost/foreach.hpp>
+#include <boost/move/move.hpp>
 
 
 namespace szn
@@ -15,8 +16,8 @@ namespace szn
 	{
 		typedef std::vector<typename ElementFormat::default_type> default_type;
 
-		template <class Element>
-		void serialize(sink &sink, const std::vector<Element> &v) const
+		template <class Sink, class Element>
+		void serialize(Sink &sink, const std::vector<Element> &v) const
 		{
 			szn::serialize(sink, v.size(), LengthFormat());
 
@@ -26,8 +27,8 @@ namespace szn
 			}
 		}
 
-		template <class Element>
-		void deserialize(source &source, std::vector<Element> &v) const
+		template <class Source, class Element>
+		void deserialize(Source &source, std::vector<Element> &v) const
 		{
 			std::size_t length = 0;
 			szn::deserialize(source, length, LengthFormat());

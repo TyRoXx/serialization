@@ -4,6 +4,7 @@
 
 #include <cstring>
 #include <vector>
+#include <string>
 
 
 namespace szn
