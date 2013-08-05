@@ -88,7 +88,7 @@ namespace szn
 		virtual char get(length_type index) SZN_OVERRIDE
 		{
 			assert(index < size());
-			return boost::next(boost::begin(m_range), m_position)[index];
+			return boost::next(boost::begin(m_range), m_position)[static_cast<size_t>(index)];
 		}
 
 		virtual void drop(length_type n) SZN_OVERRIDE

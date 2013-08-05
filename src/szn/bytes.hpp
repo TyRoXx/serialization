@@ -114,7 +114,7 @@ namespace szn
 		{
 			assert(length == static_cast<boost::uintmax_t>(std::distance(begin, end)));
 			char const * const data = reinterpret_cast<char const *>(begin);
-			sink.write(data, length);
+			sink.write(data, std::distance(begin, end));
 		}
 
 		template <class Sink, class ByteIterator>
