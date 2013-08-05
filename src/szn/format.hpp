@@ -3,6 +3,8 @@
 
 
 #include <boost/utility/declval.hpp>
+#include <boost/integer/static_min_max.hpp>
+#include <boost/static_assert.hpp>
 
 
 namespace szn
@@ -59,6 +61,23 @@ namespace szn
 	struct max_size<Format, false> : boost::integral_constant<length_type, 0>
 	{
 	};
+
+
+	template <length_type First, length_type Second>
+	struct add_lengths : boost::integral_constant<
+		length_type,
+		First + boost::static_unsigned_min<Second, static_cast<length_type>(-1) - First>::value>
+	{
+	};
+
+	BOOST_STATIC_ASSERT((add_lengths<0, 0>::value == 0));
+	BOOST_STATIC_ASSERT((add_lengths<1, 0>::value == 1));
+	BOOST_STATIC_ASSERT((add_lengths<0, 1>::value == 1));
+	BOOST_STATIC_ASSERT((add_lengths<static_cast<length_type>(-1), 0>::value == static_cast<length_type>(-1)));
+	BOOST_STATIC_ASSERT((add_lengths<static_cast<length_type>(-1), 1>::value == static_cast<length_type>(-1)));
+	BOOST_STATIC_ASSERT((add_lengths<static_cast<length_type>(-1) - 10, 8>::value == (static_cast<length_type>(-1) - 2)));
+	BOOST_STATIC_ASSERT((add_lengths<static_cast<length_type>(-1) - 10, 10>::value == static_cast<length_type>(-1)));
+	BOOST_STATIC_ASSERT((add_lengths<static_cast<length_type>(-1) - 10, 12>::value == static_cast<length_type>(-1)));
 }
 
 
