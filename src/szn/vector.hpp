@@ -16,19 +16,19 @@ namespace szn
 	{
 		typedef std::vector<typename ElementFormat::default_type> default_type;
 
-		template <class Sink, class Element>
-		void serialize(Sink &sink, const std::vector<Element> &v) const
+		template <class Sink, class SizedSequence>
+		void serialize(Sink &sink, SizedSequence const &v) const
 		{
 			szn::serialize(sink, v.size(), LengthFormat());
 
-			BOOST_FOREACH (const Element &e, v)
+			BOOST_FOREACH (const typename SizedSequence::value_type &e, v)
 			{
 				szn::serialize(sink, e, ElementFormat());
 			}
 		}
 
-		template <class Source, class Element>
-		void deserialize(Source &source, std::vector<Element> &v) const
+		template <class Source, class Sequence>
+		void deserialize(Source &source, Sequence &v) const
 		{
 			std::size_t length = 0;
 			szn::deserialize(source, length, LengthFormat());
@@ -38,7 +38,7 @@ namespace szn
 
 			for (std::size_t i = 0; i < length; ++i)
 			{
-				Element e;
+				typename Sequence::value_type e;
 				szn::deserialize(source, e, ElementFormat());
 				v.push_back(boost::move(e));
 			}

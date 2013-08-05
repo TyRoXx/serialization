@@ -15,11 +15,12 @@
 #include <szn/format.hpp>
 #include <szn/sink.hpp>
 #include <szn/source.hpp>
+#include <szn/pair.hpp>
 
 #include <boost/preprocessor/cat.hpp>
 #include <boost/cstdint.hpp>
 #include <sstream>
-
+#include <map>
 
 namespace szn
 {
@@ -685,5 +686,35 @@ namespace szn
 		                      std::runtime_error,
 		                      is_bytes_input_fail_exception);
 
+	}
+
+	BOOST_AUTO_TEST_CASE(Serialization_std_map_serialize)
+	{
+		std::string generated;
+		BOOST_AUTO(sink, make_container_sink(generated));
+		szn::vector<szn::le8, szn::pair<szn::bytes<szn::le8>, szn::le16>> format;
+		std::map<std::string, boost::uint16_t> value;
+
+		{
+			format.serialize(sink, value);
+			std::string const expected(1, 0);
+			BOOST_CHECK_EQUAL(generated, expected);
+		}
+
+		{
+			value["abc"] = 0x1234;
+			generated.clear();
+			format.serialize(sink, value);
+			char const expected[] = {1, 3, 'a', 'b', 'c', 0x34, 0x12};
+			BOOST_CHECK_EQUAL(generated, std::string(expected, 7));
+		}
+
+		{
+			value["def"] = 0x5678;
+			generated.clear();
+			format.serialize(sink, value);
+			char const expected[] = {2, 3, 'a', 'b', 'c', 0x34, 0x12, 3, 'd', 'e', 'f', 0x78, 0x56};
+			BOOST_CHECK_EQUAL(generated, std::string(expected, 13));
+		}
 	}
 }
