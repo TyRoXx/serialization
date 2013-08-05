@@ -9,7 +9,7 @@
 namespace szn
 {
 	template <class Format, class ValuePolicy>
-	struct basic_bool
+	struct basic_bool SZN_FINAL
 	{
 		static length_type const min_size = min_size<Format>::value;
 		static length_type const max_size = max_size<Format>::value;
@@ -31,7 +31,7 @@ namespace szn
 		}
 	};
 
-	struct byte_bool
+	struct byte_bool SZN_FINAL
 	{
 		typedef unsigned char value_type;
 
@@ -48,6 +48,29 @@ namespace szn
 	};
 
 	typedef basic_bool<be8, byte_bool> boolean;
+
+	template <class UnderlyingBool>
+	struct not SZN_FINAL
+	{
+		typedef typename UnderlyingBool::default_type default_type;
+
+		static length_type const min_size = min_size<UnderlyingBool>::value;
+		static length_type const max_size = max_size<UnderlyingBool>::value;
+
+		template <class Sink>
+		void serialize(Sink &sink, bool value) const
+		{
+			UnderlyingBool().serialize(sink, !value);
+		}
+
+		template <class Source>
+		void deserialize(Source &source, bool &value) const
+		{
+			bool underlying_value = false;
+			UnderlyingBool().deserialize(source, underlying_value);
+			value = !underlying_value;
+		}
+	};
 }
 
 

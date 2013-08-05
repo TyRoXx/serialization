@@ -426,8 +426,11 @@ namespace szn
 
 	BOOST_AUTO_TEST_CASE(Serialization_Bool)
 	{
-		BOOST_CHECK(serializationRoundtrip(true, szn::boolean()));
+		BOOST_CHECK(serializationRoundtrip(true,  szn::boolean()));
 		BOOST_CHECK(serializationRoundtrip(false, szn::boolean()));
+
+		BOOST_CHECK(serializationRoundtrip(true,  szn::not<szn::boolean>()));
+		BOOST_CHECK(serializationRoundtrip(false, szn::not<szn::boolean>()));
 	}
 
 #if SZN_HAS_UNIQUE_PTR
