@@ -16,6 +16,10 @@ namespace szn
 	{
 		typedef std::vector<typename ElementFormat::default_type> default_type;
 
+		static length_type const min_size = min_size<LengthFormat>::value;
+		//TODO: max_size can be limited by the length and/or element format
+		static length_type const max_size = ~static_cast<length_type>(0);
+
 		template <class Sink, class Container>
 		void serialize(Sink &sink, Container const &v) const
 		{

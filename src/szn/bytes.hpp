@@ -24,8 +24,8 @@ namespace szn
 	template <class LengthFormat>
 	struct bytes
 	{
-		static std::size_t const min_size = min_size<LengthFormat>::value;
-		static std::size_t const max_size = ~static_cast<std::size_t>(0);
+		static length_type const min_size = min_size<LengthFormat>::value;
+		static length_type const max_size = ~static_cast<length_type>(0);
 
 		typedef std::vector<char> default_type;
 

@@ -587,15 +587,15 @@ namespace szn
 	namespace
 	{
 		template <class Format>
-		bool testMinMaxSize(Format const &, std::size_t expectedMin, std::size_t expectedMax)
+		bool testMinMaxSize(Format const &, length_type expectedMin, length_type expectedMax)
 		{
-			std::size_t const min = szn::min_size<Format>::value;
-			std::size_t const max = szn::max_size<Format>::value;
+			length_type const min = szn::min_size<Format>::value;
+			length_type const max = szn::max_size<Format>::value;
 			return (min == expectedMin) && (max == expectedMax);
 		}
 
 		template <class Format>
-		bool testExactSize(Format const &format, std::size_t expectedSize)
+		bool testExactSize(Format const &format, length_type expectedSize)
 		{
 			return testMinMaxSize(format, expectedSize, expectedSize);
 		}
@@ -616,7 +616,10 @@ namespace szn
 		BOOST_CHECK(testExactSize(szn::boolean(), 1));
 
 		BOOST_CHECK(testMinMaxSize(szn::bytes<szn::le32>(), 4,
-		                           std::numeric_limits<std::size_t>::max()));
+		                           std::numeric_limits<length_type>::max()));
+
+		BOOST_CHECK(testMinMaxSize(szn::vector<szn::le32, szn::le8>(), 4,
+		                           std::numeric_limits<length_type>::max()));
 
 #if SZN_HAS_UNIQUE_PTR
 		BOOST_CHECK(testExactSize(szn::unique_ptr<szn::le64>(), 8));
