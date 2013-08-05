@@ -50,7 +50,7 @@ namespace szn
 	typedef basic_bool<be8, byte_bool> boolean;
 
 	template <class UnderlyingBool>
-	struct not SZN_FINAL
+	struct boolean_not SZN_FINAL
 	{
 		typedef typename UnderlyingBool::default_type default_type;
 
