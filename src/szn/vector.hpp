@@ -10,25 +10,25 @@
 namespace szn
 {
 	/// a format for variable-length sequences of a certain type.
-	/// Works with std::vector.
+	/// Works with std::vector and std::map.
 	template <class LengthFormat, class ElementFormat>
 	struct vector
 	{
 		typedef std::vector<typename ElementFormat::default_type> default_type;
 
-		template <class Sink, class SizedSequence>
-		void serialize(Sink &sink, SizedSequence const &v) const
+		template <class Sink, class Container>
+		void serialize(Sink &sink, Container const &v) const
 		{
 			LengthFormat().serialize(sink, v.size());
 
-			BOOST_FOREACH (const typename SizedSequence::value_type &e, v)
+			BOOST_FOREACH (const typename Container::value_type &e, v)
 			{
 				szn::serialize(sink, e, ElementFormat());
 			}
 		}
 
-		template <class Source, class Sequence>
-		void deserialize(Source &source, Sequence &v) const
+		template <class Source, class SequenceContainer>
+		void deserialize(Source &source, SequenceContainer &v) const
 		{
 			std::size_t length = 0;
 			LengthFormat().deserialize(source, length);
@@ -38,7 +38,7 @@ namespace szn
 
 			for (std::size_t i = 0; i < length; ++i)
 			{
-				typedef typename make_map_key_mutable<typename Sequence::value_type>::type element_type;
+				typedef typename make_map_key_mutable<typename SequenceContainer::value_type>::type element_type;
 				element_type e;
 				ElementFormat().deserialize(source, e);
 				v.insert(v.end(), boost::move(e));
