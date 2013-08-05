@@ -1,6 +1,4 @@
 #include <boost/test/unit_test.hpp>
-#include <boost/preprocessor/cat.hpp>
-#include <boost/cstdint.hpp>
 
 #include <szn/struct.hpp>
 #include <szn/struct2.hpp>
@@ -17,6 +15,10 @@
 #include <szn/format.hpp>
 #include <szn/sink.hpp>
 #include <szn/source.hpp>
+
+#include <boost/preprocessor/cat.hpp>
+#include <boost/cstdint.hpp>
+#include <sstream>
 
 
 namespace szn
@@ -635,5 +637,53 @@ namespace szn
 		    5, 'v', 'a', 'l', 'u', 'e'
 		};
 		BOOST_CHECK_EQUAL(generated, expected);
+	}
+
+	BOOST_AUTO_TEST_CASE(Serialization_bytes_input_iterator_success)
+	{
+		std::string generated;
+		{
+			BOOST_AUTO(sink, make_container_sink(generated));
+			szn::bytes<szn::be8> format;
+			std::stringstream value;
+			value << "value REST";
+			format.serialize(sink,
+			                 boost::make_iterator_range(
+			                     std::istreambuf_iterator<char>(value),
+			                     std::istreambuf_iterator<char>()),
+			                 6);
+		}
+		char const expected[] =
+		{
+		    6, 'v', 'a', 'l', 'u', 'e', ' '
+		};
+		BOOST_CHECK_EQUAL(generated, expected);
+	}
+
+	static void run_bytes_input_fail()
+	{
+		std::string generated;
+		BOOST_AUTO(sink, make_container_sink(generated));
+		szn::bytes<szn::be8> format;
+		std::stringstream value;
+		value << "value";
+		format.serialize(sink,
+		                 boost::make_iterator_range(
+		                     std::istreambuf_iterator<char>(value),
+		                     std::istreambuf_iterator<char>()),
+		                 6);
+	}
+
+	static bool is_bytes_input_fail_exception(std::runtime_error const &)
+	{
+		return true;
+	}
+
+	BOOST_AUTO_TEST_CASE(Serialization_bytes_input_iterator_fail)
+	{
+		BOOST_CHECK_EXCEPTION(run_bytes_input_fail(),
+		                      std::runtime_error,
+		                      is_bytes_input_fail_exception);
+
 	}
 }

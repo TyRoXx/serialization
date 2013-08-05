@@ -8,6 +8,7 @@
 #include <boost/static_assert.hpp>
 #include <boost/type_traits/is_pointer.hpp>
 #include <boost/utility.hpp> //next
+#include <boost/cstdint.hpp>
 #include <string>
 #include <vector>
 #include <utility>
@@ -37,13 +38,25 @@ namespace szn
 			return serialize_impl(sink, to_bytes(range));
 		}
 
+		template <class Sink, class FlexibleByteRange>
+		void serialize(Sink &sink, FlexibleByteRange const &range, boost::uintmax_t length) const
+		{
+			return serialize_impl(sink, to_bytes(range), length);
+		}
+
 	private:
 
 		template <class Sink, class ByteRange>
 		void serialize_impl(Sink &sink, ByteRange const &data) const
 		{
-			LengthFormat().serialize(sink, boost::size(data));
-			return serialize_range(sink, boost::begin(data), boost::end(data));
+			return serialize_impl(sink, data, boost::size(data));
+		}
+
+		template <class Sink, class ByteRange>
+		void serialize_impl(Sink &sink, ByteRange const &data, boost::uintmax_t length) const
+		{
+			LengthFormat().serialize(sink, length);
+			return serialize_range(sink, boost::begin(data), boost::end(data), length);
 		}
 
 	public:
@@ -91,25 +104,31 @@ namespace szn
 		};
 
 		template <class Sink, class ByteIterator>
-		void serialize_range(Sink &sink, ByteIterator begin, ByteIterator end) const
+		void serialize_range(Sink &sink, ByteIterator begin, ByteIterator end, boost::uintmax_t length) const
 		{
-			return serialize_range_impl(sink, begin, end, is_char_pointer<ByteIterator>());
+			return serialize_range_impl(sink, begin, end, length, is_char_pointer<ByteIterator>());
 		}
 
 		template <class Sink, class ByteIterator>
-		void serialize_range_impl(Sink &sink, ByteIterator begin, ByteIterator end, boost::true_type) const
+		void serialize_range_impl(Sink &sink, ByteIterator begin, ByteIterator end, boost::uintmax_t length, boost::true_type) const
 		{
+			assert(length == static_cast<boost::uintmax_t>(std::distance(begin, end)));
 			char const * const data = reinterpret_cast<char const *>(begin);
-			sink.write(data, std::distance(begin, end));
+			sink.write(data, length);
 		}
 
 		template <class Sink, class ByteIterator>
-		void serialize_range_impl(Sink &sink, ByteIterator begin, ByteIterator end, boost::false_type) const
+		void serialize_range_impl(Sink &sink, ByteIterator begin, ByteIterator end, boost::uintmax_t length, boost::false_type) const
 		{
-			for (; begin != end; ++begin)
+			boost::uintmax_t n = 0;
+			for (; (begin != end) && (n < length); ++begin, ++n)
 			{
 				char const c = *begin;
 				sink.write(&c, 1);
+			}
+			if (n < length)
+			{
+				throw std::runtime_error("Input byte range too short");
 			}
 		}
 
