@@ -19,7 +19,7 @@ namespace szn
 		template <class Sink>
 		void serialize(Sink &sink, bool value) const
 		{
-			Format().serialize(sink, ValuePolicy::fromBool(value));
+			Format().serialize(sink, ValuePolicy::from_bool(value));
 		}
 
 		template <class Source>
@@ -27,7 +27,7 @@ namespace szn
 		{
 			typename ValuePolicy::value_type buffer;
 			Format().deserialize(source, buffer);
-			value = ValuePolicy::toBool(buffer);
+			value = ValuePolicy::to_bool(buffer);
 		}
 	};
 
@@ -35,13 +35,13 @@ namespace szn
 	{
 		typedef unsigned char value_type;
 
-		static value_type fromBool(bool value)
+		static value_type from_bool(bool value)
 		{
 			//explicit cast to silence warning by GCC 4.3
 			return static_cast<value_type>(value ? 1 : 0);
 		}
 
-		static bool toBool(value_type value)
+		static bool to_bool(value_type value)
 		{
 			return (value != 0);
 		}
