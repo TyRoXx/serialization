@@ -658,7 +658,7 @@ namespace szn
 		{
 		    6, 'v', 'a', 'l', 'u', 'e', ' '
 		};
-		BOOST_CHECK_EQUAL(generated, expected);
+		BOOST_CHECK_EQUAL(generated, std::string(expected, 7));
 	}
 
 	static void run_bytes_input_fail()
