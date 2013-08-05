@@ -147,14 +147,14 @@ namespace szn
 		deserialize(source, b, szn::by_method());
 
 		BOOST_CHECK_EQUAL(b.le32_, 32);
-		BOOST_CHECK_EQUAL(b.le16_, 0xffff);
+		BOOST_CHECK_EQUAL(b.le16_, 0xffffu);
 		BOOST_CHECK_EQUAL(b.le8_, 7);
 		BOOST_CHECK_EQUAL(b.be32_, 0x01010101);
-		BOOST_CHECK_EQUAL(b.be16_, 0x8000);
-		BOOST_CHECK_EQUAL(b.be8_, 0xff);
+		BOOST_CHECK_EQUAL(b.be16_, 0x8000u);
+		BOOST_CHECK_EQUAL(b.be8_, 0xffu);
 		BOOST_CHECK_EQUAL(b.str16, "hallo");
 		BOOST_CHECK_EQUAL(b.str8, "");
-		BOOST_REQUIRE_EQUAL(b.vec8.size(), 2);
+		BOOST_REQUIRE_EQUAL(b.vec8.size(), 2u);
 		BOOST_CHECK_EQUAL(b.vec8[0], 0xdeadbeef);
 		BOOST_CHECK_EQUAL(b.vec8[1], 0);
 		BOOST_CHECK_EQUAL(b.f32, 0.0f);
@@ -748,7 +748,7 @@ namespace szn
 			map m;
 			BOOST_CHECK(m.empty());
 			format.deserialize(source, m);
-			BOOST_CHECK_EQUAL(m.size(), 3);
+			BOOST_CHECK_EQUAL(m.size(), 3u);
 			BOOST_CHECK_EQUAL(m["A"], 0x3344);
 			BOOST_CHECK_EQUAL(m["B"], 0x1122);
 			BOOST_CHECK_EQUAL(m["C"], 0x5566);
@@ -762,7 +762,7 @@ namespace szn
 		typedef szn::optional<szn::boolean, szn::be16> format;
 
 		{
-			format().serialize(sink, boost::optional<boost::uint16_t>(0x1122));
+			format().serialize(sink, boost::optional<boost::uint16_t>(0x1122u));
 			char const expected[] = {1, 0x11, 0x22};
 			BOOST_CHECK_EQUAL(generated, std::string(expected, 3));
 		}
