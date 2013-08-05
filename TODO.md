@@ -10,9 +10,9 @@ Things to do in no particular order
 * improve Source concept
 * error handling, exceptions, constraints, backtracing
 * UTF-8/16/32 formats
-* formats for std::list, deque, map, set, queue, vector<bool> etc.
-* formats for std::unique_ptr, auto_ptr, shared_ptr, bitset
-* formats for Boost.Container, Boost.Range, Boost.UUID, Boost.PtrContainer,
+* formats for std::list, deque, set, queue, vector<bool> etc.
+* formats for auto_ptr, shared_ptr, bitset
+* formats for Boost.Container, Boost.UUID, Boost.PtrContainer,
   Boost.DynamicBitset, Boost.SmartPtr
 * a format like boost::optional
 * provide usage examples
@@ -40,6 +40,4 @@ Things to do in no particular order
 * polymorphism
 * check possible bit field support
 * investigate sign extension problems to find safe solutions
-* use 64-bit integer for sizes in bits or bytes instead of std::size_t
-  * boost::uintmax_t is an option
 * RXN_REFLECT should support an empty field list
