@@ -29,7 +29,7 @@ namespace szn
 		typedef std::vector<char> default_type;
 
 		template <class Sink, class FlexibleByteRange>
-		void serialize(Sink &sink, FlexibleByteRange &range) const
+		void serialize(Sink &sink, FlexibleByteRange const &range) const
 		{
 			//For compilers without C++11 auto we have to use a method template
 			//to get the result of to_bytes into a variable.
