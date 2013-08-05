@@ -640,7 +640,7 @@ namespace szn
 		{
 		    5, 'v', 'a', 'l', 'u', 'e'
 		};
-		BOOST_CHECK_EQUAL(generated, expected);
+		BOOST_CHECK_EQUAL(generated, std::string(expected, 6));
 	}
 
 	BOOST_AUTO_TEST_CASE(Serialization_bytes_input_iterator_success)
