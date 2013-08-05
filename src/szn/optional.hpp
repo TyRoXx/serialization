@@ -5,6 +5,8 @@
 #include <szn/bool.hpp>
 #include <szn/format.hpp>
 #include <boost/optional.hpp>
+#include <boost/scoped_ptr.hpp>
+#include <memory>
 
 
 namespace szn
@@ -32,13 +34,52 @@ namespace szn
 		void deserialize(Source &source, boost::optional<Value> &value) const
 		{
 			assert(!value);
-			bool is_set = false;
-			ConditionFormat().deserialize(source, is_set);
-			if (is_set)
+			if (parse_condition(source))
 			{
 				Value temporary;
 				ValueFormat().deserialize(source, temporary);
 				value = boost::move(temporary);
+			}
+		}
+
+		template <class Source, class Value>
+		void deserialize(Source &source, boost::scoped_ptr<Value> &value) const
+		{
+			return deserialize_auto_ptr_like<Value>(source, value);
+		}
+
+		template <class Source, class Value>
+		void deserialize(Source &source, std::auto_ptr<Value> &value) const
+		{
+			return deserialize_auto_ptr_like<Value>(source, value);
+		}
+
+#if SZN_HAS_UNIQUE_PTR
+		template <class Source, class Value>
+		void deserialize(Source &source, std::unique_ptr<Value> &value) const
+		{
+			return deserialize_auto_ptr_like<Value>(source, value);
+		}
+#endif
+
+	private:
+
+		template <class Source>
+		bool parse_condition(Source &source) const
+		{
+			bool is_set = false;
+			ConditionFormat().deserialize(source, is_set);
+			return is_set;
+		}
+
+		template <class Value, class Source, class Ptr>
+		void deserialize_auto_ptr_like(Source &source, Ptr &ptr) const
+		{
+			assert(!ptr.get());
+			if (parse_condition(source))
+			{
+				ptr.reset(new Value);
+				ValueFormat().deserialize(source, *ptr);
 			}
 		}
 	};

@@ -783,7 +783,8 @@ namespace szn
 		}
 	}
 
-	BOOST_AUTO_TEST_CASE(Serialization_optional_deserialize)
+	template <class Nullable, class IsSet>
+	static void test_optional_deserialize(IsSet const &is_set = IsSet())
 	{
 		typedef szn::optional<szn::boolean, szn::be16> format;
 
@@ -791,9 +792,9 @@ namespace szn
 			char const data[] = {1, 0x11, 0x22};
 			std::string const data_str(data, 3);
 			BOOST_AUTO(source, make_container_source(data_str));
-			boost::optional<boost::uint16_t> extracted;
+			Nullable extracted;
 			format().deserialize(source, extracted);
-			BOOST_REQUIRE(extracted);
+			BOOST_REQUIRE(is_set(extracted));
 			BOOST_CHECK_EQUAL(*extracted, 0x1122);
 		}
 
@@ -801,9 +802,37 @@ namespace szn
 			char const data[] = {0};
 			std::string const data_str(data, 1);
 			BOOST_AUTO(source, make_container_source(data_str));
-			boost::optional<boost::uint16_t> extracted;
+			Nullable extracted;
 			format().deserialize(source, extracted);
-			BOOST_CHECK(!extracted);
+			BOOST_CHECK(!is_set(extracted));
 		}
+	}
+
+	struct ptr_like_is_set
+	{
+		template <class Nullable>
+		bool operator ()(Nullable const &n) const
+		{
+			return !!n;
+		}
+	};
+
+	struct auto_ptr_is_set
+	{
+		template <class Value>
+		bool operator ()(std::auto_ptr<Value> const &n) const
+		{
+			return n.get() != 0;
+		}
+	};
+
+	BOOST_AUTO_TEST_CASE(Serialization_optional_deserialize)
+	{
+		test_optional_deserialize<boost::optional<boost::uint16_t>, ptr_like_is_set>();
+		test_optional_deserialize<boost::scoped_ptr<boost::uint16_t>, ptr_like_is_set>();
+		test_optional_deserialize<std::auto_ptr<boost::uint16_t>, auto_ptr_is_set>();
+#if SZN_HAS_UNIQUE_PTR
+		test_optional_deserialize<std::unique_ptr<boost::uint16_t>, ptr_like_is_set>();
+#endif
 	}
 }
