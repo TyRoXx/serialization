@@ -11,7 +11,7 @@ Supported compilers
 -------------------
 
 * GCC >= 4.3
-* Visual C++ 2010
+* Visual C++ 2008, 2010
 
 GCC 4.2 and Clang have problems with Boost.Preprocessor.  I will try to fix that.
 
@@ -22,6 +22,12 @@ Dependencies
 Some header-only libraries and the unit test framework from Boost are required.
 Any Boost release since 1.48 should work.
 We recommend more recent releases though.
+
+
+Testing
+-------
+
+There is a unit test project in src/test. It is built on Boost test.
 
 
 Things to do
