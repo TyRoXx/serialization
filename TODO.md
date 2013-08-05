@@ -14,7 +14,6 @@ Things to do in no particular order
 * formats for auto_ptr, shared_ptr, bitset
 * formats for Boost.Container, Boost.UUID, Boost.PtrContainer,
   Boost.DynamicBitset, Boost.SmartPtr
-* a format like boost::optional
 * provide usage examples
   * improve garbage collection example
   * custom format

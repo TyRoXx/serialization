@@ -16,6 +16,7 @@
 #include <szn/sink.hpp>
 #include <szn/source.hpp>
 #include <szn/pair.hpp>
+#include <szn/optional.hpp>
 
 #include <boost/preprocessor/cat.hpp>
 #include <boost/cstdint.hpp>
@@ -746,6 +747,50 @@ namespace szn
 			BOOST_CHECK_EQUAL(m["A"], 0x3344);
 			BOOST_CHECK_EQUAL(m["B"], 0x1122);
 			BOOST_CHECK_EQUAL(m["C"], 0x5566);
+		}
+	}
+
+	BOOST_AUTO_TEST_CASE(Serialization_optional_serialize)
+	{
+		std::string generated;
+		BOOST_AUTO(sink, make_container_sink(generated));
+		typedef szn::optional<szn::boolean, szn::be16> format;
+
+		{
+			format().serialize(sink, boost::optional<boost::uint16_t>(0x1122));
+			char const expected[] = {1, 0x11, 0x22};
+			BOOST_CHECK_EQUAL(generated, std::string(expected, 3));
+		}
+
+		{
+			generated.clear();
+			format().serialize(sink, boost::optional<boost::uint16_t>());
+			char const expected[] = {0};
+			BOOST_CHECK_EQUAL(generated, std::string(expected, 1));
+		}
+	}
+
+	BOOST_AUTO_TEST_CASE(Serialization_optional_deserialize)
+	{
+		typedef szn::optional<szn::boolean, szn::be16> format;
+
+		{
+			char const data[] = {1, 0x11, 0x22};
+			std::string const data_str(data, 3);
+			BOOST_AUTO(source, make_container_source(data_str));
+			boost::optional<boost::uint16_t> extracted;
+			format().deserialize(source, extracted);
+			BOOST_REQUIRE(extracted);
+			BOOST_CHECK_EQUAL(*extracted, 0x1122);
+		}
+
+		{
+			char const data[] = {0};
+			std::string const data_str(data, 1);
+			BOOST_AUTO(source, make_container_source(data_str));
+			boost::optional<boost::uint16_t> extracted;
+			format().deserialize(source, extracted);
+			BOOST_CHECK(!extracted);
 		}
 	}
 }

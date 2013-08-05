@@ -120,6 +120,12 @@ namespace szn
 		return range_source<Range>(range);
 	}
 
+	template <class Container>
+	range_source<Container> make_container_source(Container const &container)
+	{
+		return make_range_source(container);
+	}
+
 	typedef range_source<boost::iterator_range<const char *> > memory_source;
 
 
