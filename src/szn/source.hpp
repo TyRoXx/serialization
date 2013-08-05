@@ -120,7 +120,7 @@ namespace szn
 		return range_source<Range>(range);
 	}
 
-	typedef range_source<boost::iterator_range<const char *> > MemorySource;
+	typedef range_source<boost::iterator_range<const char *> > memory_source;
 
 
 	struct empty_source : source

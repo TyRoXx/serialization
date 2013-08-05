@@ -138,7 +138,7 @@ namespace szn
 
 	BOOST_AUTO_TEST_CASE(Serialization_Struct_deserialize)
 	{
-		szn::MemorySource source(structureData);
+		szn::memory_source source(structureData);
 
 		TestStruct b;
 		deserialize(source, b, szn::by_method());
@@ -176,7 +176,7 @@ namespace szn
 
 	BOOST_AUTO_TEST_CASE(Serialization_EmptyStruct_deserialize)
 	{
-		szn::MemorySource source((szn::MemorySource::range_type()));
+		szn::memory_source source((szn::memory_source::range_type()));
 
 		EmptyStruct s;
 		s.deserialize(source);
@@ -715,6 +715,34 @@ namespace szn
 			format.serialize(sink, value);
 			char const expected[] = {2, 3, 'a', 'b', 'c', 0x34, 0x12, 3, 'd', 'e', 'f', 0x78, 0x56};
 			BOOST_CHECK_EQUAL(generated, std::string(expected, 13));
+		}
+	}
+
+	BOOST_AUTO_TEST_CASE(Serialization_std_map_deserialize)
+	{
+		szn::vector<szn::le8, szn::pair<szn::bytes<szn::le8>, szn::le16>> format;
+		typedef std::map<std::string, boost::uint16_t> map;
+
+		{
+			std::string const data(1, 0);
+			BOOST_AUTO(source, szn::make_range_source(data));
+			map m;
+			BOOST_CHECK(m.empty());
+			format.deserialize(source, m);
+			BOOST_CHECK(m.empty());
+		}
+
+		{
+			char const data[] = {3, 1, 'B', 0x22, 0x11, 1, 'A', 0x44, 0x33, 1, 'C', 0x66, 0x55};
+			std::string const data_str(data, 13);
+			BOOST_AUTO(source, szn::make_range_source(data_str));
+			map m;
+			BOOST_CHECK(m.empty());
+			format.deserialize(source, m);
+			BOOST_CHECK_EQUAL(m.size(), 3);
+			BOOST_CHECK_EQUAL(m["A"], 0x3344);
+			BOOST_CHECK_EQUAL(m["B"], 0x1122);
+			BOOST_CHECK_EQUAL(m["C"], 0x5566);
 		}
 	}
 }

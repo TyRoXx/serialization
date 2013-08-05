@@ -19,7 +19,7 @@ namespace szn
 		template <class Sink, class SizedSequence>
 		void serialize(Sink &sink, SizedSequence const &v) const
 		{
-			szn::serialize(sink, v.size(), LengthFormat());
+			LengthFormat().serialize(sink, v.size());
 
 			BOOST_FOREACH (const typename SizedSequence::value_type &e, v)
 			{
@@ -31,17 +31,43 @@ namespace szn
 		void deserialize(Source &source, Sequence &v) const
 		{
 			std::size_t length = 0;
-			szn::deserialize(source, length, LengthFormat());
+			LengthFormat().deserialize(source, length);
 
 			v.clear();
-			v.reserve(length);
+			reserve(v, length);
 
 			for (std::size_t i = 0; i < length; ++i)
 			{
-				typename Sequence::value_type e;
-				szn::deserialize(source, e, ElementFormat());
-				v.push_back(boost::move(e));
+				typedef typename make_map_key_mutable<typename Sequence::value_type>::type element_type;
+				element_type e;
+				ElementFormat().deserialize(source, e);
+				v.insert(v.end(), boost::move(e));
 			}
+		}
+
+	private:
+
+		template <class Element>
+		struct make_map_key_mutable
+		{
+			typedef Element type;
+		};
+
+		template <class Key, class Value>
+		struct make_map_key_mutable<std::pair<Key, Value>>
+		{
+			typedef std::pair<typename boost::remove_const<Key>::type, Value> type;
+		};
+
+		template <class Container>
+		void reserve(Container &, size_t) const
+		{
+		}
+
+		template <class Element, class Allocator>
+		void reserve(std::vector<Element, Allocator> &v, size_t size) const
+		{
+			v.reserve(size);
 		}
 	};
 }
