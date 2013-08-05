@@ -73,6 +73,9 @@ if(MSVC)
 	#disable warnings about deprecation
 	set(flags "/wd4996")
 
+	#disable warnings about compile time integer overflow
+	set(flags "${flags} /wd4307")
+
 	#enable concurrency
 	set(flags "${flags} /MP")
 
