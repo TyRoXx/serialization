@@ -7,7 +7,7 @@ namespace szn
 	BOOST_AUTO_TEST_CASE(Serialization_dynamic_message)
 	{
 		std::string generated;
-		auto sink = make_container_sink(generated);
+		BOOST_AUTO(sink, make_container_sink(generated));
 
 		szn::writer(sink)
 			.be8(0xee)

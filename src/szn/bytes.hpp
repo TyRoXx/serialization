@@ -29,12 +29,24 @@ namespace szn
 		typedef std::vector<char> default_type;
 
 		template <class Sink, class FlexibleByteRange>
-		void serialize(Sink &sink, FlexibleByteRange const &range) const
+		void serialize(Sink &sink, FlexibleByteRange &range) const
 		{
-			auto const data = to_bytes(range);
+			//For compilers without C++11 auto we have to use a method template
+			//to get the result of to_bytes into a variable.
+			//BOOST_AUTO does not work here for VC++ 2008.
+			return serialize_impl(sink, to_bytes(range));
+		}
+
+	private:
+
+		template <class Sink, class ByteRange>
+		void serialize_impl(Sink &sink, ByteRange const &data) const
+		{
 			LengthFormat().serialize(sink, boost::size(data));
 			return serialize_range(sink, boost::begin(data), boost::end(data));
 		}
+
+	public:
 
 		template <class Source>
 		void deserialize(Source &source, std::string &str) const

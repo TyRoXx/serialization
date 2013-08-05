@@ -43,7 +43,7 @@ namespace szn
 
 	private:
 
-		BOOST_COPYABLE_AND_MOVABLE(IteratorSink)
+		BOOST_COPYABLE_AND_MOVABLE(iterator_sink)
 
 		OutputIterator m_pos;
 	};

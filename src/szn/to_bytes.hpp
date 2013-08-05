@@ -11,15 +11,9 @@
 namespace szn
 {
 	template <class ByteRange>
-	ByteRange const &to_bytes(ByteRange const &range)
+	ByteRange &to_bytes(ByteRange &range)
 	{
 		return range;
-	}
-
-	template <class ByteRange>
-	ByteRange const &&to_bytes(ByteRange const &&range)
-	{
-		return static_cast<ByteRange const &&>(range);
 	}
 
 	template <class C, class Traits, class Allocator>
@@ -30,11 +24,21 @@ namespace szn
 		                                  str.data() + str.size());
 	}
 
+	namespace detail
+	{
+		//boost::enable_if_c<sizeof(C) == 1 ..> does not work for VC++ 2008,
+		//but this workaround does.
+		template <class C>
+		struct is_char : boost::integral_constant<bool, sizeof(C) == 1>
+		{
+		};
+	}
+
 	template <class C, class Allocator>
-	typename std::enable_if<sizeof(C) == 1, boost::iterator_range<char const *>>::type
+	typename boost::enable_if<detail::is_char<C>, boost::iterator_range<char const *>>::type
 	to_bytes(std::vector<C, Allocator> const &vec)
 	{
-	    char const * const begin = reinterpret_cast<char const *>(vec.data());
+		char const * const begin = vec.empty() ? NULL : reinterpret_cast<char const *>(&vec.front());
 		return boost::make_iterator_range(
 					begin,
 					begin + vec.size());
@@ -48,7 +52,7 @@ namespace szn
 	}
 
 	template <class C, std::size_t N>
-	typename std::enable_if<sizeof(C) == 1, boost::iterator_range<char const *>>::type
+	typename boost::enable_if_c<sizeof(C) == 1, boost::iterator_range<char const *>>::type
 	to_bytes(C (&arr)[N])
 	{
 	    char const * const begin = reinterpret_cast<char const *>(&arr[0]);
