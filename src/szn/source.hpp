@@ -16,10 +16,10 @@ namespace szn
 	struct source
 	{
 		virtual ~source();
-		virtual void load(std::size_t n) = 0;
-		virtual std::size_t size() = 0;
-		virtual char get(std::size_t index) = 0;
-		virtual void drop(std::size_t n) = 0;
+		virtual void load(length_type n) = 0;
+		virtual length_type size() = 0;
+		virtual char get(length_type index) = 0;
+		virtual void drop(length_type n) = 0;
 		virtual const char *data() = 0;
 
 		inline void read(char *destination, std::size_t length)
@@ -38,7 +38,7 @@ namespace szn
 		 * @return whether the memory pointed to by data() remains the same
 		 *         during the source's lifetime
 		 */
-		virtual bool isStable() const = 0;
+		virtual bool is_stable() const = 0;
 	};
 
 	namespace detail
@@ -74,24 +74,24 @@ namespace szn
 								 detail::cast_iterator<const_iterator>(boost::end(range)));
 		}
 
-		virtual void load(std::size_t n) SZN_OVERRIDE
+		virtual void load(length_type n) SZN_OVERRIDE
 		{
 			(void)n;
 		}
 
-		virtual std::size_t size() SZN_OVERRIDE
+		virtual length_type size() SZN_OVERRIDE
 		{
 			return static_cast<std::size_t>(
 						std::distance(boost::begin(m_range), boost::end(m_range)) - m_position);
 		}
 
-		virtual char get(std::size_t index) SZN_OVERRIDE
+		virtual char get(length_type index) SZN_OVERRIDE
 		{
 			assert(index < size());
 			return boost::next(boost::begin(m_range), m_position)[index];
 		}
 
-		virtual void drop(std::size_t n) SZN_OVERRIDE
+		virtual void drop(length_type n) SZN_OVERRIDE
 		{
 			assert(n <= size());
 			m_position += static_cast<difference_type>(n);
@@ -103,7 +103,7 @@ namespace szn
 						&*(boost::begin(m_range)) + m_position);
 		}
 
-		virtual bool isStable() const SZN_OVERRIDE
+		virtual bool is_stable() const SZN_OVERRIDE
 		{
 			return true;
 		}
@@ -125,10 +125,10 @@ namespace szn
 
 	struct empty_source : source
 	{
-		virtual void load(std::size_t n) SZN_OVERRIDE;
-		virtual std::size_t size() SZN_OVERRIDE;
-		virtual char get(std::size_t index) SZN_OVERRIDE;
-		virtual void drop(std::size_t n) SZN_OVERRIDE;
+		virtual void load(length_type n) SZN_OVERRIDE;
+		virtual length_type size() SZN_OVERRIDE;
+		virtual char get(length_type index) SZN_OVERRIDE;
+		virtual void drop(length_type n) SZN_OVERRIDE;
 		virtual const char *data() SZN_OVERRIDE;
 	};
 }

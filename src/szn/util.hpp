@@ -3,6 +3,7 @@
 
 
 #include <boost/typeof/typeof.hpp> //for SZN_DECLTYPE
+#include <boost/cstdint.hpp>
 
 
 #ifndef SZN_NO_CPP11
@@ -68,9 +69,10 @@
 
 namespace szn
 {
+	typedef boost::uintmax_t length_type;
+
 	struct sink;
 	struct source;
-
 
 	/// just an alternative way of calling format.serialize
 	template <class Value, class Format>

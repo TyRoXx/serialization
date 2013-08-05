@@ -8,21 +8,21 @@ namespace szn
 	}
 
 
-	void empty_source::load(std::size_t)
+	void empty_source::load(length_type)
 	{
 	}
 
-	std::size_t empty_source::size()
+	length_type empty_source::size()
 	{
 		return 0;
 	}
 
-	char empty_source::get(std::size_t)
+	char empty_source::get(length_type)
 	{
 		throw std::runtime_error("szn::EmptySource cannot be read from");
 	}
 
-	void empty_source::drop(std::size_t)
+	void empty_source::drop(length_type)
 	{
 	}
 

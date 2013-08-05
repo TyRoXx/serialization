@@ -39,7 +39,7 @@ namespace szn
 		}
 
 		template <class Sink, class FlexibleByteRange>
-		void serialize(Sink &sink, FlexibleByteRange const &range, boost::uintmax_t length) const
+		void serialize(Sink &sink, FlexibleByteRange const &range, length_type length) const
 		{
 			return serialize_impl(sink, to_bytes(range), length);
 		}
@@ -53,7 +53,7 @@ namespace szn
 		}
 
 		template <class Sink, class ByteRange>
-		void serialize_impl(Sink &sink, ByteRange const &data, boost::uintmax_t length) const
+		void serialize_impl(Sink &sink, ByteRange const &data, length_type length) const
 		{
 			LengthFormat().serialize(sink, length);
 			return serialize_range(sink, boost::begin(data), boost::end(data), length);
@@ -80,7 +80,7 @@ namespace szn
 		deserialize(Source &source,
 					std::pair<ByteRandomAccessIterator, ByteRandomAccessIterator> &range) const
 		{
-			if (!source.isStable())
+			if (!source.is_stable())
 			{
 				throw std::runtime_error(
 					"Deserialization to a pair of iterators requires a stable source");
@@ -104,13 +104,13 @@ namespace szn
 		};
 
 		template <class Sink, class ByteIterator>
-		void serialize_range(Sink &sink, ByteIterator begin, ByteIterator end, boost::uintmax_t length) const
+		void serialize_range(Sink &sink, ByteIterator begin, ByteIterator end, length_type length) const
 		{
 			return serialize_range_impl(sink, begin, end, length, is_char_pointer<ByteIterator>());
 		}
 
 		template <class Sink, class ByteIterator>
-		void serialize_range_impl(Sink &sink, ByteIterator begin, ByteIterator end, boost::uintmax_t length, boost::true_type) const
+		void serialize_range_impl(Sink &sink, ByteIterator begin, ByteIterator end, length_type length, boost::true_type) const
 		{
 			assert(length == static_cast<boost::uintmax_t>(std::distance(begin, end)));
 			char const * const data = reinterpret_cast<char const *>(begin);
@@ -118,9 +118,9 @@ namespace szn
 		}
 
 		template <class Sink, class ByteIterator>
-		void serialize_range_impl(Sink &sink, ByteIterator begin, ByteIterator end, boost::uintmax_t length, boost::false_type) const
+		void serialize_range_impl(Sink &sink, ByteIterator begin, ByteIterator end, length_type length, boost::false_type) const
 		{
-			boost::uintmax_t n = 0;
+			length_type n = 0;
 			for (; (begin != end) && (n < length); ++begin, ++n)
 			{
 				char const c = *begin;
