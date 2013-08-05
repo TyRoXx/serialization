@@ -20,6 +20,8 @@
 
 #include <boost/preprocessor/cat.hpp>
 #include <boost/cstdint.hpp>
+#include <boost/scoped_ptr.hpp>
+
 #include <sstream>
 #include <map>
 
@@ -770,6 +772,14 @@ namespace szn
 			format().serialize(sink, boost::optional<boost::uint16_t>());
 			char const expected[] = {0};
 			BOOST_CHECK_EQUAL(generated, std::string(expected, 1));
+		}
+
+		{
+			generated.clear();
+			boost::scoped_ptr<int> const value(new int(0x1234));
+			format().serialize(sink, value);
+			char const expected[] = {1, 0x12, 0x34};
+			BOOST_CHECK_EQUAL(generated, std::string(expected, 3));
 		}
 	}
 
