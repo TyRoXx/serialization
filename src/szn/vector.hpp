@@ -35,6 +35,15 @@ namespace szn
 			}
 		}
 
+		template <class Sink, class First, class Second>
+		void serialize(Sink &sink, std::pair<First, Second> const &elements) const
+		{
+			LengthFormat().serialize(sink, 2);
+			ElementFormat const elem;
+			elem.serialize(sink, elements.first);
+			elem.serialize(sink, elements.second);
+		}
+
 		template <class Source, class SequenceContainer>
 		void deserialize(Source &source, SequenceContainer &v) const
 		{

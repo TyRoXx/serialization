@@ -963,4 +963,14 @@ namespace szn
 		//TODO: std::array, boost containers
 		//TODO: test error handling on wrong array size
 	}
+
+	BOOST_AUTO_TEST_CASE(Serialization_vector_pair_serialize)
+	{
+		szn::vector<szn::be16, szn::be16> format;
+		std::string generated;
+		BOOST_AUTO(sink, make_container_sink(generated));
+		format.serialize(sink, std::make_pair(0x4455, 0x6677));
+		char const expected[] = {0, 2, 0x44, 0x55, 0x66, 0x77};
+		BOOST_CHECK_EQUAL(std::string(expected, 6), generated);
+	}
 }
