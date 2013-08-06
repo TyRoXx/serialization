@@ -37,6 +37,24 @@ namespace szn
 			}
 		}
 
+		template <class Sink, class First, class Second>
+		typename boost::enable_if_c<Length == 2, void>::type
+		serialize(Sink &sink, std::pair<First, Second> const &elements)
+		{
+			ElementFormat elem;
+			elem.serialize(sink, elements.first);
+			elem.serialize(sink, elements.second);
+		}
+
+		template <class Source, class First, class Second>
+		typename boost::enable_if_c<Length == 2, void>::type
+		deserialize(Source &source, std::pair<First, Second> &elements)
+		{
+			ElementFormat elem;
+			elem.deserialize(source, elements.first);
+			elem.deserialize(source, elements.second);
+		}
+
 #ifndef SZN_NO_CPP11
 		template <class Sink, class Element>
 		void serialize(Sink &sink, const std::array<Element, Length> &a) const

@@ -323,6 +323,25 @@ namespace szn
 		BOOST_CHECK(generated[3] == 0x44);
 	}
 
+	BOOST_AUTO_TEST_CASE(Serialization_array_pair_serialize)
+	{
+		std::string generated;
+		BOOST_AUTO(sink, szn::make_container_sink(generated));
+		szn::array<2, szn::be8> format;
+		format.serialize(sink, std::make_pair('A', 'B'));
+		BOOST_CHECK_EQUAL("AB", generated);
+	}
+
+	BOOST_AUTO_TEST_CASE(Serialization_array_pair_deserialize)
+	{
+		std::string const data_str = "AB";
+		BOOST_AUTO(source, szn::make_container_source(data_str));
+		std::pair<char, char> extracted;
+		szn::array<2, szn::be8> format;
+		format.deserialize(source, extracted);
+		BOOST_CHECK(std::make_pair('A', 'B') == extracted);
+	}
+
 	namespace
 	{
 		SZN_BEGIN2(no_methods)
