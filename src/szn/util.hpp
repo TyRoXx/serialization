@@ -67,6 +67,7 @@
 #endif
 
 #define SZN_HAS_SHARED_PTR SZN_HAS_UNIQUE_PTR
+#define SZN_HAS_ARRAY SZN_HAS_UNIQUE_PTR
 
 
 namespace szn

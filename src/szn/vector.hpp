@@ -5,6 +5,10 @@
 #include <szn/util.hpp>
 #include <boost/foreach.hpp>
 #include <boost/move/move.hpp>
+#include <boost/array.hpp>
+#if SZN_HAS_ARRAY
+#	include <array>
+#endif
 
 
 namespace szn
@@ -49,6 +53,20 @@ namespace szn
 			}
 		}
 
+		template <class Source, class Element, std::size_t Length>
+		void deserialize(Source &source, boost::array<Element, Length> &array) const
+		{
+			return deserialize_array<Element, Length>(source, array);
+		}
+
+#if SZN_HAS_ARRAY
+		template <class Source, class Element, std::size_t Length>
+		void deserialize(Source &source, std::array<Element, Length> &array) const
+		{
+			return deserialize_array<Element, Length>(source, array);
+		}
+#endif
+
 	private:
 
 		template <class Element>
@@ -72,6 +90,22 @@ namespace szn
 		void reserve(std::vector<Element, Allocator> &v, size_t size) const
 		{
 			v.reserve(size);
+		}
+
+		template <class Element, std::size_t Length, class Source, class Array>
+		void deserialize_array(Source &source, Array &array) const
+		{
+			std::size_t length = 0;
+			LengthFormat().deserialize(source, length);
+			if (length != Length)
+			{
+				//TODO more helpful error
+				throw std::runtime_error("array length mismatch");
+			}
+			for (std::size_t i = 0; i < Length; ++i)
+			{
+				ElementFormat().deserialize(source, array[i]);
+			}
 		}
 	};
 }

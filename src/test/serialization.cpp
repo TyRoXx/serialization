@@ -22,8 +22,12 @@
 #include <boost/preprocessor/cat.hpp>
 #include <boost/cstdint.hpp>
 #include <boost/scoped_ptr.hpp>
+#include <boost/assign/list_of.hpp>
 
 #include <sstream>
+#include <list>
+#include <vector>
+#include <deque>
 #include <map>
 
 namespace szn
@@ -881,5 +885,49 @@ namespace szn
 #if SZN_HAS_SHARED_PTR
 		test_optional_deserialize<std::shared_ptr<boost::uint16_t>, ptr_like_is_set>();
 #endif
+	}
+
+	template <class Container>
+	static void serialize_vector()
+	{
+		std::string generated;
+		BOOST_AUTO(sink, make_container_sink(generated));
+		szn::vector<szn::be16, szn::be16> format;
+		Container const values = boost::assign::list_of(2)(3)(5)(7);
+		format.serialize(sink, values);
+		char const expected[] = {0, 4, 0, 2, 0, 3, 0, 5, 0, 7};
+		BOOST_CHECK_EQUAL(std::string(expected, 10), generated);
+	}
+
+	BOOST_AUTO_TEST_CASE(Serialization_vector_serialize)
+	{
+		serialize_vector<std::vector<boost::uint16_t> >();
+		serialize_vector<std::list<boost::uint16_t> >();
+		serialize_vector<std::deque<boost::uint16_t> >();
+		serialize_vector<boost::array<boost::uint16_t, 4> >();
+		//TODO: std::array, boost containers
+	}
+
+	template <class Container>
+	static void deserialize_vector()
+	{
+		char const data[] = {3, 1, 2, 3};
+		std::string const data_str(data, 4);
+		BOOST_AUTO(source, make_container_source(data_str));
+		szn::vector<szn::be8, szn::be8> format;
+		Container extracted;
+		format.deserialize(source, extracted);
+		Container const expected = boost::assign::list_of(1)(2)(3);
+		BOOST_CHECK(expected == extracted);
+	}
+
+	BOOST_AUTO_TEST_CASE(Serialization_vector_deserialize)
+	{
+		deserialize_vector<std::vector<boost::uint16_t> >();
+		deserialize_vector<std::list<boost::uint16_t> >();
+		deserialize_vector<std::deque<boost::uint16_t> >();
+		deserialize_vector<boost::array<boost::uint16_t, 3> >();
+		//TODO: std::array, boost containers
+		//TODO: test error handling on wrong array size
 	}
 }

@@ -8,10 +8,9 @@ Things to do in no particular order
 * improve Source concept
 * error handling, exceptions, constraints, backtracing
 * UTF-8/16/32 formats
-* formats for std::list, deque, set, queue, vector<bool> etc.
+* formats for set, queue, vector<bool> etc.
 * formats for bitset
-* formats for Boost.Container, Boost.UUID, Boost.PtrContainer,
-  Boost.DynamicBitset
+* formats for Boost.Container, Boost.UUID, Boost.PtrContainer, Boost.DynamicBitset
 * provide usage examples
   * improve garbage collection example
   * custom format
