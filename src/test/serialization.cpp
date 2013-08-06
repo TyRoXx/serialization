@@ -17,6 +17,7 @@
 #include <szn/source.hpp>
 #include <szn/pair.hpp>
 #include <szn/optional.hpp>
+#include <szn/map.hpp>
 
 #include <boost/preprocessor/cat.hpp>
 #include <boost/cstdint.hpp>
@@ -699,9 +700,9 @@ namespace szn
 
 	BOOST_AUTO_TEST_CASE(Serialization_std_map_serialize)
 	{
+		szn::map<szn::le8, szn::bytes<szn::le8>, szn::le16> format;
 		std::string generated;
 		BOOST_AUTO(sink, make_container_sink(generated));
-		szn::vector<szn::le8, szn::pair<szn::bytes<szn::le8>, szn::le16>> format;
 		std::map<std::string, boost::uint16_t> value;
 
 		{
@@ -729,7 +730,7 @@ namespace szn
 
 	BOOST_AUTO_TEST_CASE(Serialization_std_map_deserialize)
 	{
-		szn::vector<szn::le8, szn::pair<szn::bytes<szn::le8>, szn::le16>> format;
+		szn::map<szn::le8, szn::bytes<szn::le8>, szn::le16> format;
 		typedef std::map<std::string, boost::uint16_t> map;
 
 		{
