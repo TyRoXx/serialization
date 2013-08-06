@@ -1003,4 +1003,30 @@ namespace szn
 		std::copy_n(it, 4, std::back_inserter(extracted));
 		BOOST_CHECK_EQUAL("ABCD", extracted);
 	}
+
+	template <class CountingSink>
+	static void test_counting_sink(CountingSink &sink)
+	{
+		BOOST_CHECK_EQUAL(0, sink.count());
+		sink.write(0, 0);
+		BOOST_CHECK_EQUAL(0, sink.count());
+		sink.write("data", 4);
+		BOOST_CHECK_EQUAL(4, sink.count());
+		sink.write("", 1);
+		BOOST_CHECK_EQUAL(5, sink.count());
+	}
+
+	BOOST_AUTO_TEST_CASE(Serialization_counting_sink)
+	{
+		{
+			szn::null_sink null;
+			szn::counting_sink_adaptor<szn::null_sink> sink(null);
+			test_counting_sink(sink);
+		}
+
+		{
+			szn::counting_sink sink;
+			test_counting_sink(sink);
+		}
+	}
 }
