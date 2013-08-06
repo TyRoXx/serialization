@@ -1046,4 +1046,31 @@ namespace szn
 		BOOST_CHECK_EQUAL(0, c);
 		BOOST_CHECK_EQUAL(0, d);
 	}
+
+	BOOST_AUTO_TEST_CASE(Serialization_stream_source)
+	{
+		std::istringstream stream;
+		stream.str("Hallo");
+		szn::stream_source source(stream);
+		source.load(10000);
+		BOOST_CHECK_EQUAL(5, source.size());
+		BOOST_CHECK_EQUAL("Hallo", std::string(source.data(), static_cast<size_t>(source.size())));
+		BOOST_CHECK_EQUAL(false, source.is_stable());
+		source.drop(2);
+		BOOST_CHECK_EQUAL('l', source.get(0));
+		BOOST_CHECK_EQUAL('l', source.get(1));
+		BOOST_CHECK_EQUAL('o', source.get(2));
+		source.drop(3);
+		BOOST_CHECK_EQUAL(0, source.size());
+		source.load(10000);
+		BOOST_CHECK_EQUAL(0, source.size());
+	}
+
+	BOOST_AUTO_TEST_CASE(Serialization_stream_sink)
+	{
+		std::ostringstream stream;
+		szn::stream_sink sink(stream);
+		sink.write("Hallo", 5);
+		BOOST_CHECK_EQUAL("Hallo", stream.str());
+	}
 }

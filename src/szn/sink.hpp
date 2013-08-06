@@ -115,6 +115,23 @@ namespace szn
 
 		NextSink &m_next;
 	};
+
+	struct stream_sink : sink
+	{
+		explicit stream_sink(std::ostream &out)
+			: m_out(out)
+		{
+		}
+
+		virtual void write(const char *data, std::size_t n) SZN_OVERRIDE
+		{
+			m_out.write(data, n);
+		}
+
+	private:
+
+		std::ostream &m_out;
+	};
 }
 
 BOOST_TYPEOF_REGISTER_TEMPLATE(::szn::iterator_sink, 1)

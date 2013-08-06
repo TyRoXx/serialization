@@ -5,6 +5,7 @@
 #include <szn/util.hpp>
 #include <algorithm>
 #include <stdexcept>
+#include <vector>
 #include <boost/range/iterator_range.hpp>
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
@@ -147,6 +148,23 @@ namespace szn
 		virtual void drop(length_type n) SZN_OVERRIDE;
 		virtual const char *data() SZN_OVERRIDE;
 		virtual bool is_stable() const SZN_OVERRIDE;
+	};
+
+	struct stream_source : source
+	{
+		explicit stream_source(std::istream &in);
+		virtual void load(length_type n) SZN_OVERRIDE;
+		virtual length_type size() SZN_OVERRIDE;
+		virtual char get(length_type index) SZN_OVERRIDE;
+		virtual void drop(length_type n) SZN_OVERRIDE;
+		virtual const char *data() SZN_OVERRIDE;
+		virtual bool is_stable() const SZN_OVERRIDE;
+
+	private:
+
+		std::istream &m_in;
+		std::vector<char> m_buffer;
+		length_type m_size;
 	};
 }
 
