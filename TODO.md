@@ -1,17 +1,15 @@
 Things to do in no particular order
 ===================================
 
-* adapt C++ standard naming style
 * make Sink and Source parameters template-tized where possible
 * "lazy" ranges for deserialization
 * make library header-only?
-* support old compilers (MSVC9, GCC 4.2, Clang 2.9, ..)
-* avoid Boost in the library?
+* support old compilers (GCC 4.2, Clang 2.9, ..)
 * improve Source concept
 * error handling, exceptions, constraints, backtracing
 * UTF-8/16/32 formats
 * formats for std::list, deque, set, queue, vector<bool> etc.
-* formats for auto_ptr, shared_ptr, bitset
+* formats for shared_ptr, bitset
 * formats for Boost.Container, Boost.UUID, Boost.PtrContainer,
   Boost.DynamicBitset, Boost.SmartPtr
 * provide usage examples
