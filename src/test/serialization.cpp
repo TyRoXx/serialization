@@ -780,49 +780,49 @@ namespace szn
 		}
 	}
 
-	BOOST_AUTO_TEST_CASE(Serialization_optional_serialize)
+	template <class Ptr>
+	static void serialize_ptr()
 	{
 		std::string generated;
 		BOOST_AUTO(sink, make_container_sink(generated));
 		typedef szn::optional<szn::boolean, szn::be16> format;
+		Ptr const value(new int(0x1234));
+		format().serialize(sink, value);
+		char const expected[] = {1, 0x12, 0x34};
+		BOOST_CHECK_EQUAL(generated, std::string(expected, 3));
+	}
 
+	BOOST_AUTO_TEST_CASE(Serialization_optional_serialize)
+	{
 		{
-			format().serialize(sink, boost::optional<boost::uint16_t>(0x1122u));
-			char const expected[] = {1, 0x11, 0x22};
-			BOOST_CHECK_EQUAL(generated, std::string(expected, 3));
+			std::string generated;
+			BOOST_AUTO(sink, make_container_sink(generated));
+			typedef szn::optional<szn::boolean, szn::be16> format;
+
+			{
+				format().serialize(sink, boost::optional<boost::uint16_t>(0x1122u));
+				char const expected[] = {1, 0x11, 0x22};
+				BOOST_CHECK_EQUAL(generated, std::string(expected, 3));
+			}
+
+			{
+				generated.clear();
+				format().serialize(sink, boost::optional<boost::uint16_t>());
+				char const expected[] = {0};
+				BOOST_CHECK_EQUAL(generated, std::string(expected, 1));
+			}
 		}
 
-		{
-			generated.clear();
-			format().serialize(sink, boost::optional<boost::uint16_t>());
-			char const expected[] = {0};
-			BOOST_CHECK_EQUAL(generated, std::string(expected, 1));
-		}
-
-		{
-			generated.clear();
-			boost::scoped_ptr<int> const value(new int(0x1234));
-			format().serialize(sink, value);
-			char const expected[] = {1, 0x12, 0x34};
-			BOOST_CHECK_EQUAL(generated, std::string(expected, 3));
-		}
-
-		{
-			generated.clear();
-			std::auto_ptr<int> const value(new int(0x1234));
-			format().serialize(sink, value);
-			char const expected[] = {1, 0x12, 0x34};
-			BOOST_CHECK_EQUAL(generated, std::string(expected, 3));
-		}
+		serialize_ptr<boost::scoped_ptr<int> >();
+		serialize_ptr<boost::shared_ptr<int> >();
+		serialize_ptr<std::auto_ptr<int> >();
 
 #if SZN_HAS_UNIQUE_PTR
-		{
-			generated.clear();
-			std::unique_ptr<int> const value(new int(0x1234));
-			format().serialize(sink, value);
-			char const expected[] = {1, 0x12, 0x34};
-			BOOST_CHECK_EQUAL(generated, std::string(expected, 3));
-		}
+		serialize_ptr<std::unique_ptr<int>>();
+#endif
+
+#if SZN_HAS_SHARED_PTR
+		serialize_ptr<std::shared_ptr<int>>();
 #endif
 	}
 
@@ -873,9 +873,13 @@ namespace szn
 	{
 		test_optional_deserialize<boost::optional<boost::uint16_t>, ptr_like_is_set>();
 		test_optional_deserialize<boost::scoped_ptr<boost::uint16_t>, ptr_like_is_set>();
+		test_optional_deserialize<boost::shared_ptr<boost::uint16_t>, ptr_like_is_set>();
 		test_optional_deserialize<std::auto_ptr<boost::uint16_t>, auto_ptr_is_set>();
 #if SZN_HAS_UNIQUE_PTR
 		test_optional_deserialize<std::unique_ptr<boost::uint16_t>, ptr_like_is_set>();
+#endif
+#if SZN_HAS_SHARED_PTR
+		test_optional_deserialize<std::shared_ptr<boost::uint16_t>, ptr_like_is_set>();
 #endif
 	}
 }

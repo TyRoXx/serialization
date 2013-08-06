@@ -6,6 +6,8 @@
 #include <szn/format.hpp>
 #include <boost/optional.hpp>
 #include <boost/scoped_ptr.hpp>
+#include <boost/shared_ptr.hpp>
+#include <boost/make_shared.hpp>
 #include <memory>
 
 
@@ -46,22 +48,46 @@ namespace szn
 		}
 
 		template <class Source, class Value>
-		void deserialize(Source &source, boost::scoped_ptr<Value> &value) const
+		void deserialize(Source &source, boost::scoped_ptr<Value> &ptr) const
 		{
-			return deserialize_auto_ptr_like<Value>(source, value);
+			return deserialize_auto_ptr_like<Value>(source, ptr);
 		}
 
 		template <class Source, class Value>
-		void deserialize(Source &source, std::auto_ptr<Value> &value) const
+		void deserialize(Source &source, boost::shared_ptr<Value> &ptr) const
 		{
-			return deserialize_auto_ptr_like<Value>(source, value);
+			assert(!ptr.get());
+			if (parse_condition(source))
+			{
+				ptr = boost::make_shared<Value>();
+				ValueFormat().deserialize(source, *ptr);
+			}
+		}
+
+		template <class Source, class Value>
+		void deserialize(Source &source, std::auto_ptr<Value> &ptr) const
+		{
+			return deserialize_auto_ptr_like<Value>(source, ptr);
 		}
 
 #if SZN_HAS_UNIQUE_PTR
 		template <class Source, class Value>
-		void deserialize(Source &source, std::unique_ptr<Value> &value) const
+		void deserialize(Source &source, std::unique_ptr<Value> &ptr) const
 		{
-			return deserialize_auto_ptr_like<Value>(source, value);
+			return deserialize_auto_ptr_like<Value>(source, ptr);
+		}
+#endif
+
+#if SZN_HAS_SHARED_PTR
+		template <class Source, class Value>
+		void deserialize(Source &source, std::shared_ptr<Value> &ptr) const
+		{
+			assert(!ptr.get());
+			if (parse_condition(source))
+			{
+				ptr = std::make_shared<Value>();
+				ValueFormat().deserialize(source, *ptr);
+			}
 		}
 #endif
 

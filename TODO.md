@@ -9,9 +9,9 @@ Things to do in no particular order
 * error handling, exceptions, constraints, backtracing
 * UTF-8/16/32 formats
 * formats for std::list, deque, set, queue, vector<bool> etc.
-* formats for shared_ptr, bitset
+* formats for bitset
 * formats for Boost.Container, Boost.UUID, Boost.PtrContainer,
-  Boost.DynamicBitset, Boost.SmartPtr
+  Boost.DynamicBitset
 * provide usage examples
   * improve garbage collection example
   * custom format
