@@ -18,6 +18,7 @@
 #include <szn/pair.hpp>
 #include <szn/optional.hpp>
 #include <szn/map.hpp>
+#include <szn/iterator.hpp>
 
 #include <boost/preprocessor/cat.hpp>
 #include <boost/cstdint.hpp>
@@ -991,5 +992,15 @@ namespace szn
 		format.serialize(sink, std::make_pair(0x4455, 0x6677));
 		char const expected[] = {0, 2, 0x44, 0x55, 0x66, 0x77};
 		BOOST_CHECK_EQUAL(std::string(expected, 6), generated);
+	}
+
+	BOOST_AUTO_TEST_CASE(Serialization_deserializing_iterator)
+	{
+		std::string const data_str = "ABCD";
+		BOOST_AUTO(source, make_container_source(data_str));
+		BOOST_AUTO(it, (make_deserializing_iterator<szn::be8, char>(source)));
+		std::string extracted;
+		std::copy_n(it, 4, std::back_inserter(extracted));
+		BOOST_CHECK_EQUAL("ABCD", extracted);
 	}
 }
