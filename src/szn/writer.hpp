@@ -46,62 +46,62 @@ namespace szn
 	};
 
 
-	writer::writer(sink &destination)
+	inline writer::writer(sink &destination)
 	    : m_destination(destination)
 	{
 	}
 
-	sink &writer::destination() const
+	inline sink &writer::destination() const
 	{
 		return m_destination;
 	}
 
-	writer &writer::be8(boost::uint8_t value)
+	inline writer &writer::be8(boost::uint8_t value)
 	{
 		return this->value<szn::be8>(value);
 	}
 
-	writer &writer::be16(boost::uint16_t value)
+	inline writer &writer::be16(boost::uint16_t value)
 	{
 		return this->value<szn::be16>(value);
 	}
 
-	writer &writer::be32(boost::uint32_t value)
+	inline writer &writer::be32(boost::uint32_t value)
 	{
 		return this->value<szn::be32>(value);
 	}
 
-	writer &writer::be64(boost::uint64_t value)
+	inline writer &writer::be64(boost::uint64_t value)
 	{
 		return this->value<szn::be64>(value);
 	}
 
-	writer &writer::le8(boost::uint8_t value)
+	inline writer &writer::le8(boost::uint8_t value)
 	{
 		return this->value<szn::le8>(value);
 	}
 
-	writer &writer::le16(boost::uint16_t value)
+	inline writer &writer::le16(boost::uint16_t value)
 	{
 		return this->value<szn::le16>(value);
 	}
 
-	writer &writer::le32(boost::uint32_t value)
+	inline writer &writer::le32(boost::uint32_t value)
 	{
 		return this->value<szn::le32>(value);
 	}
 
-	writer &writer::le64(boost::uint64_t value)
+	inline writer &writer::le64(boost::uint64_t value)
 	{
 		return this->value<szn::le64>(value);
 	}
 
-	writer &writer::boolean8(bool value)
+	inline writer &writer::boolean8(bool value)
 	{
 		return this->value<szn::boolean>(value);
 	}
 
-	writer &writer::raw(char const *data, size_t length)
+	inline writer &writer::raw(char const *data, size_t length)
 	{
 		m_destination.write(data, length);
 		return *this;

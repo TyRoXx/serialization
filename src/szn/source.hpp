@@ -34,7 +34,7 @@ namespace szn
 		}
 
 		/**
-		 * @brief isStable
+		 * @brief is_stable
 		 * @return whether the memory pointed to by data() remains the same
 		 *         during the source's lifetime
 		 */
@@ -136,6 +136,17 @@ namespace szn
 		virtual char get(length_type index) SZN_OVERRIDE;
 		virtual void drop(length_type n) SZN_OVERRIDE;
 		virtual const char *data() SZN_OVERRIDE;
+		virtual bool is_stable() const SZN_OVERRIDE;
+	};
+
+	struct zero_source : source
+	{
+		virtual void load(length_type n) SZN_OVERRIDE;
+		virtual length_type size() SZN_OVERRIDE;
+		virtual char get(length_type index) SZN_OVERRIDE;
+		virtual void drop(length_type n) SZN_OVERRIDE;
+		virtual const char *data() SZN_OVERRIDE;
+		virtual bool is_stable() const SZN_OVERRIDE;
 	};
 }
 

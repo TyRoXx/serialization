@@ -19,6 +19,8 @@
 #include <szn/optional.hpp>
 #include <szn/map.hpp>
 #include <szn/iterator.hpp>
+#include <szn/reader.hpp>
+#include <szn/writer.hpp>
 
 #include <boost/preprocessor/cat.hpp>
 #include <boost/cstdint.hpp>
@@ -1028,5 +1030,19 @@ namespace szn
 			szn::counting_sink sink;
 			test_counting_sink(sink);
 		}
+	}
+
+	BOOST_AUTO_TEST_CASE(Serialization_zero_source)
+	{
+		zero_source source;
+		boost::uint8_t a = 1;
+		boost::uint16_t b = 2;
+		boost::uint32_t c = 3;
+		boost::uint64_t d = 0;
+		reader(source).be8(a).be16(b).be32(c).be64(d);
+		BOOST_CHECK_EQUAL(0, a);
+		BOOST_CHECK_EQUAL(0, b);
+		BOOST_CHECK_EQUAL(0, c);
+		BOOST_CHECK_EQUAL(0, d);
 	}
 }

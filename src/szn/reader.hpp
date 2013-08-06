@@ -39,62 +39,62 @@ namespace szn
 	};
 
 
-	reader::reader(source &from)
+	inline reader::reader(source &from)
 		: m_from(from)
 	{
 	}
 
-	source &reader::from() const
+	inline source &reader::from() const
 	{
 		return m_from;
 	}
 
-	reader &reader::be8(boost::uint8_t &value)
+	inline reader &reader::be8(boost::uint8_t &value)
 	{
 		return this->value<szn::be8>(value);
 	}
 
-	reader &reader::be16(boost::uint16_t &value)
+	inline reader &reader::be16(boost::uint16_t &value)
 	{
 		return this->value<szn::be16>(value);
 	}
 
-	reader &reader::be32(boost::uint32_t &value)
+	inline reader &reader::be32(boost::uint32_t &value)
 	{
 		return this->value<szn::be32>(value);
 	}
 
-	reader &reader::be64(boost::uint64_t &value)
+	inline reader &reader::be64(boost::uint64_t &value)
 	{
 		return this->value<szn::be64>(value);
 	}
 
-	reader &reader::le8(boost::uint8_t &value)
+	inline reader &reader::le8(boost::uint8_t &value)
 	{
 		return this->value<szn::le8>(value);
 	}
 
-	reader &reader::le16(boost::uint16_t &value)
+	inline reader &reader::le16(boost::uint16_t &value)
 	{
 		return this->value<szn::le16>(value);
 	}
 
-	reader &reader::le32(boost::uint32_t &value)
+	inline reader &reader::le32(boost::uint32_t &value)
 	{
 		return this->value<szn::le32>(value);
 	}
 
-	reader &reader::le64(boost::uint64_t &value)
+	inline reader &reader::le64(boost::uint64_t &value)
 	{
 		return this->value<szn::le64>(value);
 	}
 
-	reader &reader::boolean8(bool &value)
+	inline reader &reader::boolean8(bool &value)
 	{
 		return this->value<szn::boolean>(value);
 	}
 
-	reader &reader::raw(char *data, size_t length)
+	inline reader &reader::raw(char *data, size_t length)
 	{
 		m_from.read(data, length);
 		return *this;
