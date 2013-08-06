@@ -806,6 +806,24 @@ namespace szn
 			char const expected[] = {1, 0x12, 0x34};
 			BOOST_CHECK_EQUAL(generated, std::string(expected, 3));
 		}
+
+		{
+			generated.clear();
+			std::auto_ptr<int> const value(new int(0x1234));
+			format().serialize(sink, value);
+			char const expected[] = {1, 0x12, 0x34};
+			BOOST_CHECK_EQUAL(generated, std::string(expected, 3));
+		}
+
+#if SZN_HAS_UNIQUE_PTR
+		{
+			generated.clear();
+			std::unique_ptr<int> const value(new int(0x1234));
+			format().serialize(sink, value);
+			char const expected[] = {1, 0x12, 0x34};
+			BOOST_CHECK_EQUAL(generated, std::string(expected, 3));
+		}
+#endif
 	}
 
 	template <class Nullable, class IsSet>

@@ -23,11 +23,14 @@ namespace szn
 		void serialize(Sink &sink, Nullable const &value) const
 		{
 			bool const is_set = !!value;
-			ConditionFormat().serialize(sink, is_set);
-			if (is_set)
-			{
-				ValueFormat().serialize(sink, *value);
-			}
+			serialize_indirect(sink, is_set, value);
+		}
+
+		template <class Sink, class Value>
+		void serialize(Sink &sink, std::auto_ptr<Value> const &ptr) const
+		{
+			bool const is_set = ptr.get() != 0;
+			serialize_indirect(sink, is_set, ptr);
 		}
 
 		template <class Source, class Value>
@@ -63,6 +66,16 @@ namespace szn
 #endif
 
 	private:
+
+		template <class Sink, class Dereferenceable>
+		void serialize_indirect(Sink &sink, bool is_set, Dereferenceable const &deref) const
+		{
+			ConditionFormat().serialize(sink, is_set);
+			if (is_set)
+			{
+				ValueFormat().serialize(sink, *deref);
+			}
+		}
 
 		template <class Source>
 		bool parse_condition(Source &source) const
