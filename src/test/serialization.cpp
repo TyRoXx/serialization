@@ -23,12 +23,19 @@
 #include <boost/cstdint.hpp>
 #include <boost/scoped_ptr.hpp>
 #include <boost/assign/list_of.hpp>
+#include <boost/unordered_map.hpp>
+#include <boost/unordered_set.hpp>
 
 #include <sstream>
 #include <list>
 #include <vector>
 #include <deque>
 #include <map>
+#include <set>
+#if SZN_HAS_UNORDERED
+#	include <unordered_map>
+#	include <unordered_set>
+#endif
 
 namespace szn
 {
@@ -890,13 +897,29 @@ namespace szn
 	template <class Container>
 	static void serialize_vector()
 	{
+		szn::vector<szn::be16, szn::be16> format;
 		std::string generated;
 		BOOST_AUTO(sink, make_container_sink(generated));
-		szn::vector<szn::be16, szn::be16> format;
 		Container const values = boost::assign::list_of(2)(3)(5)(7);
 		format.serialize(sink, values);
 		char const expected[] = {0, 4, 0, 2, 0, 3, 0, 5, 0, 7};
 		BOOST_CHECK_EQUAL(std::string(expected, 10), generated);
+	}
+
+	template <class Container>
+	static void serialize_vector_roundtrip()
+	{
+		szn::vector<szn::be16, szn::be16> format;
+		Container const values = boost::assign::list_of(2)(3)(5)(7);
+		std::string generated;
+		{
+			BOOST_AUTO(sink, make_container_sink(generated));
+			format.serialize(sink, values);
+		}
+		BOOST_AUTO(source, make_container_source(generated));
+		Container extracted;
+		format.deserialize(source, extracted);
+		BOOST_CHECK(values == extracted);
 	}
 
 	BOOST_AUTO_TEST_CASE(Serialization_vector_serialize)
@@ -905,6 +928,11 @@ namespace szn
 		serialize_vector<std::list<boost::uint16_t> >();
 		serialize_vector<std::deque<boost::uint16_t> >();
 		serialize_vector<boost::array<boost::uint16_t, 4> >();
+		serialize_vector<std::set<boost::uint16_t> >();
+		serialize_vector_roundtrip<boost::unordered_set<boost::uint16_t> >();
+#if SZN_HAS_UNORDERED
+		serialize_vector_roundtrip<std::unordered_set<boost::uint16_t> >();
+#endif
 		//TODO: std::array, boost containers
 	}
 
@@ -927,6 +955,11 @@ namespace szn
 		deserialize_vector<std::list<boost::uint16_t> >();
 		deserialize_vector<std::deque<boost::uint16_t> >();
 		deserialize_vector<boost::array<boost::uint16_t, 3> >();
+		deserialize_vector<std::set<boost::uint16_t> >();
+		deserialize_vector<boost::unordered_set<boost::uint16_t> >();
+#if SZN_HAS_UNORDERED
+		deserialize_vector<std::unordered_set<boost::uint16_t> >();
+#endif
 		//TODO: std::array, boost containers
 		//TODO: test error handling on wrong array size
 	}
