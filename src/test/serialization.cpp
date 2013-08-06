@@ -698,6 +698,30 @@ namespace szn
 
 	}
 
+	BOOST_AUTO_TEST_CASE(Serialization_pair_serialize)
+	{
+		std::string generated;
+		BOOST_AUTO(sink, make_container_sink(generated));
+		typedef szn::pair<szn::le8, szn::le8> in_order;
+		typedef szn::pair<szn::le8, szn::le8, szn::pair_order::second_first> reversed;
+		in_order().serialize(sink, std::make_pair('a', 'b'));
+		reversed().serialize(sink, std::make_pair('c', 'd'));
+		BOOST_CHECK_EQUAL("abdc", generated);
+	}
+
+	BOOST_AUTO_TEST_CASE(Serialization_pair_deserialize)
+	{
+		std::string const data = "VWXY";
+		BOOST_AUTO(source, szn::make_range_source(data));
+		typedef szn::pair<szn::le8, szn::le8, szn::pair_order::second_first> reversed;
+		typedef szn::pair<szn::le8, szn::le8> in_order;
+		std::pair<char, char> wv, xy;
+		reversed().deserialize(source, wv);
+		in_order().deserialize(source, xy);
+		BOOST_CHECK(wv == std::make_pair('W', 'V'));
+		BOOST_CHECK(xy == std::make_pair('X', 'Y'));
+	}
+
 	BOOST_AUTO_TEST_CASE(Serialization_std_map_serialize)
 	{
 		szn::map<szn::le8, szn::bytes<szn::le8>, szn::le16> format;

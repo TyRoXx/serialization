@@ -8,8 +8,8 @@
 
 namespace szn
 {
-	template <class LengthFormat, class KeyFormat, class ValueFormat>
-	struct map : vector<LengthFormat, pair<KeyFormat, ValueFormat>>
+	template <class LengthFormat, class KeyFormat, class ValueFormat, class KeyValueFormat = pair<KeyFormat, ValueFormat>>
+	struct map : vector<LengthFormat, KeyValueFormat>
 	{
 	};
 }
