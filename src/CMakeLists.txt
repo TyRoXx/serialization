@@ -22,6 +22,9 @@ if(CMAKE_COMPILER_IS_GNUCXX)
 	#some more warnings (which are not always useful)
 	set(flags "${flags} -Wextra")
 
+        #do not warn about auto_ptr
+        set(flags "${flags} -Wno-deprecated-declarations")
+
 	#extra strictness
 	set(flags "${flags} -pedantic")
 
