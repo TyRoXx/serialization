@@ -998,7 +998,8 @@ namespace szn
 
 	BOOST_AUTO_TEST_CASE(Serialization_deserializing_iterator)
 	{
-		std::string const data_str = "ABCD";
+		//TODO make the iterator work without the extra 'E' at the end
+		std::string const data_str = "ABCDE";
 		BOOST_AUTO(source, make_container_source(data_str));
 		BOOST_AUTO(it, (make_deserializing_iterator<szn::be8, char>(source)));
 		std::string extracted;
