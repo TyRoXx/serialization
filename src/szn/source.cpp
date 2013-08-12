@@ -85,7 +85,7 @@ namespace szn
 			size_t const bytes_to_read = clamped_n - prev_size;
 			m_in.read(&m_buffer.front() + prev_size, bytes_to_read);
 			std::streamsize const read = m_in.gcount();
-			assert(read <= bytes_to_read);
+			assert(static_cast<size_t>(read) <= bytes_to_read);
 			m_buffer.resize(prev_size + static_cast<size_t>(read));
 		}
 		m_size = std::min(clamped_n, m_buffer.size());
