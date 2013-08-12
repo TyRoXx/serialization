@@ -44,6 +44,7 @@ namespace szn
 {
 	namespace
 	{
+		//SZN_BEGIN and SZN_BEGIN2 are deprecated, use RXN_REFLECT instead (tests are in syntax_v3.cpp).
 		SZN_BEGIN(TestStruct)
 			SZN_FIELD(le32_,          int,                   le32)
 			SZN_FIELD(le16_,     unsigned,                   le16)
