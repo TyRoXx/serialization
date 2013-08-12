@@ -573,22 +573,21 @@ namespace szn
 
 	BOOST_AUTO_TEST_CASE(Serialization_enum)
 	{
-
 #define SZNTEST_ENUM_VALUES(endianness, bitsize) \
 		BOOST_CHECK(serialization_roundtrip(Zero, szn:: BOOST_PP_CAT(endianness, bitsize) ())); \
 		BOOST_CHECK(serialization_roundtrip(NonZero, szn:: BOOST_PP_CAT(endianness, bitsize) ())); \
 		BOOST_CHECK(serialization_roundtrip(Ones, szn:: BOOST_PP_CAT(endianness, bitsize) ()));
+		
+#define SZNTEST_ENUM_VALUES2(endianness) \
+		SZNTEST_ENUM_VALUES(endianness, 8) \
+		SZNTEST_ENUM_VALUES(endianness, 16) \
+		SZNTEST_ENUM_VALUES(endianness, 32) \
+		SZNTEST_ENUM_VALUES(endianness, 64)
 
-		SZNTEST_ENUM_VALUES(le, 8)
-		SZNTEST_ENUM_VALUES(le, 16)
-		SZNTEST_ENUM_VALUES(le, 32)
-		SZNTEST_ENUM_VALUES(le, 64)
+		SZNTEST_ENUM_VALUES2(le)
+		SZNTEST_ENUM_VALUES2(be)
 
-		SZNTEST_ENUM_VALUES(be, 8)
-		SZNTEST_ENUM_VALUES(be, 16)
-		SZNTEST_ENUM_VALUES(be, 32)
-		SZNTEST_ENUM_VALUES(be, 64)
-
+#undef SZNTEST_ENUM_VALUES2
 #undef SZNTEST_ENUM_VALUES
 	}
 
@@ -610,16 +609,16 @@ namespace szn
 		BOOST_CHECK(serialization_roundtrip(TestEnumClass::NonZero, szn:: BOOST_PP_CAT(endianness, bitsize) ())); \
 		BOOST_CHECK(serialization_roundtrip(TestEnumClass::Ones, szn:: BOOST_PP_CAT(endianness, bitsize) ()));
 
-		SZNTEST_ENUM_VALUES(le, 8)
-		SZNTEST_ENUM_VALUES(le, 16)
-		SZNTEST_ENUM_VALUES(le, 32)
-		SZNTEST_ENUM_VALUES(le, 64)
+#define SZNTEST_ENUM_VALUES2(endianness) \
+		SZNTEST_ENUM_VALUES(endianness, 8) \
+		SZNTEST_ENUM_VALUES(endianness, 16) \
+		SZNTEST_ENUM_VALUES(endianness, 32) \
+		SZNTEST_ENUM_VALUES(endianness, 64)
 
-		SZNTEST_ENUM_VALUES(be, 8)
-		SZNTEST_ENUM_VALUES(be, 16)
-		SZNTEST_ENUM_VALUES(be, 32)
-		SZNTEST_ENUM_VALUES(be, 64)
+		SZNTEST_ENUM_VALUES2(le)
+		SZNTEST_ENUM_VALUES2(be)
 
+#undef SZNTEST_ENUM_VALUES2
 #undef SZNTEST_ENUM_VALUES
 	}
 #endif
