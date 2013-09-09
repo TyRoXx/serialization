@@ -6,14 +6,52 @@
 #include <boost/integer.hpp>
 #include <boost/type_traits/make_unsigned.hpp>
 #include <boost/type_traits/is_enum.hpp>
+#include <boost/utility/declval.hpp>
 
 
 namespace szn
 {
-	template <std::size_t Size>
-	struct intrinsic_size_tag
+	namespace detail
 	{
-	};
+		template <std::size_t Size>
+		struct intrinsic_size_tag
+		{
+		};
+
+		template <class Sink, class Integer, class ByteOrder, std::size_t IntegerSize>
+		struct integer_serializer SZN_FINAL
+		{
+			Sink *sink;
+			Integer value;
+
+			template <class SizeTag>
+			typename boost::enable_if<boost::is_same<Integer, decltype(ByteOrder::make_serializable_pod(boost::declval<Integer>(), SizeTag()))>, void>::type
+			serialize(SizeTag, int) const
+			{
+				assert(sink);
+				const Integer preparedForWriting = ByteOrder::make_serializable_pod(value, intrinsic_size_tag<IntegerSize>());
+				BOOST_STATIC_ASSERT(sizeof(preparedForWriting) >= IntegerSize);
+				sink->write(reinterpret_cast<char const *>(&preparedForWriting), IntegerSize);
+			}
+
+			template <class SizeTag>
+			void serialize(SizeTag, ...) const
+			{
+				assert(sink);
+				//Value could be an enum class which is not implicitly convertible
+				//to any integer. We have to do the conversion explicitly.
+				typedef typename boost::uint_t<sizeof(value) * 8>::least ArithUValue;
+				ArithUValue const arith_value = static_cast<ArithUValue>(value);
+
+				for (std::size_t b = 0; b < IntegerSize; ++b)
+				{
+					std::size_t const byte_shift = ByteOrder::get_byte_shift(b, IntegerSize);
+					char const byte = static_cast<unsigned char>(arith_value >> (byte_shift * 8));
+					sink->write(&byte, 1);
+				}
+			}
+		};
+	}
 
 	template <std::size_t ByteSize, class ByteOrder>
 	struct integer SZN_FINAL
@@ -26,32 +64,23 @@ namespace szn
 		template <class Sink, class Value>
 		void serialize(Sink &sink, Value value) const
 		{
-			//Value could be an enum class which is not implicitly convertible
-			//to any integer. We have to do the conversion explicitly.
-			typedef typename boost::uint_t<sizeof(value) * 8>::least ArithUValue;
-			ArithUValue const arith_value = static_cast<ArithUValue>(value);
-
-			for (std::size_t b = 0; b < ByteSize; ++b)
-			{
-				std::size_t const byte_shift = ByteOrder::get_byte_shift(b, ByteSize);
-				char const byte = static_cast<unsigned char>(arith_value >> (byte_shift * 8));
-				sink.write(&byte, 1);
-			}
+			detail::integer_serializer<Sink, default_type, ByteOrder, ByteSize> serializer;
+			serializer.sink = &sink;
+			serializer.value = static_cast<default_type>(value);
+			serializer.serialize(detail::intrinsic_size_tag<ByteSize>(), 0);
 		}
 
 		template <class Source, class Value>
 		void deserialize(Source &source, Value &value) const
 		{
-			//We do the calculations with unsigned integers to keep the code simple.
-			typedef typename boost::make_unsigned<Value>::type UValue;
-
+			typedef default_type UValue;
 			UValue result = 0;
 			for (std::size_t b = 0; b < ByteSize; ++b)
 			{
 				unsigned char byte;
 				source.read(reinterpret_cast<char *>(&byte), 1);
 				std::size_t const byte_shift = ByteOrder::get_byte_shift(b, ByteSize);
-				result = static_cast<UValue>(result | static_cast<UValue>(static_cast<UValue>(byte) << (byte_shift * 8)));
+				result = static_cast<UValue>(result | static_cast<UValue>(static_cast<UValue>(byte) << static_cast<UValue>(byte_shift * 8)));
 			}
 
 			//If Value is signed and ByteSize is less than sizeof(Value)

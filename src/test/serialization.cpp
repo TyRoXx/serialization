@@ -110,7 +110,7 @@ namespace szn
 
 		template <class Value, class Format>
 		bool serialization_roundtrip(Value const &value,
-									Format const &format)
+									 Format const &format)
 		{
 			typedef typename boost::remove_const<Value>::type mutable_value;
 

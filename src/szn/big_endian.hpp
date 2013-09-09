@@ -17,16 +17,18 @@ namespace szn
 		}
 
 		template <class T>
-		static T make_serializable_pod(T value, intrinsic_size_tag<2>)
+		static T make_serializable_pod(T value, detail::intrinsic_size_tag<2>)
 		{
 			return intrinsics::htons(value);
 		}
 
 		template <class T>
-		static T make_serializable_pod(T value, intrinsic_size_tag<4>)
+		static T make_serializable_pod(T value, detail::intrinsic_size_tag<4>)
 		{
 			return intrinsics::htonl(value);
 		}
+
+		//TODO: 64 bit
 	};
 
 	typedef integer<1, big_endian_byte_order> be8;
