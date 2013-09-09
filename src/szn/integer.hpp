@@ -10,6 +10,11 @@
 
 namespace szn
 {
+	template <std::size_t Size>
+	struct intrinsic_size_tag
+	{
+	};
+
 	template <std::size_t ByteSize, class ByteOrder>
 	struct integer SZN_FINAL
 	{

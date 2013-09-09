@@ -3,6 +3,7 @@
 
 
 #include <szn/integer.hpp>
+#include <szn/intrinsics.hpp>
 
 
 namespace szn
@@ -14,6 +15,24 @@ namespace szn
 		{
 			(void)word_size;
 			return byte_index;
+		}
+
+		template <class T>
+		static T make_serializable_pod(T value, intrinsic_size_tag<2>)
+		{
+			return intrinsics::bswap16(intrinsics::htons(value));
+		}
+
+		template <class T>
+		static T make_serializable_pod(T value, intrinsic_size_tag<4>)
+		{
+			return intrinsics::bswap32(intrinsics::htonl(value));
+		}
+
+		template <class T>
+		static T make_serializable_pod(T value, intrinsic_size_tag<8>)
+		{
+			return intrinsics::bswap64(intrinsics::htonl(value));
 		}
 	};
 

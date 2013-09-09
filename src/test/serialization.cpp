@@ -1073,4 +1073,33 @@ namespace szn
 		sink.write("Hallo", 5);
 		BOOST_CHECK_EQUAL("Hallo", stream.str());
 	}
+
+	BOOST_AUTO_TEST_CASE(Serialization_intrinsics_bswap)
+	{
+		namespace in = szn::intrinsics;
+
+		BOOST_CHECK(0 == in::bswap16(0));
+		BOOST_CHECK(0xaabbu == in::bswap16(0xbbaau));
+
+		BOOST_CHECK(0 == in::bswap32(0));
+		BOOST_CHECK(0xaabbccddu == in::bswap32(0xddccbbaau));
+
+		BOOST_CHECK(0 == in::bswap64(0));
+		BOOST_CHECK(0xaabbccddeeff1122ull == in::bswap64(0x2211ffeeddccbbaaull));
+	}
+
+	BOOST_AUTO_TEST_CASE(Serialization_intrinsics_htons)
+	{
+		namespace in = szn::intrinsics;
+
+		BOOST_CHECK(0 == in::htons(0));
+		BOOST_CHECK(0 == in::ntohs(0));
+		BOOST_CHECK(0 == in::htonl(0));
+		BOOST_CHECK(0 == in::ntohl(0));
+
+		BOOST_CHECK(in::htons(0xaabb) == 0xaabb || in::htons(0xaabb) == 0xbbaa);
+		BOOST_CHECK(in::ntohs(0xaabb) == 0xaabb || in::ntohs(0xaabb) == 0xbbaa);
+		BOOST_CHECK(in::htonl(0xaabbccdd) == 0xaabbccdd || in::htonl(0xaabbccdd) == 0xddccbbaa);
+		BOOST_CHECK(in::ntohl(0xaabbccdd) == 0xaabbccdd || in::ntohl(0xaabbccdd) == 0xddccbbaa);
+	}
 }
