@@ -4,4 +4,4 @@ file(GLOB codeFiles
 )
 
 add_executable(test ${codeFiles})
-target_link_libraries(test serialization)
+target_link_libraries(test ${Boost_LIBRARIES})

@@ -42,6 +42,10 @@ namespace szn
 		virtual bool is_stable() const = 0;
 	};
 
+	inline source::~source()
+	{
+	}
+
 	namespace detail
 	{
 		template <class To, class From>
@@ -140,6 +144,34 @@ namespace szn
 		virtual bool is_stable() const SZN_OVERRIDE;
 	};
 
+	inline void empty_source::load(length_type)
+	{
+	}
+
+	inline length_type empty_source::size()
+	{
+		return 0;
+	}
+
+	inline char empty_source::get(length_type)
+	{
+		throw std::runtime_error("szn::EmptySource cannot be read from");
+	}
+
+	inline void empty_source::drop(length_type)
+	{
+	}
+
+	inline const char *empty_source::data()
+	{
+		return NULL;
+	}
+
+	inline bool empty_source::is_stable() const
+	{
+		return true;
+	}
+
 	struct zero_source : source
 	{
 		virtual void load(length_type n) SZN_OVERRIDE;
@@ -149,6 +181,37 @@ namespace szn
 		virtual const char *data() SZN_OVERRIDE;
 		virtual bool is_stable() const SZN_OVERRIDE;
 	};
+
+	inline void zero_source::load(length_type n)
+	{
+		(void)n;
+	}
+
+	inline length_type zero_source::size()
+	{
+		return 1;
+	}
+
+	inline char zero_source::get(length_type index)
+	{
+		(void)index;
+		return 0;
+	}
+
+	inline void zero_source::drop(length_type n)
+	{
+		(void)n;
+	}
+
+	inline const char *zero_source::data()
+	{
+		return "";
+	}
+
+	inline bool zero_source::is_stable() const
+	{
+		return true;
+	}
 
 	struct stream_source : source
 	{
@@ -166,6 +229,58 @@ namespace szn
 		std::vector<char> m_buffer;
 		length_type m_size;
 	};
+
+	inline stream_source::stream_source(std::istream &in)
+		: m_in(in)
+		, m_size(0)
+	{
+	}
+
+	inline void stream_source::load(length_type n)
+	{
+		size_t const clamped_n = static_cast<size_t>(std::min<length_type>(n, m_buffer.max_size()));
+		size_t const prev_size = m_buffer.size();
+		if (clamped_n > prev_size)
+		{
+			m_buffer.resize(clamped_n);
+			size_t const bytes_to_read = clamped_n - prev_size;
+			m_in.read(&m_buffer.front() + prev_size, bytes_to_read);
+			std::streamsize const read = m_in.gcount();
+			assert(static_cast<size_t>(read) <= bytes_to_read);
+			m_buffer.resize(prev_size + static_cast<size_t>(read));
+		}
+		m_size = std::min(clamped_n, m_buffer.size());
+	}
+
+	inline length_type stream_source::size()
+	{
+		return m_size;
+	}
+
+	inline char stream_source::get(length_type index)
+	{
+		assert(index < m_size);
+		assert(index < m_buffer.size());
+		return m_buffer[static_cast<size_t>(index)];
+	}
+
+	inline void stream_source::drop(length_type n)
+	{
+		assert(n <= m_size);
+		assert(n <= m_buffer.size());
+		m_buffer.erase(m_buffer.begin(), m_buffer.begin() + static_cast<ptrdiff_t>(n));
+		m_size -= n;
+	}
+
+	inline const char *stream_source::data()
+	{
+		return m_buffer.empty() ? NULL : &m_buffer.front();
+	}
+
+	inline bool stream_source::is_stable() const
+	{
+		return false;
+	}
 }
 
 BOOST_TYPEOF_REGISTER_TEMPLATE(::szn::range_source, 2)

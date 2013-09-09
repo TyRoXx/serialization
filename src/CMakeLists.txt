@@ -103,6 +103,5 @@ include_directories(${Boost_INCLUDE_DIRS})
 
 include_directories(".")
 
-add_subdirectory(szn)
 add_subdirectory(test)
 add_subdirectory(examples)

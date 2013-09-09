@@ -19,11 +19,21 @@ namespace szn
 		virtual void write(const char *data, std::size_t n) = 0;
 	};
 
+	inline sink::~sink()
+	{
+	}
+
 	/// does nothing when being written to
 	struct null_sink : sink
 	{
 		virtual void write(const char *data, std::size_t n) SZN_OVERRIDE;
 	};
+
+	inline void null_sink::write(const char *data, std::size_t n)
+	{
+		(void)data;
+		(void)n;
+	}
 
 	/// copies the data byte-wise to an output iterator.
 	/// Works with std::ostreambuf_iterator<char>, std::back_inserter etc.
