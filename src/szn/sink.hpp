@@ -126,7 +126,7 @@ namespace szn
 		NextSink &m_next;
 	};
 
-	struct stream_sink : sink
+	struct stream_sink SZN_FINAL : sink
 	{
 		explicit stream_sink(std::ostream &out)
 			: m_out(out)

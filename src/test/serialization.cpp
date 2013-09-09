@@ -1092,14 +1092,14 @@ namespace szn
 	{
 		namespace in = szn::intrinsics;
 
-		BOOST_CHECK(0 == in::htons(0));
-		BOOST_CHECK(0 == in::ntohs(0));
-		BOOST_CHECK(0 == in::htonl(0));
-		BOOST_CHECK(0 == in::ntohl(0));
+		BOOST_CHECK(0 == in::hton16(0));
+		BOOST_CHECK(0 == in::ntoh16(0));
+		BOOST_CHECK(0 == in::hton32(0));
+		BOOST_CHECK(0 == in::ntoh32(0));
 
-		BOOST_CHECK(in::htons(0xaabb) == 0xaabb || in::htons(0xaabb) == 0xbbaa);
-		BOOST_CHECK(in::ntohs(0xaabb) == 0xaabb || in::ntohs(0xaabb) == 0xbbaa);
-		BOOST_CHECK(in::htonl(0xaabbccdd) == 0xaabbccdd || in::htonl(0xaabbccdd) == 0xddccbbaa);
-		BOOST_CHECK(in::ntohl(0xaabbccdd) == 0xaabbccdd || in::ntohl(0xaabbccdd) == 0xddccbbaa);
+		BOOST_CHECK(in::hton16(0xaabb) == 0xaabb || in::hton16(0xaabb) == 0xbbaa);
+		BOOST_CHECK(in::ntoh16(0xaabb) == 0xaabb || in::ntoh16(0xaabb) == 0xbbaa);
+		BOOST_CHECK(in::hton32(0xaabbccdd) == 0xaabbccdd || in::hton32(0xaabbccdd) == 0xddccbbaa);
+		BOOST_CHECK(in::ntoh32(0xaabbccdd) == 0xaabbccdd || in::ntoh32(0xaabbccdd) == 0xddccbbaa);
 	}
 }

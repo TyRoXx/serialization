@@ -19,13 +19,13 @@ namespace szn
 		template <class T>
 		static T make_serializable_pod(T value, detail::intrinsic_size_tag<2>)
 		{
-			return intrinsics::htons(value);
+			return intrinsics::hton16(value);
 		}
 
 		template <class T>
 		static T make_serializable_pod(T value, detail::intrinsic_size_tag<4>)
 		{
-			return intrinsics::htonl(value);
+			return intrinsics::hton32(value);
 		}
 
 		//TODO: 64 bit

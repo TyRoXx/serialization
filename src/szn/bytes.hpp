@@ -113,6 +113,7 @@ namespace szn
 		void serialize_range_impl(Sink &sink, ByteIterator begin, ByteIterator end, length_type length, boost::true_type) const
 		{
 			assert(length == static_cast<boost::uintmax_t>(std::distance(begin, end)));
+			(void)length;
 			char const * const data = reinterpret_cast<char const *>(begin);
 			sink.write(data, std::distance(begin, end));
 		}

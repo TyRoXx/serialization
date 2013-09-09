@@ -14,10 +14,25 @@ namespace szn
 {
 	namespace intrinsics
 	{
-		using ::ntohl;
-		using ::htonl;
-		using ::ntohs;
-		using ::htons;
+		inline boost::uint32_t ntoh32(boost::uint32_t value)
+		{
+			return ntohl(value);
+		}
+
+		inline boost::uint32_t hton32(boost::uint32_t value)
+		{
+			return htonl(value);
+		}
+
+		inline boost::uint16_t hton16(boost::uint16_t value)
+		{
+			return htons(value);
+		}
+
+		inline boost::uint16_t ntoh16(boost::uint16_t value)
+		{
+			return ntohs(value);
+		}
 	}
 }
 
