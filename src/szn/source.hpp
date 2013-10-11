@@ -249,7 +249,7 @@ namespace szn
 			assert(static_cast<size_t>(read) <= bytes_to_read);
 			m_buffer.resize(prev_size + static_cast<size_t>(read));
 		}
-		m_size = std::min(clamped_n, m_buffer.size());
+		m_size = (std::min)(clamped_n, m_buffer.size());
 	}
 
 	inline length_type stream_source::size()

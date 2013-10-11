@@ -25,13 +25,13 @@ namespace szn
 			Integer value;
 
 			template <class SizeTag>
-			typename boost::enable_if<boost::is_same<Integer, decltype(ByteOrder::make_serializable_pod(boost::declval<Integer>(), SizeTag()))>, void>::type
+			typename boost::enable_if_c<!boost::is_same<void, decltype(ByteOrder::make_serializable_pod(boost::declval<Integer>(), SizeTag()))>::value, void>::type
 			serialize(SizeTag, int) const
 			{
 				assert(sink);
-				const Integer preparedForWriting = ByteOrder::make_serializable_pod(value, intrinsic_size_tag<IntegerSize>());
-				BOOST_STATIC_ASSERT(sizeof(preparedForWriting) >= IntegerSize);
-				sink->write(reinterpret_cast<char const *>(&preparedForWriting), IntegerSize);
+				const Integer prepared_for_writing = ByteOrder::make_serializable_pod(value, intrinsic_size_tag<IntegerSize>());
+				BOOST_STATIC_ASSERT(sizeof(prepared_for_writing) == IntegerSize);
+				sink->write(reinterpret_cast<char const *>(&prepared_for_writing), IntegerSize);
 			}
 
 			template <class SizeTag>

@@ -88,6 +88,8 @@ if(MSVC)
 	set(Boost_USE_MULTITHREADED      ON)
 	set(Boost_USE_STATIC_RUNTIME     OFF)
 	set(BOOST_ALL_DYN_LINK           OFF)
+
+	set(SERIALIZATION_COMPILER_LIBS "Ws2_32.lib")
 endif()
 
 option(SZN_BOOST_DYNAMIC "change if linker complains about Boost" ON)

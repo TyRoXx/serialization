@@ -17,6 +17,9 @@ namespace szn
 			return byte_index;
 		}
 
+		template <class T, std::size_t OtherSize>
+		static void make_serializable_pod(T value, detail::intrinsic_size_tag<OtherSize>);
+
 		template <class T>
 		static T make_serializable_pod(T value, detail::intrinsic_size_tag<2>)
 		{

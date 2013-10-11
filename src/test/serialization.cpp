@@ -660,10 +660,10 @@ namespace szn
 #endif
 
 		BOOST_CHECK(test_min_max_size(szn::bytes<szn::le32>(), 4,
-		                           std::numeric_limits<length_type>::max()));
+		                           (std::numeric_limits<length_type>::max)()));
 
 		BOOST_CHECK(test_min_max_size(szn::vector<szn::le32, szn::le8>(), 4,
-								   std::numeric_limits<length_type>::max()));
+								   (std::numeric_limits<length_type>::max)()));
 	}
 
 	BOOST_AUTO_TEST_CASE(Serialization_bytes_non_pointer)
