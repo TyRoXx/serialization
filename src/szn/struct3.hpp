@@ -43,4 +43,66 @@ namespace szn
 	}
 
 
+namespace szn
+{
+	namespace detail
+	{
+		template <class Sink>
+		struct serializing_structure3_visitor
+		{
+			explicit serializing_structure3_visitor(Sink &sink)
+			    : m_sink(sink)
+			{
+			}
+
+			template <class Format, class Element>
+			void accept(Element const &element) const
+			{
+				Format().serialize(m_sink, element);
+			}
+
+		private:
+
+			Sink &m_sink;
+		};
+
+		template <class Source>
+		struct deserializing_structure3_visitor
+		{
+			explicit deserializing_structure3_visitor(Source &source)
+			    : m_source(source)
+			{
+			}
+
+			template <class Format, class Element>
+			void accept(Element &element) const
+			{
+				Format().deserialize(m_source, element);
+			}
+
+		private:
+
+			Source &m_source;
+		};
+	}
+
+	struct structure3
+	{
+		template <class Sink, class Structure>
+		void serialize(Sink &sink, Structure const &object) const
+		{
+			detail::serializing_structure3_visitor<Sink> const visitor(sink);
+			object.iterate(visitor);
+		}
+
+		template <class Source, class Structure>
+		void deserialize(Source &source, Structure &object) const
+		{
+			detail::deserializing_structure3_visitor<Source> const visitor(source);
+			object.iterate(visitor);
+		}
+	};
+}
+
+
 #endif

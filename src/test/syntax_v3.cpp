@@ -6,6 +6,8 @@
 #include <szn/big_endian.hpp>
 #include <szn/vector.hpp>
 #include <szn/struct.hpp>
+#include <szn/source.hpp>
+#include <szn/sink.hpp>
 
 #include <sstream>
 
@@ -153,5 +155,44 @@ namespace szn
 		        boost::assign::list_of(8)(7)(6)(8)(7)(6);
 
 		BOOST_CHECK(v.values == expectedValues);
+	}
+
+	namespace
+	{
+		struct serialized_struct3
+		{
+			RXN_REFLECT((SZN_AUTO_MEMBERS) (SZN_ITERATE),
+			            (i, be16),
+			            (s, bytes<be8>) (std::string))
+		};
+	}
+
+	BOOST_AUTO_TEST_CASE(Serialization_Syntax_v3_serialize)
+	{
+		serialized_struct3 s;
+		s.i = 0xaabb;
+		s.s = "abc";
+		std::vector<unsigned char> generated;
+		auto sink = make_container_sink(generated);
+		structure3().serialize(sink, s);
+		boost::array<unsigned char, 6> const expected =
+		{{
+		     0xaa, 0xbb, 0x03, 'a', 'b', 'c'
+		}};
+		BOOST_CHECK(std::vector<unsigned char>(expected.begin(), expected.end()) == generated);
+	}
+
+	BOOST_AUTO_TEST_CASE(Serialization_Syntax_v3_deserialize)
+	{
+		boost::array<unsigned char, 6> const data =
+		{{
+		     0xaa, 0xbb, 0x03, 'a', 'b', 'c'
+		}};
+		serialized_struct3 s;
+		s.i = 0;
+		memory_source source(data);
+		structure3().deserialize(source, s);
+		BOOST_CHECK_EQUAL(0xaabb, s.i);
+		BOOST_CHECK_EQUAL("abc", s.s);
 	}
 }
