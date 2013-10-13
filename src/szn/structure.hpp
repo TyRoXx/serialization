@@ -2,7 +2,7 @@
 #define SERIALIZATION_STRUCT3_HPP_EBB9B9F7_02FB_4C22_958B_86E566E6B48F
 
 
-#include <rxn/struct2.hpp>
+#include <rxn/reflect.hpp>
 
 
 namespace szn

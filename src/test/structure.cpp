@@ -1,7 +1,7 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/assign/list_of.hpp>
 
-#include <szn/struct3.hpp>
+#include <szn/structure.hpp>
 #include <szn/bytes.hpp>
 #include <szn/big_endian.hpp>
 #include <szn/vector.hpp>

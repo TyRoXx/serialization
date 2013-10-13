@@ -1,5 +1,5 @@
-#ifndef REFLEXION_STRUCT2_HPP
-#define REFLEXION_STRUCT2_HPP
+#ifndef REFLEXION_REFLECT_HPP
+#define REFLEXION_REFLECT_HPP
 
 
 #include <boost/preprocessor/seq/for_each.hpp>
