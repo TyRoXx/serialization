@@ -1,7 +1,5 @@
 #include <boost/test/unit_test.hpp>
 
-#include <szn/struct.hpp>
-#include <szn/struct2.hpp>
 #include <szn/little_endian.hpp>
 #include <szn/big_endian.hpp>
 #include <szn/bytes.hpp>
@@ -44,46 +42,6 @@ namespace szn
 {
 	namespace
 	{
-		//SZN_BEGIN and SZN_BEGIN2 are deprecated, use RXN_REFLECT instead (tests are in syntax_v3.cpp).
-		SZN_BEGIN(TestStruct)
-			SZN_FIELD(le32_,          int,                   le32)
-			SZN_FIELD(le16_,     unsigned,                   le16)
-			SZN_FIELD( le8_,         char,                   le8 )
-
-			SZN_FIELD(be32_,          int,                   be32)
-			SZN_FIELD(be16_,     unsigned,                   be16)
-			SZN_FIELD( be8_, boost::uint8_t,                 be8 )
-
-			SZN_FIELD(str16,  std::string,            bytes<le16>)
-			SZN_FIELD( str8,  std::string,            bytes<le8 >)
-
-			SZN_FIELD( vec8, std::vector<int>, vector<le8 BOOST_PP_COMMA() le32>)
-
-			SZN_FIELD( f32,         float,     binary_float<le32>)
-			SZN_FIELD( f64,        double,     binary_float<le64>)
-		SZN_END()
-
-		const unsigned char structureData[] =
-		{
-			/*le32*/   0x20, 0x00, 0x00, 0x00,
-			/*le16*/   0xff, 0xff,
-			/*le8*/    0x07,
-
-			/*be32*/   0x01, 0x01, 0x01, 0x01,
-			/*be16*/   0x80, 0,
-			/*be8*/    0xff,
-
-			/*str16*/  0x05, 0x00, 'h', 'a', 'l', 'l', 'o',
-			/*str8*/   0x00,
-
-			/*vec8*/   0x02,
-						   0xef, 0xbe, 0xad, 0xde,
-						   0x00, 0x00, 0x00, 0x00,
-
-			/*f32*/    0x00, 0x00, 0x00, 0x00,
-			/*f64*/    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
-		};
-
 		struct Equal
 		{
 			template <class T>
@@ -128,79 +86,6 @@ namespace szn
 		}
 	}
 
-	BOOST_AUTO_TEST_CASE(Serialization_Struct_serialize)
-	{
-		std::vector<unsigned char> generated;
-		BOOST_AUTO(sink, szn::make_container_sink(generated));
-
-		TestStruct b;
-		b.le32_ = 32;
-		b.le16_ = 0xffff;
-		b.le8_ = 7;
-		b.be32_ = 0x01010101;
-		b.be16_ = 0x8000;
-		b.be8_ = 0xff;
-		b.str16 = "hallo";
-		b.str8 = "";
-		b.vec8.push_back(0xdeadbeef);
-		b.vec8.push_back(0);
-		b.f32 = 0.0f;
-		b.f64 = 0.0;
-
-		serialize(sink, b, szn::by_method());
-
-		BOOST_REQUIRE_EQUAL(generated.size(), sizeof(structureData));
-		BOOST_CHECK(std::equal(boost::begin(structureData),
-							   boost::end(structureData),
-							   generated.begin()));
-	}
-
-	BOOST_AUTO_TEST_CASE(Serialization_Struct_deserialize)
-	{
-		szn::memory_source source(structureData);
-
-		TestStruct b;
-		deserialize(source, b, szn::by_method());
-
-		BOOST_CHECK_EQUAL(b.le32_, 32);
-		BOOST_CHECK_EQUAL(b.le16_, 0xffffu);
-		BOOST_CHECK_EQUAL(b.le8_, 7);
-		BOOST_CHECK_EQUAL(b.be32_, 0x01010101);
-		BOOST_CHECK_EQUAL(b.be16_, 0x8000u);
-		BOOST_CHECK_EQUAL(b.be8_, 0xffu);
-		BOOST_CHECK_EQUAL(b.str16, "hallo");
-		BOOST_CHECK_EQUAL(b.str8, "");
-		BOOST_REQUIRE_EQUAL(b.vec8.size(), 2u);
-		BOOST_CHECK_EQUAL(b.vec8[0], 0xdeadbeef);
-		BOOST_CHECK_EQUAL(b.vec8[1], 0);
-		BOOST_CHECK_EQUAL(b.f32, 0.0f);
-		BOOST_CHECK_EQUAL(b.f64, 0.0);
-	}
-
-	namespace
-	{
-		SZN_BEGIN(EmptyStruct)
-		SZN_END()
-	}
-
-	BOOST_AUTO_TEST_CASE(Serialization_EmptyStruct_serialize)
-	{
-		std::string generated;
-		BOOST_AUTO(sink, szn::make_container_sink(generated));
-
-		EmptyStruct().serialize(sink);
-
-		BOOST_CHECK(generated.empty());
-	}
-
-	BOOST_AUTO_TEST_CASE(Serialization_EmptyStruct_deserialize)
-	{
-		szn::memory_source source((szn::memory_source::range_type()));
-
-		EmptyStruct s;
-		s.deserialize(source);
-	}
-
 	namespace
 	{
 		template <class Container>
@@ -240,29 +125,6 @@ namespace szn
 			return (left.size() == right.size()) &&
 					std::equal(boost::begin(left), boost::end(left), boost::begin(right));
 		}
-
-		namespace for_adl_tests
-		{
-			struct Custom
-			{
-				bool ok;
-			};
-
-			void serialize(sink &, const Custom &custom, szn::by_adl)
-			{
-				BOOST_REQUIRE(custom.ok);
-			}
-
-			void deserialize(source &, Custom &custom, szn::by_adl)
-			{
-				BOOST_REQUIRE(!custom.ok);
-				custom.ok = true;
-			}
-
-			SZN_BEGIN(Wrapper)
-				SZN_FIELD(c, Custom, szn::by_adl)
-			SZN_END()
-		}
 	}
 
 	BOOST_AUTO_TEST_CASE(Serialization_ASCIIFloat_serialize)
@@ -275,14 +137,6 @@ namespace szn
 		Format().serialize(sink, 1.234f);
 
 		BOOST_CHECK(equalBytes(generated, std::string("1.234\0", 6)));
-	}
-
-	BOOST_AUTO_TEST_CASE(Serialization_by_adl)
-	{
-		szn::null_sink sink;
-		for_adl_tests::Wrapper w;
-		w.c.ok = true;
-		szn::serialize(sink, w, szn::by_method());
 	}
 
 	BOOST_AUTO_TEST_CASE(Serialization_array_std_array)
@@ -344,121 +198,6 @@ namespace szn
 		szn::array<2, szn::be8> format;
 		format.deserialize(source, extracted);
 		BOOST_CHECK(std::make_pair('A', 'B') == extracted);
-	}
-
-	namespace
-	{
-		SZN_BEGIN2(no_methods)
-			SZN_FIELD(i, boost::uint32_t, szn::le32)
-		SZN_END()
-	}
-
-	BOOST_AUTO_TEST_CASE(Serialization_no_methods)
-	{
-		std::vector<unsigned char> generated;
-		{
-			no_methods no;
-			no.i = 123;
-			BOOST_AUTO(sink, szn::make_container_sink(generated));
-			szn::structure().serialize(sink, no);
-		}
-
-		no_methods no;
-		{
-			BOOST_AUTO(source, szn::make_range_source(generated));
-			szn::structure().deserialize(source, no);
-		}
-
-		BOOST_CHECK(no.i == 123);
-	}
-
-	namespace
-	{
-		SZN_BEGIN2(iteration_tester)
-			SZN_FIELD(fieldA, int, szn::be32)
-			SZN_FIELD(fieldB, long, szn::le32)
-			SZN_FIELD(fieldC, char, szn::le8)
-		SZN_END()
-
-		struct iteration_test_visitor SZN_FINAL
-		{
-			explicit iteration_test_visitor(iteration_tester &tester)
-				: m_tester(tester)
-			{
-			}
-
-			void visit_field(int iteration_tester::*a, szn::be32, const char *name)
-			{
-				BOOST_CHECK(m_tester.*a == 2);
-				BOOST_CHECK(std::string(name) == "fieldA");
-			}
-
-			void visit_field(long iteration_tester::*b, szn::le32, const char *name)
-			{
-				BOOST_CHECK(m_tester.*b == 7);
-				BOOST_CHECK(std::string(name) == "fieldB");
-			}
-
-			void visit_field(char iteration_tester::*c, szn::le8, const char *name)
-			{
-				BOOST_CHECK(m_tester.*c == '!');
-				BOOST_CHECK(std::string(name) == "fieldC");
-			}
-
-		private:
-
-			iteration_tester const &m_tester;
-		};
-	}
-
-	BOOST_AUTO_TEST_CASE(Serialization_struct_iterate)
-	{
-		iteration_tester tester;
-		tester.fieldA = 2;
-		tester.fieldB = 7;
-		tester.fieldC = '!';
-		iteration_test_visitor visitor((tester));
-		tester.iterate(visitor);
-	}
-
-	namespace
-	{
-		//SZN structures can in fact be templates.
-		//For example C++ field types could be different for the sender and receiver.
-		template <class Range>
-		SZN_BEGIN2(bytes_tester)
-			SZN_FIELD(str, std::string, szn::bytes<szn::be64>)
-			SZN_FIELD(vec, std::vector<signed char>, szn::bytes<szn::be64>)
-			SZN_FIELD(range, Range, szn::bytes<szn::be64>)
-		SZN_END()
-	}
-
-	BOOST_AUTO_TEST_CASE(Serialization_bytes)
-	{
-		typedef std::pair<const char *, const char *> ConstStringRange;
-		const std::string range_pointee = "range";
-
-		std::vector<signed char> generated;
-		{
-			bytes_tester<ConstStringRange> tester;
-			tester.str = "hallo";
-			tester.vec.push_back(42);
-			tester.range = std::make_pair(range_pointee.data(),
-										  range_pointee.data() + range_pointee.size());
-			BOOST_AUTO(sink, szn::make_container_sink(generated));
-			szn::structure().serialize(sink, tester);
-		}
-
-		bytes_tester<ConstStringRange> tester;
-		{
-			BOOST_AUTO(source, szn::make_range_source(generated));
-			szn::structure().deserialize(source, tester);
-		}
-
-		BOOST_CHECK(tester.str == "hallo");
-		BOOST_CHECK(tester.vec.size() == 1);
-		BOOST_CHECK(tester.vec.at(0) == 42);
-		BOOST_CHECK(range_pointee == std::string(tester.range.first, tester.range.second));
 	}
 
 	BOOST_AUTO_TEST_CASE(Serialization_Bool)

@@ -5,7 +5,6 @@
 #include <szn/bytes.hpp>
 #include <szn/big_endian.hpp>
 #include <szn/vector.hpp>
-#include <szn/struct.hpp>
 #include <szn/source.hpp>
 #include <szn/sink.hpp>
 
@@ -81,7 +80,7 @@ namespace szn
 		{
 			RXN_REFLECT((SZN_AUTO_MEMBERS) (SZN_ITERATE),
 			            (value, be64),
-			            (children, vector<be32, structure>) (std::vector<tree>)
+			            (children, vector<be32, structure3>) (std::vector<tree>)
 			            )
 
 			explicit tree(be64::default_type value)
