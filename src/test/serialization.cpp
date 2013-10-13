@@ -19,6 +19,7 @@
 #include <szn/iterator.hpp>
 #include <szn/reader.hpp>
 #include <szn/writer.hpp>
+#include <szn/substitute.hpp>
 
 #include <boost/preprocessor/cat.hpp>
 #include <boost/cstdint.hpp>
@@ -840,5 +841,25 @@ namespace szn
 		BOOST_CHECK(in::ntoh16(0xaabb) == 0xaabb || in::ntoh16(0xaabb) == 0xbbaa);
 		BOOST_CHECK(in::hton32(0xaabbccdd) == 0xaabbccdd || in::hton32(0xaabbccdd) == 0xddccbbaa);
 		BOOST_CHECK(in::ntoh32(0xaabbccdd) == 0xaabbccdd || in::ntoh32(0xaabbccdd) == 0xddccbbaa);
+	}
+
+	BOOST_AUTO_TEST_CASE(Serialization_substitute_serialize)
+	{
+		szn::substitute<unsigned, 3> s;
+		szn::failing_sink sink;
+		s.serialize(sink, 3);
+		BOOST_CHECK_EXCEPTION(s.serialize(sink, 4), std::invalid_argument, [](std::invalid_argument const &)
+		{
+			return true;
+		});
+	}
+
+	BOOST_AUTO_TEST_CASE(Serialization_substitute_deserialize)
+	{
+		szn::substitute<unsigned, 3> s;
+		szn::zero_source source;
+		unsigned found = 0;
+		s.deserialize(source, found);
+		BOOST_CHECK_EQUAL(3, found);
 	}
 }

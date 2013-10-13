@@ -7,8 +7,10 @@
 #include <vector>
 #include <string>
 #include <iterator>
+#include <stdexcept>
 #include <boost/typeof/typeof.hpp>
 #include <boost/move/move.hpp>
+#include <boost/type_traits/decay.hpp>
 
 
 namespace szn
@@ -142,6 +144,46 @@ namespace szn
 
 		std::ostream &m_out;
 	};
+
+	struct failing_sink SZN_FINAL : sink
+	{
+		virtual void write(const char *data, std::size_t n) SZN_OVERRIDE
+		{
+			(void)data;
+			(void)n;
+			throw std::logic_error("You cannot write to an szn::failing_sink");
+		}
+	};
+
+	template <class WriteFunction>
+	struct function_sink SZN_FINAL : sink
+	{
+		function_sink()
+		    : m_function(WriteFunction())
+		{
+		}
+
+		template <class F>
+		function_sink(F &&function)
+		    : m_function(std::forward<F>(function))
+		{
+		}
+
+		virtual void write(const char *data, std::size_t n) SZN_OVERRIDE
+		{
+			return m_function(data, n);
+		}
+
+	private:
+
+		WriteFunction m_function;
+	};
+
+	template <class WriteFunction>
+	function_sink<typename boost::decay<WriteFunction>::type> make_function_sink(WriteFunction &&write)
+	{
+		return function_sink<typename boost::decay<WriteFunction>::type>(std::forward<WriteFunction>(write));
+	}
 }
 
 BOOST_TYPEOF_REGISTER_TEMPLATE(::szn::iterator_sink, 1)

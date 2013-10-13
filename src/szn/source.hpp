@@ -281,6 +281,50 @@ namespace szn
 	{
 		return false;
 	}
+
+
+	struct failing_source : source
+	{
+		virtual void load(length_type n) SZN_OVERRIDE;
+		virtual length_type size() SZN_OVERRIDE;
+		virtual char get(length_type index) SZN_OVERRIDE;
+		virtual void drop(length_type n) SZN_OVERRIDE;
+		virtual const char *data() SZN_OVERRIDE;
+		virtual bool is_stable() const SZN_OVERRIDE;
+	};
+
+	inline void failing_source::load(length_type n)
+	{
+		(void)n;
+		throw std::logic_error("You cannot load from an szn::failing_source");
+	}
+
+	inline length_type failing_source::size()
+	{
+		return 0;
+	}
+
+	inline char failing_source::get(length_type index)
+	{
+		(void)index;
+		assert(nullptr == "You cannot get from an szn::failing_source");
+		return 0;
+	}
+
+	inline void failing_source::drop(length_type n)
+	{
+		(void)n;
+	}
+
+	inline const char *failing_source::data()
+	{
+		return nullptr;
+	}
+
+	inline bool failing_source::is_stable() const
+	{
+		return true;
+	}
 }
 
 BOOST_TYPEOF_REGISTER_TEMPLATE(::szn::range_source, 2)

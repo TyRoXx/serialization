@@ -6,6 +6,7 @@
 #include <szn/big_endian.hpp>
 #include <szn/little_endian.hpp>
 #include <szn/bool.hpp>
+#include <szn/bytes.hpp>
 #include <boost/cstdint.hpp>
 
 

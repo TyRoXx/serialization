@@ -1,5 +1,4 @@
 #include <boost/test/unit_test.hpp>
-
 #include <szn/reader.hpp>
 
 namespace szn
