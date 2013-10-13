@@ -1,7 +1,6 @@
 Things to do in no particular order
 ===================================
 
-* make Sink and Source parameters template-tized where possible
 * "lazy" ranges for deserialization
 * make library header-only?
 * support old compilers (GCC 4.2, Clang 2.9, ..)
@@ -29,11 +28,8 @@ Things to do in no particular order
 * support for UTF-8 representations of data (for example JSON)
 * investigate object-relational mapping (e.g. SQL)
 * support for C (maybe with code generation)
-* shortcuts for common things
-  * SZN_LE8(a) instead of SZN_FIELD(a, std::uint8_t, szn::LE8)
-* syntax v2 transformations (lexically, semantically with templates)
-* ignore trailing comma in v2 field sequence
 * polymorphism
 * check possible bit field support
 * investigate sign extension problems to find safe solutions
 * RXN_REFLECT should support an empty field list
+* a real format for raw bytes / merge szn::vector with szn::bytes
