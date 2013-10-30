@@ -1,4 +1,5 @@
 #include <szn/sink.hpp>
+#include <szn/source.hpp>
 #include <szn/big_endian.hpp>
 #include <szn/little_endian.hpp>
 #include <cassert>
@@ -16,4 +17,14 @@ int main()
 	};
 	assert(buffer.size() == sizeof(expected));
 	assert(std::equal(std::begin(buffer), std::end(buffer), std::begin(expected)));
+
+	auto source = szn::make_container_source(buffer);
+
+	boost::uint64_t first = 0;
+	szn::be64().deserialize(source, first);
+	assert(first == 0x12345678);
+
+	boost::uint32_t second = 0;
+	szn::le32().deserialize(source, second);
+	assert(second == 0xaabbccdd);
 }
