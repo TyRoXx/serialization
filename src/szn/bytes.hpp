@@ -64,14 +64,14 @@ namespace szn
 		template <class Source>
 		void deserialize(Source &source, std::string &str) const
 		{
-			return deserializeContainer(source, str);
+			return deserialize_container(source, str);
 		}
 
 		template <class Source, class Byte, class Allocator>
 		typename boost::enable_if_c<sizeof(Byte) == 1, void>::type
 		deserialize(Source &source, std::vector<Byte, Allocator> &v) const
 		{
-			return deserializeContainer(source, v);
+			return deserialize_container(source, v);
 		}
 
 		template <class Source, class ByteRandomAccessIterator>
@@ -134,7 +134,7 @@ namespace szn
 		}
 
 		template <class Source, class Container>
-		void deserializeContainer(Source &source, Container &destination) const
+		void deserialize_container(Source &source, Container &destination) const
 		{
 			std::size_t length = 0;
 			szn::deserialize(source, length, LengthFormat());
