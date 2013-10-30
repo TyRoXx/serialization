@@ -7,6 +7,7 @@
 #include <boost/type_traits/make_unsigned.hpp>
 #include <boost/type_traits/is_enum.hpp>
 #include <boost/utility/declval.hpp>
+#include <cassert>
 
 
 namespace szn
