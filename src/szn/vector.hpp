@@ -3,6 +3,7 @@
 
 
 #include <szn/util.hpp>
+#include <szn/format.hpp>
 #include <boost/foreach.hpp>
 #include <boost/move/move.hpp>
 #include <boost/array.hpp>
@@ -20,7 +21,7 @@ namespace szn
 	{
 		typedef std::vector<typename ElementFormat::default_type> default_type;
 
-		static length_type const min_size = min_size<LengthFormat>::value;
+		static length_type const min_size = szn::min_size<LengthFormat>::value;
 		//TODO: max_size can be limited by the length and/or element format
 		static length_type const max_size = ~static_cast<length_type>(0);
 
