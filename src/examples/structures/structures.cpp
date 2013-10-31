@@ -7,10 +7,11 @@
 
 struct person_entry
 {
-	RXN_REFLECT((SZN_AUTO_MEMBERS) (SZN_ITERATE),
-            (id, szn::be32),
-            (name, szn::bytes<szn::be8>) (std::string)
-            )
+	SZN_STRUCTURE
+	(
+		(id, szn::be32),
+		(name, szn::bytes<szn::be8>) (std::string)
+	)
 };
 
 int main()

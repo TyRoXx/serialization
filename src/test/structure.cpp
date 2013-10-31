@@ -194,4 +194,17 @@ namespace szn
 		BOOST_CHECK_EQUAL(0xaabb, s.i);
 		BOOST_CHECK_EQUAL("abc", s.s);
 	}
+
+	struct new_syntax { SZN_STRUCTURE (
+		(field, be32)
+	)};
+
+	BOOST_AUTO_TEST_CASE(Serialization_structure_macro)
+	{
+		szn::null_sink sink;
+		new_syntax n = {123};
+		BOOST_CHECK_EQUAL(123, n.field);
+		BOOST_STATIC_ASSERT(sizeof(n.field) >= 4);
+		szn::structure().serialize(sink, n);
+	}
 }

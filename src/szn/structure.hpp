@@ -42,6 +42,8 @@ namespace szn
 		BOOST_PP_SEQ_FOR_EACH_I(RXN_GENERATE_FIELD, SZN_ITERATE_ACCEPT_MEMBER, fields) \
 	}
 
+#define SZN_STRUCTURE(...) RXN_REFLECT((SZN_AUTO_MEMBERS) (SZN_ITERATE), __VA_ARGS__)
+
 
 namespace szn
 {
