@@ -2,12 +2,11 @@ Things to do in no particular order
 ===================================
 
 * "lazy" ranges for deserialization
-* make library header-only?
 * support old compilers (GCC 4.2, Clang 2.9, ..)
 * improve Source concept
 * error handling, exceptions, constraints, backtracing
 * UTF-8/16/32 formats
-* formats for set, queue, vector<bool> etc.
+* formats for queue, vector<bool> etc.
 * formats for bitset
 * formats for Boost.Container, Boost.UUID, Boost.PtrContainer, Boost.DynamicBitset
 * provide usage examples
@@ -23,7 +22,7 @@ Things to do in no particular order
 * find shorter and more distinguishable namings for de/serialization
   * maybe read/write or load/save
 * write a manual and introduction
-* default value optimization (so that a field only needs 1 bit in the stream if
+* default value optimization format (so that a field only needs 1 bit in the stream if
   it has the default value)
 * support for UTF-8 representations of data (for example JSON)
 * investigate object-relational mapping (e.g. SQL)
@@ -32,4 +31,4 @@ Things to do in no particular order
 * check possible bit field support
 * investigate sign extension problems to find safe solutions
 * RXN_REFLECT should support an empty field list
-* a real format for raw bytes / merge szn::vector with szn::bytes
+* a real format for raw bytes
