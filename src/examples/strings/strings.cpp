@@ -6,10 +6,10 @@
 
 int main()
 {
-	std::vector<unsigned char> buffer;
+	std::vector<szn::byte> buffer;
 	auto sink = szn::make_container_sink(buffer);
 	szn::bytes<szn::be16>().serialize(sink, "Hello, world!");
-	unsigned char const expected[] =
+	szn::byte const expected[] =
 	{
 		0, 13, //<- the length of the string in big endian
 		'H', 'e', 'l', 'l', 'o', ',', ' ', 'w', 'o', 'r', 'l', 'd', '!'

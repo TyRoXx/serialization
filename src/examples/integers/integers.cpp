@@ -6,11 +6,11 @@
 
 int main()
 {
-	std::vector<unsigned char> buffer;
+	std::vector<szn::byte> buffer;
 	auto sink = szn::make_container_sink(buffer);
 	szn::be64().serialize(sink, 0x12345678);
 	szn::le32().serialize(sink, 0xaabbccdd);
-	unsigned char const expected[] =
+	szn::byte const expected[] =
 	{
 	    0, 0, 0, 0, 0x12, 0x34, 0x56, 0x78,
 	    0xdd, 0xcc, 0xbb, 0xaa

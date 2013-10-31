@@ -16,7 +16,7 @@ struct person_entry
 
 int main()
 {
-	std::vector<unsigned char> buffer;
+	std::vector<szn::byte> buffer;
 	auto sink = szn::make_container_sink(buffer);
 
 	person_entry alice;
@@ -24,7 +24,7 @@ int main()
 	alice.name = "Alice";
 	szn::structure().serialize(sink, alice);
 
-	unsigned char const expected[] =
+	szn::byte const expected[] =
 	{
 	    0, 0, 0, 12,
 	    5, 'A', 'l', 'i', 'c', 'e'

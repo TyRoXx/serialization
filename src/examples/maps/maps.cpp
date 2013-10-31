@@ -8,7 +8,7 @@
 
 int main()
 {
-	std::vector<unsigned char> buffer;
+	std::vector<szn::byte> buffer;
 	auto sink = szn::make_container_sink(buffer);
 	typedef std::map<boost::uint16_t, std::string> map_type;
 	map_type original;
@@ -22,7 +22,7 @@ int main()
 	        > map_format;
 
 	map_format().serialize(sink, original);
-	unsigned char const expected[] =
+	szn::byte const expected[] =
 	{
 	    1, //the number of map entries
 	    1, 200, //456 as bytes in big endian
