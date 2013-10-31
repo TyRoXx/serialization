@@ -60,6 +60,29 @@ namespace szn
 		OutputIterator m_pos;
 	};
 
+	template <class Container>
+	struct insertion_sink : sink
+	{
+		insertion_sink()
+		    : m_destination(NULL)
+		{
+		}
+
+		explicit insertion_sink(Container &destination)
+		    : m_destination(&destination)
+		{
+		}
+
+		virtual void write(const char *data, std::size_t n) SZN_OVERRIDE
+		{
+			m_destination->insert(m_destination->end(), data, data + n);
+		}
+
+	private:
+
+		Container *m_destination;
+	};
+
 	/// creates a sink from an output iterator for chars
 	template <class OutputIterator>
 	iterator_sink<OutputIterator> make_iterator_sink(OutputIterator begin)
@@ -67,18 +90,15 @@ namespace szn
 		return iterator_sink<OutputIterator>(boost::move(begin));
 	}
 
-	template <class Byte,
-			  class Allocator>
-	iterator_sink<std::back_insert_iterator<std::vector<Byte, Allocator> > >
+	template <class Byte, class Allocator>
+	insertion_sink<std::vector<Byte, Allocator> >
 	make_container_sink(std::vector<Byte, Allocator> &destination,
 	                    typename boost::enable_if_c<sizeof(Byte) == 1, void>::type * = NULL)
 	{
-		return make_iterator_sink(std::back_inserter(destination));
+		return insertion_sink<std::vector<Byte, Allocator> >(destination);
 	}
 
-	template <class Byte,
-			  class Traits,
-			  class Allocator>
+	template <class Byte, class Traits, class Allocator>
 	iterator_sink<std::back_insert_iterator<std::basic_string<Byte, Traits, Allocator> > >
 	make_container_sink(std::basic_string<Byte, Traits, Allocator> &destination,
 	                    typename boost::enable_if_c<sizeof(Byte) == 1, void>::type * = NULL)
