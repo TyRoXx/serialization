@@ -4,6 +4,7 @@
 
 #include <boost/typeof/typeof.hpp> //for SZN_DECLTYPE
 #include <boost/cstdint.hpp>
+#include <boost/static_assert.hpp>
 
 
 #ifndef SZN_NO_CPP11
@@ -73,7 +74,23 @@
 
 namespace szn
 {
+	/**
+	 * @brief byte is an unsigned integer type with exactly 8 bits. sizeof(byte) is always 1.
+	 * The range of possible values goes from 0 to 255.
+	 * The byte typedef is used for arbitrary binary data in favor of char variants to avoid
+	 * confusion with C strings.
+	 */
+	typedef unsigned char byte;
+
+	/**
+	 * @brief length_type is an unsigned integer type that is used for sizes that can be greater
+	 * than the maximum of std::size_t. A typical use case is file sizes. Its minimal sizeof is 8.
+	 * It consists at least 64 bits.
+	 * length_type will typically be either boost::uintmax_t or std::uintmax_t.
+	 */
 	typedef boost::uintmax_t length_type;
+
+	BOOST_STATIC_ASSERT(sizeof(length_type) >= 8);
 
 	struct sink;
 	struct source;

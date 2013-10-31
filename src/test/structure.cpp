@@ -171,7 +171,7 @@ namespace szn
 		serialized_struct3 s;
 		s.i = 0xaabb;
 		s.s = "abc";
-		std::vector<unsigned char> generated;
+		std::vector<szn::byte> generated;
 		auto sink = make_container_sink(generated);
 		structure().serialize(sink, s);
 		boost::array<unsigned char, 6> const expected =
