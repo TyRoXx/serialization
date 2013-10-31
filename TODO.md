@@ -32,3 +32,6 @@ Things to do in no particular order
 * investigate sign extension problems to find safe solutions
 * RXN_REFLECT should support an empty field list
 * a real format for raw bytes
+* optimize for runtime efficiency
+  * prefer insert over push_back
+  * merge consecutive inserts and push_backs
