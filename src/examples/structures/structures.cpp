@@ -21,7 +21,7 @@ int main()
 	person_entry alice;
 	alice.id = 12;
 	alice.name = "Alice";
-	szn::structure3().serialize(sink, alice);
+	szn::structure().serialize(sink, alice);
 
 	unsigned char const expected[] =
 	{
@@ -33,7 +33,7 @@ int main()
 
 	auto source = szn::make_container_source(buffer);
 	person_entry who;
-	szn::structure3().deserialize(source, who);
+	szn::structure().deserialize(source, who);
 	assert(alice.id == who.id);
 	assert(alice.name == who.name);
 }

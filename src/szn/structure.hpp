@@ -86,7 +86,7 @@ namespace szn
 		};
 	}
 
-	struct structure3
+	struct structure
 	{
 		template <class Sink, class Structure>
 		void serialize(Sink &sink, Structure const &object) const
