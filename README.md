@@ -19,7 +19,8 @@ GCC 4.2 and Clang have problems with Boost.Preprocessor.  I will try to fix that
 Dependencies
 ------------
 
-Some header-only libraries and the unit test framework from Boost are required.
+Some header-only libraries from Boost are required.
+In order to run the tests you need the compiled Boost unit test framework.
 Any Boost release since 1.48 should work.
 We recommend more recent releases though.
 
@@ -39,4 +40,4 @@ There is a list of ideas in TODO.md
 License
 -------
 
-Currently undecided. Most likely MIT.
+You can find the license text in the file LICENSE. It contains the MIT license.
