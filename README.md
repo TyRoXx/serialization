@@ -1,5 +1,7 @@
-Serialization library for C++
-=============================
+A low-level serialization library for C++
+=========================================
+
+Turn C++ objects into a portable sequence of bytes and vice versa.
 
 How to use
 ----------
