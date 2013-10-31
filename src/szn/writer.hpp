@@ -33,6 +33,13 @@ namespace szn
 			return this->value<szn::bytes<LengthFormat>>(value);
 		}
 
+		template <class LengthFormat, class InputIterator>
+		writer &bytes(InputIterator pos, std::size_t count)
+		{
+			szn::bytes<LengthFormat>().serialize(m_destination, pos, count);
+			return *this;
+		}
+
 		template <class Format, class Value>
 		writer &value(Value const &value)
 		{

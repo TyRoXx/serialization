@@ -18,7 +18,7 @@ namespace szn
 			.le16(0xaabb)
 			.le32(12)
 			.le64(1)
-			.bytes<be16>("hello")
+			.bytes<be16>("hello", 5)
 			.boolean8(true)
 			.raw("raw", 3)
 			;

@@ -432,9 +432,7 @@ namespace szn
 			std::stringstream value;
 			value << "value REST";
 			format.serialize(sink,
-			                 boost::make_iterator_range(
-			                     std::istreambuf_iterator<char>(value),
-			                     std::istreambuf_iterator<char>()),
+			                 std::istreambuf_iterator<char>(value),
 			                 6);
 		}
 		char const expected[] =
@@ -442,33 +440,6 @@ namespace szn
 		    6, 'v', 'a', 'l', 'u', 'e', ' '
 		};
 		BOOST_CHECK_EQUAL(generated, std::string(expected, 7));
-	}
-
-	static void run_bytes_input_fail()
-	{
-		std::string generated;
-		BOOST_AUTO(sink, make_container_sink(generated));
-		szn::bytes<szn::be8> format;
-		std::stringstream value;
-		value << "value";
-		format.serialize(sink,
-		                 boost::make_iterator_range(
-		                     std::istreambuf_iterator<char>(value),
-		                     std::istreambuf_iterator<char>()),
-		                 6);
-	}
-
-	static bool is_bytes_input_fail_exception(std::runtime_error const &)
-	{
-		return true;
-	}
-
-	BOOST_AUTO_TEST_CASE(Serialization_bytes_input_iterator_fail)
-	{
-		BOOST_CHECK_EXCEPTION(run_bytes_input_fail(),
-		                      std::runtime_error,
-		                      is_bytes_input_fail_exception);
-
 	}
 
 	BOOST_AUTO_TEST_CASE(Serialization_pair_serialize)

@@ -7,6 +7,7 @@
 #include <boost/foreach.hpp>
 #include <boost/move/move.hpp>
 #include <boost/array.hpp>
+#include <boost/range/size.hpp>
 #if SZN_HAS_ARRAY
 #	include <array>
 #endif
@@ -28,12 +29,7 @@ namespace szn
 		template <class Sink, class Container>
 		void serialize(Sink &sink, Container const &v) const
 		{
-			LengthFormat().serialize(sink, v.size());
-
-			BOOST_FOREACH (const typename Container::value_type &e, v)
-			{
-				szn::serialize(sink, e, ElementFormat());
-			}
+			serialize_impl(sink, v, typename std::iterator_traits<typename Container::const_iterator>::iterator_category());
 		}
 
 		template <class Sink, class First, class Second>
@@ -43,6 +39,23 @@ namespace szn
 			ElementFormat const elem;
 			elem.serialize(sink, elements.first);
 			elem.serialize(sink, elements.second);
+		}
+
+		template <class Sink, class Element, std::size_t N>
+		void serialize(Sink &sink, Element (&arr)[N]) const
+		{
+			LengthFormat().serialize(sink, N);
+			serialize_raw_range(sink, arr);
+		}
+
+		template <class Sink, class InputIterator>
+		void serialize(Sink &sink, InputIterator pos, std::size_t count) const
+		{
+			LengthFormat().serialize(sink, count);
+			for (; count; ++pos, --count)
+			{
+				ElementFormat().serialize(sink, *pos);
+			}
 		}
 
 		template <class Source, class SequenceContainer>
@@ -78,6 +91,29 @@ namespace szn
 #endif
 
 	private:
+
+		template <class Sink, class Range, class OtherTag>
+		void serialize_impl(Sink &sink, Range const &sequence, OtherTag) const
+		{
+			LengthFormat().serialize(sink, sequence.size());
+			serialize_raw_range(sink, sequence);
+		}
+
+		template <class Sink, class Range>
+		void serialize_impl(Sink &sink, Range const &sequence, std::random_access_iterator_tag) const
+		{
+			LengthFormat().serialize(sink, boost::size(sequence));
+			serialize_raw_range(sink, sequence);
+		}
+
+		template <class Sink, class Range>
+		void serialize_raw_range(Sink &sink, Range const &sequence) const
+		{
+			for (auto i = boost::begin(sequence), e = boost::end(sequence); i != e; ++i)
+			{
+				szn::serialize(sink, *i, ElementFormat());
+			}
+		}
 
 		template <class Element>
 		struct make_map_key_mutable

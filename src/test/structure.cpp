@@ -120,7 +120,7 @@ namespace szn
 		simple_struct const t = create_simple_struct();
 		BOOST_CHECK_EQUAL(t.a, 0);
 		BOOST_CHECK_EQUAL(t.b, 3);
-		BOOST_CHECK(t.c == std::vector<char>(32));
+		BOOST_CHECK(t.c == std::vector<szn::byte>(32));
 		BOOST_CHECK_EQUAL(t.d, "hallo");
 		BOOST_CHECK(t.v == std::vector<be16::default_type>(2, 12));
 	}
