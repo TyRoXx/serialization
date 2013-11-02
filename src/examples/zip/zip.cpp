@@ -1,6 +1,7 @@
 #include <szn/source.hpp>
 #include <szn/endianness.hpp>
 #include <szn/structure.hpp>
+#include <szn/util.hpp>
 #include <iostream>
 #include <string>
 #include <fstream>
@@ -15,7 +16,7 @@ using namespace szn;
 		BOOST_PP_SEQ_FOR_EACH_I(RXN_GENERATE_FIELD, PRINT_ELEMENT, fields) \
 	}
 
-struct local_file_header
+struct local_file_header_begin
 {
 	RXN_REFLECT((SZN_ITERATE) (SZN_AUTO_MEMBERS) (PRINT),
 	        (min_version, le16),
@@ -25,10 +26,40 @@ struct local_file_header
 	        (modification_date, le16),
 	        (crc32, le32),
 	        (compressed_size, le32),
-	        (uncompressed_size, le32),
+	        (uncompressed_size, le32)
+	)
+};
+
+struct local_file_header_lengths
+{
+	SZN_STRUCTURE(
 	        (name_length, le16),
 	        (extra_length, le16)
 	)
+};
+
+struct local_file_header
+{
+	local_file_header_begin begin;
+	std::string name;
+	std::string extra;
+
+	template <class Source>
+	void deserialize(Source &source)
+	{
+		szn::structure().deserialize(source, begin);
+		local_file_header_lengths lengths;
+		szn::structure().deserialize(source, lengths);
+		szn::read(source, name, lengths.name_length);
+		szn::read(source, extra, lengths.extra_length);
+	}
+
+	void print(std::ostream &out) const
+	{
+		begin.print(out);
+		out << "name: " << name << '\n';
+		out << "extra: " << extra << '\n';
+	}
 };
 
 int main(int argc, char **argv)
@@ -49,10 +80,11 @@ int main(int argc, char **argv)
 	boost::uint32_t signature;
 	szn::le32().deserialize(source, signature);
 
-	if (0x04034b50 == signature)
+	boost::uint32_t const local_file_signature = 0x04034b50;
+	if (local_file_signature == signature)
 	{
 		local_file_header header;
-		szn::structure().deserialize(source, header);
+		szn::by_method().deserialize(source, header);
 		header.print(std::cout);
 	}
 	else
