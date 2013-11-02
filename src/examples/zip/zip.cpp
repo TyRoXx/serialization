@@ -5,36 +5,29 @@
 #include <iostream>
 #include <string>
 #include <fstream>
-
 using namespace szn;
-
-#define PRINT_ELEMENT(name, format, annotations) \
-	out << BOOST_STRINGIZE(name) << ": " << name << '\n';
-
-#define PRINT(fields) \
-	void print(std::ostream &out) const { \
-		BOOST_PP_SEQ_FOR_EACH_I(RXN_GENERATE_FIELD, PRINT_ELEMENT, fields) \
-	}
 
 struct local_file_header_begin
 {
-	RXN_REFLECT((SZN_ITERATE) (SZN_AUTO_MEMBERS) (PRINT),
-	        (min_version, le16),
-	        (flags, le16),
-	        (compression, le16),
-	        (modification_time, le16),
-	        (modification_date, le16),
-	        (crc32, le32),
-	        (compressed_size, le32),
-	        (uncompressed_size, le32)
+	SZN_STRUCTURE
+	(
+		(min_version, le16),
+		(flags, le16),
+		(compression, le16),
+		(modification_time, le16),
+		(modification_date, le16),
+		(crc32, le32),
+		(compressed_size, le32),
+		(uncompressed_size, le32)
 	)
 };
 
 struct local_file_header_lengths
 {
-	SZN_STRUCTURE(
-	        (name_length, le16),
-	        (extra_length, le16)
+	SZN_STRUCTURE
+	(
+		(name_length, le16),
+		(extra_length, le16)
 	)
 };
 
@@ -52,13 +45,6 @@ struct local_file_header
 		szn::structure().deserialize(source, lengths);
 		szn::read(source, name, lengths.name_length);
 		szn::read(source, extra, lengths.extra_length);
-	}
-
-	void print(std::ostream &out) const
-	{
-		begin.print(out);
-		out << "name: " << name << '\n';
-		out << "extra: " << extra << '\n';
 	}
 };
 
@@ -84,8 +70,10 @@ int main(int argc, char **argv)
 	if (local_file_signature == signature)
 	{
 		local_file_header header;
-		szn::by_method().deserialize(source, header);
-		header.print(std::cout);
+		header.deserialize(source);
+		std::cout << "first file name: " << header.name << '\n'
+		          << "compressed size: " << header.begin.compressed_size << '\n'
+		          << "uncompressed size: " << header.begin.uncompressed_size << '\n';
 	}
 	else
 	{
