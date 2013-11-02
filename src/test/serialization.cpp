@@ -833,4 +833,34 @@ namespace szn
 		s.deserialize(source, found);
 		BOOST_CHECK_EQUAL(3, found);
 	}
+
+	BOOST_AUTO_TEST_CASE(Serialization_read)
+	{
+		std::string const message = "12345";
+		auto source = szn::make_container_source(message);
+
+		{
+			std::string a;
+			read(source, a, 1);
+			BOOST_CHECK_EQUAL("1", a);
+		}
+
+		{
+			std::vector<unsigned char> b;
+			read(source, b, 1);
+			BOOST_CHECK(boost::assign::list_of('2') == b);
+		}
+
+		{
+			std::vector<signed char> c;
+			read(source, c, 1);
+			BOOST_CHECK(boost::assign::list_of('3') == c);
+		}
+
+		{
+			std::vector<char> d;
+			read(source, d, 2);
+			BOOST_CHECK(boost::assign::list_of('4')('5') == d);
+		}
+	}
 }

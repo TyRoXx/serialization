@@ -46,6 +46,17 @@ namespace szn
 	{
 	}
 
+	template <class Source, class ByteContainer>
+	typename boost::enable_if_c<sizeof(typename ByteContainer::value_type) == 1, void>::type
+	read(Source &source, ByteContainer &destination, std::size_t byte_count)
+	{
+		destination.resize(byte_count);
+		if (byte_count > 0)
+		{
+			source.read(reinterpret_cast<char *>(&destination[0]), byte_count);
+		}
+	}
+
 	namespace detail
 	{
 		template <class To, class From>
