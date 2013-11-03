@@ -35,3 +35,5 @@ Things to do in no particular order
 * optimize for runtime efficiency
   * prefer insert over push_back
   * merge consecutive inserts and push_backs
+* fix make_container_source
+  * make it work with boost::array etc
