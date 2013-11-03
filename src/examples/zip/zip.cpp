@@ -40,9 +40,9 @@ struct local_file_header
 	template <class Source>
 	void deserialize(Source &source)
 	{
-		szn::structure().deserialize(source, begin);
+		szn::any_structure().deserialize(source, begin);
 		local_file_header_lengths lengths;
-		szn::structure().deserialize(source, lengths);
+		szn::any_structure().deserialize(source, lengths);
 		szn::read(source, name, lengths.name_length);
 		szn::read(source, extra, lengths.extra_length);
 	}

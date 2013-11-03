@@ -88,7 +88,7 @@ namespace szn
 		};
 	}
 
-	struct structure
+	struct any_structure
 	{
 		template <class Sink, class Structure>
 		void serialize(Sink &sink, Structure const &object) const
@@ -98,6 +98,26 @@ namespace szn
 		}
 
 		template <class Source, class Structure>
+		void deserialize(Source &source, Structure &object) const
+		{
+			detail::deserializing_structure3_visitor<Source> const visitor(source);
+			object.iterate(visitor);
+		}
+	};
+
+	template <class Structure>
+	struct structure : any_structure
+	{
+		typedef Structure default_type;
+
+		template <class Sink>
+		void serialize(Sink &sink, Structure const &object) const
+		{
+			detail::serializing_structure3_visitor<Sink> const visitor(sink);
+			object.iterate(visitor);
+		}
+
+		template <class Source>
 		void deserialize(Source &source, Structure &object) const
 		{
 			detail::deserializing_structure3_visitor<Source> const visitor(source);

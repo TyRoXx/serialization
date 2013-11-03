@@ -80,7 +80,7 @@ namespace szn
 		{
 			RXN_REFLECT((SZN_AUTO_MEMBERS) (SZN_ITERATE),
 			            (value, be64),
-			            (children, vector<be32, structure>) (std::vector<tree>)
+			            (children, vector<be32, structure<tree> >)
 			            )
 
 			explicit tree(be64::default_type value)
@@ -173,7 +173,7 @@ namespace szn
 		s.s = "abc";
 		std::vector<szn::byte> generated;
 		auto sink = make_container_sink(generated);
-		structure().serialize(sink, s);
+		any_structure().serialize(sink, s);
 		boost::array<unsigned char, 6> const expected =
 		{{
 		     0xaa, 0xbb, 0x03, 'a', 'b', 'c'
@@ -190,7 +190,7 @@ namespace szn
 		serialized_struct3 s;
 		s.i = 0;
 		memory_source source(data);
-		structure().deserialize(source, s);
+		any_structure().deserialize(source, s);
 		BOOST_CHECK_EQUAL(0xaabb, s.i);
 		BOOST_CHECK_EQUAL("abc", s.s);
 	}
@@ -205,6 +205,6 @@ namespace szn
 		new_syntax n = {123};
 		BOOST_CHECK_EQUAL(123, n.field);
 		BOOST_STATIC_ASSERT(sizeof(n.field) >= 4);
-		szn::structure().serialize(sink, n);
+		szn::any_structure().serialize(sink, n);
 	}
 }
