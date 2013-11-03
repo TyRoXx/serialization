@@ -23,7 +23,7 @@ namespace szn
 			.raw("raw", 3)
 			;
 
-		unsigned char const expectedBytes[] =
+		byte const expectedBytes[] =
 		{
 		    0xee,
 		    0xaa, 0xbb,

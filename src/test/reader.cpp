@@ -5,7 +5,7 @@ namespace szn
 {
 	BOOST_AUTO_TEST_CASE(Serialization_reader)
 	{
-		unsigned char const data[] =
+		byte const data[] =
 		{
 			0xee,
 			0xaa, 0xbb,
