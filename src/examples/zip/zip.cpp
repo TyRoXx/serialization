@@ -5,20 +5,19 @@
 #include <iostream>
 #include <string>
 #include <fstream>
-using namespace szn;
 
 struct local_file_header_begin
 {
 	SZN_STRUCTURE
 	(
-		(min_version, le16),
-		(flags, le16),
-		(compression, le16),
-		(modification_time, le16),
-		(modification_date, le16),
-		(crc32, le32),
-		(compressed_size, le32),
-		(uncompressed_size, le32)
+		(min_version, szn::le16),
+		(flags, szn::le16),
+		(compression, szn::le16),
+		(modification_time, szn::le16),
+		(modification_date, szn::le16),
+		(crc32, szn::le32),
+		(compressed_size, szn::le32),
+		(uncompressed_size, szn::le32)
 	)
 };
 
@@ -26,8 +25,8 @@ struct local_file_header_lengths
 {
 	SZN_STRUCTURE
 	(
-		(name_length, le16),
-		(extra_length, le16)
+		(name_length, szn::le16),
+		(extra_length, szn::le16)
 	)
 };
 
