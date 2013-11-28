@@ -47,9 +47,9 @@ namespace szn
 	}
 
 	template <class Source, class ByteContainer>
-	typename boost::enable_if_c<sizeof(typename ByteContainer::value_type) == 1, void>::type
-	read(Source &source, ByteContainer &destination, std::size_t byte_count)
+	void read(Source &source, ByteContainer &destination, std::size_t byte_count)
 	{
+		BOOST_STATIC_ASSERT(sizeof(destination[0]) == sizeof(byte));
 		destination.resize(byte_count);
 		if (byte_count > 0)
 		{
