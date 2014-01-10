@@ -41,7 +41,8 @@ Dependencies
 
 Some header-only libraries from Boost are required.
 In order to run the tests you need the compiled Boost unit test framework.
-Any Boost release since 1.48 should work.
+Any Boost release since 1.48 should work. Older releases of Boost
+will not work because this library uses Boost.Move.
 We recommend more recent releases though.
 
 
