@@ -1,7 +1,13 @@
 language: cpp
 compiler:
   - gcc
-script: cmake . -DCMAKE_BUILD_TYPE=DEBUG && make
+script:
+  - cd ..
+  - mkdir build
+  - cd build
+  - cmake ../serialization/src -DCMAKE_BUILD_TYPE=DEBUG
+  - make -j2
+  - ./test/test
 before_install:
   - sudo apt-get update -qq
   - sudo apt-get install -qq -y libboost-all-dev
