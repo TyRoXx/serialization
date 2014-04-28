@@ -50,9 +50,9 @@ namespace szn
 	namespace detail
 	{
 		template <class Sink>
-		struct serializing_structure3_visitor
+		struct serializing_structure_visitor
 		{
-			explicit serializing_structure3_visitor(Sink &sink)
+			explicit serializing_structure_visitor(Sink &sink)
 			    : m_sink(sink)
 			{
 			}
@@ -69,9 +69,9 @@ namespace szn
 		};
 
 		template <class Source>
-		struct deserializing_structure3_visitor
+		struct deserializing_structure_visitor
 		{
-			explicit deserializing_structure3_visitor(Source &source)
+			explicit deserializing_structure_visitor(Source &source)
 			    : m_source(source)
 			{
 			}
@@ -93,14 +93,14 @@ namespace szn
 		template <class Sink, class Structure>
 		void serialize(Sink &sink, Structure const &object) const
 		{
-			detail::serializing_structure3_visitor<Sink> const visitor(sink);
+			detail::serializing_structure_visitor<Sink> const visitor(sink);
 			object.iterate(visitor);
 		}
 
 		template <class Source, class Structure>
 		void deserialize(Source &source, Structure &object) const
 		{
-			detail::deserializing_structure3_visitor<Source> const visitor(source);
+			detail::deserializing_structure_visitor<Source> const visitor(source);
 			object.iterate(visitor);
 		}
 	};
@@ -113,14 +113,14 @@ namespace szn
 		template <class Sink>
 		void serialize(Sink &sink, Structure const &object) const
 		{
-			detail::serializing_structure3_visitor<Sink> const visitor(sink);
+			detail::serializing_structure_visitor<Sink> const visitor(sink);
 			object.iterate(visitor);
 		}
 
 		template <class Source>
 		void deserialize(Source &source, Structure &object) const
 		{
-			detail::deserializing_structure3_visitor<Source> const visitor(source);
+			detail::deserializing_structure_visitor<Source> const visitor(source);
 			object.iterate(visitor);
 		}
 	};
