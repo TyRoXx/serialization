@@ -1,5 +1,6 @@
 file(GLOB codeFiles
-	"*.h"
+	"../szn/*.hpp"
+	"../rxn/*.hpp"
 	"*.cpp"
 )
 
