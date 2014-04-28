@@ -62,6 +62,8 @@ namespace szn
 
 		typedef typename boost::uint_t<ByteSize * 8>::least default_type;
 
+		integer() {}
+
 		template <class Sink, class Value>
 		void serialize(Sink &sink, Value value) const
 		{

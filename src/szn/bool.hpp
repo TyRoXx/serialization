@@ -11,8 +11,8 @@ namespace szn
 	template <class Format, class ValuePolicy>
 	struct basic_bool SZN_FINAL
 	{
-		static length_type const min_size = min_size<Format>::value;
-		static length_type const max_size = max_size<Format>::value;
+		static length_type const min_size = szn::min_size<Format>::value;
+		static length_type const max_size = szn::max_size<Format>::value;
 
 		typedef bool default_type;
 
@@ -54,8 +54,8 @@ namespace szn
 	{
 		typedef typename UnderlyingBool::default_type default_type;
 
-		static length_type const min_size = min_size<UnderlyingBool>::value;
-		static length_type const max_size = max_size<UnderlyingBool>::value;
+		static length_type const min_size = szn::min_size<UnderlyingBool>::value;
+		static length_type const max_size = szn::max_size<UnderlyingBool>::value;
 
 		template <class Sink>
 		void serialize(Sink &sink, bool value) const

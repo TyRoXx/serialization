@@ -18,8 +18,8 @@ namespace szn
 	{
 		typedef boost::optional<typename ValueFormat::default_type> default_type;
 
-		static length_type const min_size = add_lengths<min_size<ConditionFormat>::value, min_size<ValueFormat>::value>::value;
-		static length_type const max_size = add_lengths<max_size<ConditionFormat>::value, max_size<ValueFormat>::value>::value;
+		static length_type const min_size = add_lengths<szn::min_size<ConditionFormat>::value, szn::min_size<ValueFormat>::value>::value;
+		static length_type const max_size = add_lengths<szn::max_size<ConditionFormat>::value, szn::max_size<ValueFormat>::value>::value;
 
 		template <class Sink, class Nullable>
 		void serialize(Sink &sink, Nullable const &value) const
