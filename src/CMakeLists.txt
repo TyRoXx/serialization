@@ -22,8 +22,15 @@ if(CMAKE_COMPILER_IS_GNUCXX)
 	#some more warnings (which are not always useful)
 	set(flags "${flags} -Wextra")
 
-        #do not warn about auto_ptr
-        set(flags "${flags} -Wno-deprecated-declarations")
+	set(flags "${flags} -Wlogical-op")
+	set(flags "${flags} -Wvla")
+	set(flags "${flags} -Wunused-but-set-parameter")
+
+	#TODO: use nullptr and enable this warning
+	#set(flags "${flags} -Wzero-as-null-pointer-constant")
+
+	#do not warn about auto_ptr
+	set(flags "${flags} -Wno-deprecated-declarations")
 
 	#extra strictness
 	set(flags "${flags} -pedantic")
